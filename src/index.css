@@ -1,0 +1,297 @@
+/* Font Light */
+@font-face {
+  font-family: 'GT Walsheim Pro';
+  src: local('GT Walsheim Pro Light'), local('GTWalsheimPro-Light'), 
+  url(./assets/font/GTWalsheimPro-Light.eot?#iefix) format('embedded-opentype'),
+  url(./assets/font/GTWalsheimPro-Light.woff2) format('woff2'),
+  url(./assets/font/GTWalsheimPro-Light.woff) format('woff'),
+  url(./assets/font/GTWalsheimPro-Light.ttf) format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+/* Font Regular */
+@font-face {
+  font-family: 'GT Walsheim Pro';
+  src: local('GT Walsheim Pro Regular'), local('GTWalsheimPro-Regular'),
+  url(./assets/font/GTWalsheimPro-Regular.eot?#iefix) format('embedded-opentype'),
+  url(./assets/font/GTWalsheimPro-Regular.woff2) format('woff2'),
+  url(./assets/font/GTWalsheimPro-Regular.woff) format('woff'),
+  url(./assets/font/GTWalsheimPro-Regular.ttf) format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Font Thin */
+@font-face {
+  font-family: 'GT Walsheim Pro';
+  src: local('GT Walsheim Pro Thin'), local('GTWalsheimPro-Thin'),
+  url(./assets/font/GTWalsheimPro-Thin.eot?#iefix) format('embedded-opentype'),
+  url(./assets/font/GTWalsheimPro-Thin.woff2) format('woff2'),
+  url(./assets/font/GTWalsheimPro-Thin.woff) format('woff'),
+  url(./assets/font/GTWalsheimPro-Thin.ttf) format('truetype');
+    font-weight: 100;
+    font-style: normal;
+}
+
+/* Font Bold */
+@font-face {
+  font-family: 'GT Walsheim Pro';
+    src: url(./assets/font/GTWalsheimPro-Bold.eot);
+    src: local('GT Walsheim Pro Bold'), local('GTWalsheimPro-Bold'),
+        url(./assets/font/GTWalsheimPro-Bold.eot?#iefix) format('embedded-opentype'),
+        url(./assets/font/GTWalsheimPro-Bold.woff2) format('woff2'),
+        url(./assets/font/GTWalsheimPro-Bold.woff) format('woff'),
+        url(./assets/font/GTWalsheimPro-Bold.ttf) format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+/* Font Extrabold */
+@font-face {
+  font-family: 'GT Walsheim Pro Ultra';
+    src: local('GT Walsheim Pro Ultra Bold'), local('GTWalsheimPro-UltraBold'),
+        url(./assets/font/GTWalsheimPro-UltraBold.eot?#iefix) format('embedded-opentype'),
+        url(./assets/font/GTWalsheimPro-UltraBold.woff2) format('woff2'),
+        url(./assets/font/GTWalsheimPro-UltraBold.woff) format('woff'),
+        url(./assets/font/GTWalsheimPro-UltraBold.ttf) format('truetype');
+    font-weight: 800;
+    font-style: normal;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+html,
+#root,
+body {
+  height: 100%;
+  width: 100%;
+    font-family: GT Walsheim Pro, sans-serif;
+}
+
+.wrapper {
+    position: fixed; 
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 9;
+  }
+
+.modal {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 999;
+  }
+
+.loader {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 999;
+  }
+
+button {
+    transition: 0.7s;
+}
+
+.nav__items a {
+  padding: 1rem 1rem;
+}
+
+.nav__items a:hover {
+    color: #4285F4;
+    padding: 0.3rem 1rem;
+    transition: 1s;
+}
+
+.nav__items a:active {
+  background: #4285F4;
+  padding: 0.3rem 1rem;
+  transition: 1s;
+}
+
+.dashboard__menu li {
+    display: flex;
+    align-items: center;
+    padding: 5px 12px 5px 15px ;
+  }
+  
+.dashboard__menu li:hover {
+    width: 100%;
+    background: lightgray;
+    border-left: 0.3rem solid #FF741F;
+  }
+
+  /* Dashboard Sidebar */
+
+  .sidebar-item {
+    padding: 0.75em 1em;
+    display: block;
+    border-radius: 5px;
+    border-bottom: 2px solid #ccc;
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: background-color 0.15s;
+  }
+
+  .s-parent {
+    border-bottom: 2px solid #ccc;
+  }
+
+  .sidebar-item:hover {
+    background-color: #eee;
+  }
+  
+  .sidebar-title {
+    display: flex;
+    font-size: 18px;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+  }
+  
+  .sidebar-title span {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 12px;
+    transition: all 0.5s;
+    font-size: 18px;
+  }
+  
+  .sidebar-title span .icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1.5em;
+    font-size: 25px;
+  }
+  
+  .sidebar-title .arrow-icon {
+    cursor: pointer;
+    transition: all 0.5s;
+  }
+  
+  .sidebar-item.open > .sidebar-title .arrow-icon {
+    transform: rotate(90deg);
+  }
+  
+  .sidebar-content {
+    padding-top: 0.25em;
+    height: 0;
+    overflow: hidden;
+  }
+  .sidebar-item.open > .sidebar-content {
+    height: auto;
+  }
+  
+  .s-child {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin-top: 5px;
+  }
+  
+  .s-child:hover {
+    border: 1px solid var(--light-blue);
+  }
+  
+  a {
+    color: var(--colo-dark);
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  
+  .active {
+    color: #fdfdfd;
+    display: block;
+    position: relative;
+    width: 100%;
+    height: auto;
+    background-color: #4285F4;
+  }
+  
+  .active::after {
+    content: "";
+    position: absolute;
+    width: 5px;
+    height: 100%;
+    right: 0;
+    top: 0;
+    background-color: var(--light-blue);
+  }
+  
+  .sublink .sidebar-item .sidebar-title {
+    padding-left: 40px;
+  }
+
+  .pagination {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem 0;
+    font-size: 1rem;
+  }
+  
+  .pagination .page-num {
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+    font-weight: normal;
+    color: #333;
+    border: 1px solid #333;
+    margin-right: 0.5rem;
+  }
+  
+  .pagination .page-num:hover {
+    color: #f0d803;
+    background-color: var(--light-blue);
+  }
+  .activePage {
+    color: #fa0202;
+    background-color: var(--light-blue);
+    height: 100%;
+  }
+
+
+.running {
+  background-color: rgba(0, 128, 0, 0.05);
+  color: green;
+}
+
+.pending {
+  background-color: rgba(0, 217, 0, 0.05);
+  color: yellow;
+}
+
+.rejected {
+  background-color: rgba(0, 217, 0, 0.05);
+  color: red;
+}
+
+.allocating {
+  background-color: rgba(0, 217, 0, 0.05);
+  color: skyblue;
+}
+
+.completed {
+  background-color: rgba(0, 217, 0, 0.05);
+  color: blue;
+}
+
+.cellAction {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
