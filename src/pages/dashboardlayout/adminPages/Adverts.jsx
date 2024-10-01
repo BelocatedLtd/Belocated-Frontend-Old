@@ -5,14 +5,9 @@ import { MdArrowDownward, MdOutlineKeyboardArrowLeft } from 'react-icons/md'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { handleGetALLUserAdverts } from '../../../redux/slices/advertSlice'
-import {
-	selectIsError,
-	selectIsLoading,
-	selectUsers,
-} from '../../../redux/slices/userSlice'
+import { selectIsError, selectIsLoading } from '../../../redux/slices/userSlice'
 
 const Adverts = () => {
-	const users = useSelector(selectUsers)
 	const isLoading = useSelector(selectIsLoading)
 	const isError = useSelector(selectIsError)
 	const navigate = useNavigate()

@@ -43,10 +43,10 @@ export const getUserWallet = async() => {
 }
 
 // Get Wallet Details
-export const getSingleUserWallet = async(id) => {
+export const getSingleUserDetails = async(id) => {
     const headers = getAuthHeaders();
     try {
-         const response = await axios.get(`${BACKEND_URL}/api/transactions/wallet/user/${id}`,  headers)
+         const response = await axios.get(`${BACKEND_URL}/api/admin/user/${id}`, headers)
         return response.data
      } catch (error) {
          const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();

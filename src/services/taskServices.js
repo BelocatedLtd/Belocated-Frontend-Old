@@ -40,9 +40,9 @@ export const getUserTasks = async() => {
 }
 
 // Get All Tasks Get all tasks from db
-export const getTasks = async() => {
+export const getTasks = async(page,limit) => {
     const headers = getAuthHeaders();
-    const response = await axios.get(`${BACKEND_URL}/api/tasks`, headers)
+    const response = await axios.get(`${BACKEND_URL}/api/tasks?page=${page}&limit=${limit}`, headers)
    return response.data      
 }
 
