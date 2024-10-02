@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import DataSearch from '../../../components/adminComponents/DataSearch'
 import Loader from '../../../components/loader/Loader'
-import { selectAllAdverts } from '../../../redux/slices/advertSlice'
 import {
 	handleGetAllActivities,
 	selectActivities,
@@ -24,7 +23,6 @@ const Users = () => {
 	const navigate = useNavigate()
 	const dispatch = useDispatch()
 	const tasks = useSelector(selectTasks)
-	const adverts = useSelector(selectAllAdverts)
 	const activities = useSelector(selectActivities)
 	const isLoading = useSelector(selectIsLoading)
 	const sortIcon = <MdArrowDownward />
@@ -113,50 +111,17 @@ const Users = () => {
 		},
 		{
 			name: 'Ads Created',
-			cell: (row) => {
-				const userAds =
-					adverts && adverts?.filter((ad) => ad.userId == row?._id)
-				return <div className='font-bold text-[13px]'>{userAds?.length}</div>
-			},
+			selector: (row) => row.adsCreated,
 			sortable: true,
 		},
 		{
 			name: 'Task On Going',
-			cell: (row) => {
-				const userTasks = tasks?.filter(
-					(task) => task.taskPerformerId == row?._id,
-				)
-				const userTasksRunning = userTasks?.filter(
-					(task) =>
-						task.status == 'Awaiting Submission' ||
-						task.status == 'Pending Approval' ||
-						task.status == 'Submitted',
-				)
-
-				return (
-					<div className='font-bold text-[13px]'>
-						{userTasksRunning?.length}
-					</div>
-				)
-			},
+			selector: (row) => row.taskOngoing,
 			sortable: true,
 		},
 		{
 			name: 'Tasks Completed',
-			cell: (row) => {
-				const userTasks = tasks?.filter(
-					(task) => task.taskPerformerId == row?._id,
-				)
-				const userTasksCompleted = userTasks?.filter(
-					(task) => task.status == 'Approved',
-				)
-
-				return (
-					<div className='font-bold text-[13px]'>
-						{userTasksCompleted?.length}
-					</div>
-				)
-			},
+			selector: (row) => row.taskCompleted,
 			sortable: true,
 		},
 		{
@@ -212,7 +177,13 @@ const Users = () => {
 	}
 
 	useEffect(() => {
-		dispatch(handleGetAllUser(currentPage, rowsPerPage))
+		console.log(
+			'🚀 ~ useEffect ~ urrentPage, rowsPerPage:',
+			currentPage,
+			rowsPerPage,
+		)
+
+		dispatch(handleGetAllUser({ page: currentPage, limit: rowsPerPage }))
 	}, [])
 
 	return (
