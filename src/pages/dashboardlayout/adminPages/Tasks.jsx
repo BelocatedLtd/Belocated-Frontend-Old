@@ -20,7 +20,7 @@ const Tasks = () => {
 	const [tasks, setTasks] = useState([])
 
 	const fetchTasks = async (page, rows) => {
-		const response = await getTasks(page, rows)
+		const response = await getTasks(page, rows, selectedStatus)
 
 		if (response) {
 			setTotalRows(response.totalTasks)
@@ -30,7 +30,7 @@ const Tasks = () => {
 
 	useEffect(() => {
 		fetchTasks(currentPage, rowsPerPage)
-	}, [])
+	}, [selectedStatus])
 
 	const handlePageChange = (page) => {
 		setCurrentPage(page)
@@ -42,18 +42,6 @@ const Tasks = () => {
 		fetchTasks(currentPage, rowsPerPage)
 	}
 
-	// useEffect(() => {
-	// 	console.log(selectedStatus)
-
-	// 	// Filter tasks based on selected status
-	// 	const filteredTasks =
-	// 		selectedStatus === 'All'
-	// 			? tasks
-	// 			: tasks.filter((task) => task.status === selectedStatus)
-
-	// 	setSortedTasks(filteredTasks)
-	// }, [tasks, selectedStatus])
-
 	const columns = [
 		{
 			name: 'Title',
@@ -63,30 +51,31 @@ const Tasks = () => {
 		{
 			name: 'Task Performer',
 			selector: (row) => {
-				const taskPerformer = users?.find(
-					(user) => user._id === row.taskPerformerId,
-				)
 				return (
-					<div className='font-bold text-[13px]'>{taskPerformer?.fullname}</div>
+					<div className='font-bold text-[13px]'>
+						{row?.taskPerformerId?.fullname}
+					</div>
 				)
 			},
 		},
 		{
 			name: 'Advertiser',
 			selector: (row) => {
-				const advertiser = users?.find((user) => user._id === row.advertiserId)
 				return (
-					<div className='font-bold text-[13px]'>{advertiser?.username}</div>
+					<div className='font-bold text-[13px]'>
+						{row?.advertiserId?.username}
+					</div>
 				)
 			},
 		},
 		{
 			name: 'Moderator',
 			selector: (row) => {
-				// const advert = adverts?.find((ad) => ad._id === row.advertId)
 				return (
 					<div className='font-bold text-[13px]'>
-						{row?.tasksModerator ? row?.tasksModerator : 'N/A'}
+						{row?.advertId?.tasksModerator
+							? row?.advertId?.tasksModerator
+							: 'N/A'}
 					</div>
 				)
 			},
