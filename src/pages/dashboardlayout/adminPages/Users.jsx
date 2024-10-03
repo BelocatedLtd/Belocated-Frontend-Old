@@ -62,19 +62,7 @@ const Users = () => {
 
 	const handleFilter = (e) => {
 		e.preventDefault()
-		const newData = users?.filter((row) => {
-			return (
-				row?.username
-					?.toLowerCase()
-					?.includes(e?.target?.value?.toLowerCase()) ||
-				row?.email?.toLowerCase()?.includes(e?.target?.value?.toLowerCase()) ||
-				row?.phone
-					?.toString()
-					?.toLowerCase()
-					?.includes(e?.target?.value?.toLowerCase())
-			)
-		})
-		setFilteredData(newData)
+		const newData = fetchUsers(currentPage, rowsPerPage, e?.target?.value)
 	}
 
 	const columns = [
@@ -164,8 +152,8 @@ const Users = () => {
 		fetchUsers(currentPage, rowsPerPage)
 	}
 
-	const fetchUsers = async (page, limit) => {
-		const response = await getAllUser(page, limit)
+	const fetchUsers = async (page, limit, search) => {
+		const response = await getAllUser(page, limit, search)
 
 		if (response) {
 			setTotalRows(response.totalUsers)

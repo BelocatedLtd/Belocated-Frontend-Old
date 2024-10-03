@@ -30,8 +30,6 @@ const AdvertSingle = () => {
 	const [isFree, setIsFree] = useState(ad?.isFree)
 	const [slides, setSlides] = useState([])
 
-	console.log('🚀 ~ AdvertSingle ~ ad:', { ad, adverter })
-
 	useEffect(() => {
 		async function getData() {
 			const resp = await getSingleAdvertById(id)
@@ -186,12 +184,7 @@ const AdvertSingle = () => {
 									</label>
 									<div className='flex flex-col gap-1'>
 										<div className='flex gap-1 items-baseline'>
-											<p>
-												{
-													tasks?.filter((task) => task?.advertId === ad?._id)
-														?.length
-												}
-											</p>
+											<p>{ad?.tasks}</p>
 											<small className='text-[9px] text-gray-700 font-bold'>
 												₦{ad?.earnPerTask}/task
 											</small>

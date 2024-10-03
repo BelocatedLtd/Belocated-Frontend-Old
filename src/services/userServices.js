@@ -15,12 +15,13 @@ const getAuthHeaders = () => {
 }
 
 //Get User
-export const getAllUser = async (page, limit) => {
-	console.log('🚀 ~ getAllUser ~ age, limit:', page, limit)
+export const getAllUser = async (page, limit, search) => {
 	const headers = getAuthHeaders()
 	try {
 		const response = await axios.get(
-			`${BACKEND_URL}/api/user/all?page=${page}&limit=${limit}`,
+			`${BACKEND_URL}/api/user/all?page=${page}&limit=${limit}&search=${
+				search || ''
+			}`,
 			headers,
 		)
 		return response.data
