@@ -149,8 +149,6 @@ const Tasks = () => {
 		navigate(`/admin/dashboard/task/${taskId}`)
 	}
 
-	console.log('🚀 ~ Tasks ~ tasks:', tasks)
-
 	return (
 		<div className='w-full mx-auto mt-[2rem]'>
 			<div className='flex items-center justify-between mb-[2rem] py-5'>

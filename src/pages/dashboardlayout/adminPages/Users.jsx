@@ -12,10 +12,7 @@ import {
 	selectActivities,
 } from '../../../redux/slices/feedSlice'
 import { selectTasks } from '../../../redux/slices/taskSlice'
-import {
-	handleGetAllUser,
-	selectIsLoading,
-} from '../../../redux/slices/userSlice'
+import { selectIsLoading } from '../../../redux/slices/userSlice'
 import { trashAllUserActivities } from '../../../services/feedService'
 import { getAllUser } from '../../../services/userServices'
 
@@ -177,13 +174,7 @@ const Users = () => {
 	}
 
 	useEffect(() => {
-		console.log(
-			'🚀 ~ useEffect ~ urrentPage, rowsPerPage:',
-			currentPage,
-			rowsPerPage,
-		)
-
-		dispatch(handleGetAllUser({ page: currentPage, limit: rowsPerPage }))
+		fetchUsers(currentPage, rowsPerPage)
 	}, [])
 
 	return (
@@ -209,21 +200,23 @@ const Users = () => {
 				</div>
 			</div>
 			<DataSearch placeholder='Search User...' handleFilter={handleFilter} />
-			<DataTable
-				columns={columns}
-				data={users}
-				progressPending={isLoading}
-				pagination
-				selectableRows
-				paginationServer
-				fixedHeader
-				customStyles={customStyles}
-				sortIcon={sortIcon}
-				handleButtonClick={handleButtonClick}
-				paginationTotalRows={totalRows}
-				onChangePage={handlePageChange}
-				onChangeRowsPerPage={handleChangeRowsPerPage}
-			/>
+			{users.length > 0 && (
+				<DataTable
+					columns={columns}
+					data={users}
+					progressPending={isLoading}
+					pagination
+					selectableRows
+					paginationServer
+					fixedHeader
+					customStyles={customStyles}
+					sortIcon={sortIcon}
+					handleButtonClick={handleButtonClick}
+					paginationTotalRows={totalRows}
+					onChangePage={handlePageChange}
+					onChangeRowsPerPage={handleChangeRowsPerPage}
+				/>
+			)}
 		</div>
 	)
 }

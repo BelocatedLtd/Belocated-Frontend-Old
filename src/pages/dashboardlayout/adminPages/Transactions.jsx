@@ -86,7 +86,7 @@ const Transactions = () => {
 	}
 
 	useEffect(() => {
-		fetchTransactions
+		fetchTransactions(currentPage, rowsPerPage)
 	}, [])
 
 	return (

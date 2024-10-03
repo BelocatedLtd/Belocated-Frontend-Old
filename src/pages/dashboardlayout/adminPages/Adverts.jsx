@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component'
-import { toast } from 'react-hot-toast'
 import { MdArrowDownward, MdOutlineKeyboardArrowLeft } from 'react-icons/md'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -122,24 +121,18 @@ const Adverts = () => {
 	}
 
 	const handlePageChange = (page) => {
-		console.log('🚀 ~ handlePageChange ~ page:', page)
 		setCurrentPage(page)
 		fetchAdverts(page, rowsPerPage)
 	}
 
 	const handleChangeRowsPerPage = (rowsPerPage) => {
-		console.log('🚀 ~ handlePageChange ~ rowsPerPage:', rowsPerPage)
 		setRowsPerPage(rowsPerPage)
 		fetchAdverts(currentPage, rowsPerPage)
 	}
 
 	useEffect(() => {
-		fetchAdverts(currentPage)
-
-		if (isError) {
-			toast.error('Failed to fetch adverts')
-		}
-	}, [isError, dispatch, currentPage])
+		fetchAdverts(currentPage, rowsPerPage)
+	}, [])
 
 	const handleButtonClick = (e, advertId) => {
 		e.preventDefault()
