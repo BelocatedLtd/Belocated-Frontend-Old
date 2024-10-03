@@ -1,48 +1,48 @@
 import React, { useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component'
-import { toast } from 'react-hot-toast'
 import { MdArrowDownward, MdOutlineKeyboardArrowLeft } from 'react-icons/md'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
-import {
-	handleGetTasks,
-	selectIsError,
-	selectIsLoading,
-	selectTasks,
-} from '../../../redux/slices/taskSlice'
+import { selectIsLoading, selectTasks } from '../../../redux/slices/taskSlice'
 import { selectUsers } from '../../../redux/slices/userSlice'
+import { getTasksByUserId } from '../../../services/taskServices'
 
 const AdsTasksList = () => {
 	const { id } = useParams()
-	console.log('🚀 ~ AdsTasksList ~ id:', id)
 	const tasks = useSelector(selectTasks)
 	const users = useSelector(selectUsers)
 	const navigate = useNavigate()
-	const dispatch = useDispatch()
 	const isLoading = useSelector(selectIsLoading)
-	const isError = useSelector(selectIsError)
 	const sortIcon = <MdArrowDownward />
 	const [taskAdList, seTaskAdList] = useState()
-	const [sortedTasks, setSortedTasks] = useState()
 	const [selectedStatus, setSelectedStatus] = useState('All')
 
-	useEffect(() => {
-		const adsTaskList = tasks?.filter((task) => task.advertId === id)
-		seTaskAdList(adsTaskList)
-	}, [tasks])
+	const [currentPage, setCurrentPage] = useState(1)
+	const [rowsPerPage, setRowsPerPage] = useState(10)
+	const [totalRows, setTotalRows] = useState(0)
+
+	const fetchTasksByUserId = async () => {
+		const resp = await getTasksByUserId({
+			userId: id,
+			page: currentPage,
+			limit: rowsPerPage,
+			status: selectedStatus,
+		})
+		seTaskAdList(resp.tasks)
+		setTotalRows(resp.totalTasks)
+	}
 
 	useEffect(() => {
-		console.log(selectedStatus)
-		//const filteredTasks = tasks?.filter(task => task?.status !== 'Awaiting Submission')
+		fetchTasksByUserId()
+	}, [selectedStatus, currentPage, rowsPerPage])
 
-		// Filter tasks based on selected status
-		const filteredTasks =
-			selectedStatus === 'All'
-				? tasks
-				: taskAdList.filter((task) => task.status === selectedStatus)
+	const handlePageChange = (page) => {
+		setCurrentPage(page)
+	}
 
-		setSortedTasks(filteredTasks)
-	}, [tasks, selectedStatus])
+	const handleChangeRowsPerPage = (limit) => {
+		setRowsPerPage(limit)
+	}
 
 	const columns = [
 		{
@@ -53,20 +53,18 @@ const AdsTasksList = () => {
 		{
 			name: 'Task Performer',
 			selector: (row) => {
-				const taskPerformer = users?.find(
-					(user) => user._id === row.taskPerformerId,
-				)
 				return (
-					<div className='font-bold text-[13px]'>{taskPerformer?.fullname}</div>
+					<div className='font-bold text-[13px]'>{row?.taskPerformerId?.fullname}</div>
 				)
 			},
 		},
 		{
 			name: 'Advertiser',
 			selector: (row) => {
-				const advertiser = users?.find((user) => user._id === row.advertiserId)
 				return (
-					<div className='font-bold text-[13px]'>{advertiser?.fullname}</div>
+					<div className='font-bold text-[13px]'>
+						{row?.advertiserId?.fullname}
+					</div>
 				)
 			},
 		},
@@ -128,14 +126,6 @@ const AdsTasksList = () => {
 		navigate(`/admin/dashboard/task/${taskId}`)
 	}
 
-	useEffect(() => {
-		dispatch(handleGetTasks())
-
-		if (isError) {
-			toast.error('failed to fetch tasks')
-		}
-	}, [isError, dispatch])
-
 	return (
 		<div className='w-full mx-auto mt-[2rem]'>
 			<div className='flex items-center justify-between mb-[2rem] py-5'>
@@ -166,9 +156,13 @@ const AdsTasksList = () => {
 
 			<DataTable
 				columns={columns}
-				data={sortedTasks}
+				data={taskAdList}
 				progressPending={isLoading}
 				pagination
+				paginationServer
+				paginationTotalRows={totalRows}
+				onChangePage={handlePageChange}
+				onChangeRowsPerPage={handleChangeRowsPerPage}
 				selectableRows
 				fixedHeader
 				customStyles={customStyles}

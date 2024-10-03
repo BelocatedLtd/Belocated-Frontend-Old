@@ -191,7 +191,9 @@ const AdvertSingle = () => {
 										</div>
 										<small
 											onClick={() =>
-												navigate(`/admin/dashboard/advert/tasks/${ad?._id}`)
+												navigate(
+													`/admin/dashboard/advert/tasks/${adverter?._id}`,
+												)
 											}
 											className='text-secondary text-[13px]'>
 											View Tasks

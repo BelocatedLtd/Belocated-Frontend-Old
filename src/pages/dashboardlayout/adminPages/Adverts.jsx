@@ -14,8 +14,8 @@ const Adverts = () => {
 
 	const [currentPage, setCurrentPage] = useState(1)
 	const [totalRows, setTotalRows] = useState(0)
-	const [rowsPerPage, setRowsPerPage] = useState(10) // Adjust as needed
-	const [adverts, setAdverts] = useState() // Adjust as needed
+	const [rowsPerPage, setRowsPerPage] = useState(10)
+	const [adverts, setAdverts] = useState()
 
 	const sortIcon = <MdArrowDownward />
 
