@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { selectIsLoading, selectTasks } from '../../../redux/slices/taskSlice'
 import { selectUsers } from '../../../redux/slices/userSlice'
-import { getTasksByUserId } from '../../../services/taskServices'
+import { getTasksByAdvertId } from '../../../services/taskServices'
 
 const AdsTasksList = () => {
 	const { id } = useParams()
@@ -21,9 +21,9 @@ const AdsTasksList = () => {
 	const [rowsPerPage, setRowsPerPage] = useState(10)
 	const [totalRows, setTotalRows] = useState(0)
 
-	const fetchTasksByUserId = async () => {
-		const resp = await getTasksByUserId({
-			userId: id,
+	const fetchTasksByAdvertId = async () => {
+		const resp = await getTasksByAdvertId({
+			advertId: id,
 			page: currentPage,
 			limit: rowsPerPage,
 			status: selectedStatus,
@@ -33,7 +33,7 @@ const AdsTasksList = () => {
 	}
 
 	useEffect(() => {
-		fetchTasksByUserId()
+		fetchTasksByAdvertId()
 	}, [selectedStatus, currentPage, rowsPerPage])
 
 	const handlePageChange = (page) => {
@@ -54,7 +54,9 @@ const AdsTasksList = () => {
 			name: 'Task Performer',
 			selector: (row) => {
 				return (
-					<div className='font-bold text-[13px]'>{row?.taskPerformerId?.fullname}</div>
+					<div className='font-bold text-[13px]'>
+						{row?.taskPerformerId?.fullname}
+					</div>
 				)
 			},
 		},

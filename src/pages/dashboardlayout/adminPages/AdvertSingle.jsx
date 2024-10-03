@@ -140,7 +140,7 @@ const AdvertSingle = () => {
 								onClick={() =>
 									navigate(`/admin/dashboard/user/${adverter?._id}`)
 								}
-								className='px-4 py-2 bg-secondary text-primary hover:bg-gray-900 mt-2'>
+								className='px-4 py-2 bg-secondary text-primary cursor-pointer hover:bg-gray-900 mt-2'>
 								View Advertiser
 							</button>
 
@@ -191,11 +191,9 @@ const AdvertSingle = () => {
 										</div>
 										<small
 											onClick={() =>
-												navigate(
-													`/admin/dashboard/advert/tasks/${adverter?._id}`,
-												)
+												navigate(`/admin/dashboard/advert/tasks/${ad?._id}`)
 											}
-											className='text-secondary text-[13px]'>
+											className='text-secondary cursor-pointer text-[13px]'>
 											View Tasks
 										</small>
 									</div>
