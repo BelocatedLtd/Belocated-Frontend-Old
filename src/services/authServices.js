@@ -140,21 +140,24 @@ export const updateUserAccountDetails = async (verificationData) => {
          toast.error(message)
     }
 }
-
 //Update user account details
 export const updateUserBankAccountDetails = async (verificationData) => {
     const headers = getAuthHeaders();
     try {
-        const response = await axios.patch(`${BACKEND_URL}/api/user/update/bankaccountdetails`, verificationData,{
-            ...headers,
-            withCredentials:true
-        }) 
-         return response.data
+        const response = await axios.patch(
+            `${BACKEND_URL}/api/user/update/bankaccountdetails`, 
+            verificationData, {
+                ...headers,
+                withCredentials: true, // Include credentials in this request
+            }
+        );
+        return response.data;
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-         toast.error(message)
+        toast.error(message);
     }
 }
+
 
 
 //Verify User Password
