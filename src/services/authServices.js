@@ -55,7 +55,10 @@ export const createNewUserRef = async(formData) => {
 //Create New User From Ref Challenge
 export const createNewUserRefChal = async(formData) => {
     try {
-         const response = await axios.post(`${BACKEND_URL}/api/user/refchalregister`, formData )
+         const response = await axios.post(`${BACKEND_URL}/api/user/refchalregister`, formData, {
+            
+           withCredentials: true, // Include credentials in this request
+       });
          if (response.statusText === "Created") {
           }
         //   console.log(response.data)
@@ -71,7 +74,10 @@ export const createNewUserRefChal = async(formData) => {
 export const loginUser = async(formData) => {
     const headers =getAuthHeaders();
     try {
-         const response = await axios.post(`${BACKEND_URL}/api/user/login`, formData, headers)
+         const response = await axios.post(`${BACKEND_URL}/api/user/login`, formData, {
+            ...headers,
+           withCredentials: true, // Include credentials in this request
+       });
         return response.data
      } catch (error) {
          const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
@@ -113,7 +119,10 @@ export const getUser = async() => {
 //Update user details
 export const updateUser = async (formData) => {
     const headers = getAuthHeaders();
-    const response = await axios.patch(`${BACKEND_URL}/api/user/update`, formData, headers) 
+    const response = await axios.patch(`${BACKEND_URL}/api/user/update`, formData,{
+            ...headers,
+           withCredentials: true, // Include credentials in this request
+       });
     return response.data
 }
 
@@ -121,7 +130,10 @@ export const updateUser = async (formData) => {
 export const updateUserAccountDetails = async (verificationData) => {
     const headers = getAuthHeaders();
     try {
-        const response = await axios.patch(`${BACKEND_URL}/api/user/update/accountdetails`, verificationData, headers) 
+        const response = await axios.patch(`${BACKEND_URL}/api/user/update/accountdetails`, verificationData, {
+            ...headers,
+            withCredentials:true
+        }) 
          return response.data
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
@@ -133,7 +145,10 @@ export const updateUserAccountDetails = async (verificationData) => {
 export const updateUserBankAccountDetails = async (verificationData) => {
     const headers = getAuthHeaders();
     try {
-        const response = await axios.patch(`${BACKEND_URL}/api/user/update/bankaccountdetails`, verificationData, headers) 
+        const response = await axios.patch(`${BACKEND_URL}/api/user/update/bankaccountdetails`, verificationData,{
+            ...headers,
+            withCredentials:true
+        }) 
          return response.data
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
@@ -170,7 +185,10 @@ export const verifyOldUserPassword = async(data) => {
 //Change Password
 export const changeUserPassword = async(data) => {
     try {
-         const response = await axios.post(`${BACKEND_URL}/api/user/changePassword`, data)
+         const response = await axios.post(`${BACKEND_URL}/api/user/changePassword`, data,{
+            ...headers,
+            withCredentials:true
+        }) 
         return response.data
      } catch (error) {
          const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
@@ -182,7 +200,10 @@ export const changeUserPassword = async(data) => {
 //Reset forgotten password
 export const forgottenPasswordChange = async(data) => {
     try {
-         const response = await axios.post(`${BACKEND_URL}/api/user/forgotpassword`, data)
+         const response = await axios.post(`${BACKEND_URL}/api/user/forgotpassword`, data,{
+            ...headers,
+            withCredentials:true
+        }) 
         return response.data
      } catch (error) {
          const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
@@ -237,7 +258,10 @@ export const confirmEmailOTP = async(OTP) => {
 //Send Phone OTP
 export const handlesendingPhoneOTP = async(accountDetailsData) => {
     try {
-        const response = await axios.post(`${BACKEND_URL}/api/user/verifyphone`, accountDetailsData)
+        const response = await axios.post(`${BACKEND_URL}/api/user/verifyphone`, accountDetailsData,{
+            ...headers,
+            withCredentials:true
+        }) 
             return response.data
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
