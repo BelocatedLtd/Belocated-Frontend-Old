@@ -153,10 +153,24 @@ export const updateUserBankAccountDetails = async (verificationData) => {
         );
         return response.data;
     } catch (error) {
-        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+        let message;
+        
+        // Check if error response exists and has a message
+        if (error.response) {
+            // If your server response has a custom message
+            message = error.response.data.message || "An unexpected error occurred.";
+        } else if (error.request) {
+            // The request was made but no response was received
+            message = "No response received from the server.";
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            message = error.message || "An error occurred while processing your request.";
+        }
+
         toast.error(message);
     }
 }
+
 
 
 
