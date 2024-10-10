@@ -19,11 +19,15 @@ const getAuthHeaders = () => {
 //Create New User
 export const createNewUser = async(formData) => {
     try {
-         const response = await axios.post(`${BACKEND_URL}/api/user/register`, formData )
-         if (response.statusText === "Created") {
-          }
-        return response.data 
-     } catch (error) {
+        const response = await axios.post(`${BACKEND_URL}/api/user/register`, formData, {
+            
+           withCredentials: true, // Include credentials in this request
+       }
+       );
+        if (response.statusText === "Created") {
+         }
+       return response.data 
+    }catch (error) {
          const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
          toast.error(message)
      }
@@ -33,11 +37,15 @@ export const createNewUser = async(formData) => {
 //Create New User Ref
 export const createNewUserRef = async(formData) => {
     try {
-         const response = await axios.post(`${BACKEND_URL}/api/user/refregister`, formData )
-         if (response.statusText === "Created") {
-          }
-        return response.data 
-     } catch (error) {
+        const response = await axios.post(`${BACKEND_URL}/api/user/refregister`, formData, {
+          
+           withCredentials: true, // Include credentials in this request
+       }
+   );
+        if (response.statusText === "Created") {
+         }
+       return response.data 
+    } catch (error) {
          const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
          toast.error(message)
      }
@@ -61,8 +69,9 @@ export const createNewUserRefChal = async(formData) => {
 
 //Login User
 export const loginUser = async(formData) => {
+    const headers =getAuthHeaders();
     try {
-         const response = await axios.post(`${BACKEND_URL}/api/user/login`, formData)
+         const response = await axios.post(`${BACKEND_URL}/api/user/login`, formData, headers)
         return response.data
      } catch (error) {
          const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
@@ -75,9 +84,13 @@ export const loginUser = async(formData) => {
 export const getLoginStatus = async() => {
     const headers = getAuthHeaders();
     try {
-         const response = await axios.get(`${BACKEND_URL}/api/user/loggedin`, headers)
-        return response.data
-     } catch (error) {
+        const response = await axios.get(`${BACKEND_URL}/api/user/loggedin`, {
+           ...headers,
+           withCredentials: true, // Include credentials in this request
+       }
+   );
+       return response.data
+    } catch (error) {
          const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
          toast.error(message)
      }
