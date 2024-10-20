@@ -34,7 +34,7 @@ const TaskSingle = () => {
 
 	useEffect(() => {
 		const taskDetails = tasks?.find((task) => task?._id.toString() === id)
-		console.log(taskDetails)
+		console.log('taskDetails',taskDetails)
 		const taskPerformerDetails = users?.find(
 			(user) => user._id.toString() === taskDetails?.taskPerformerId,
 		)
@@ -48,7 +48,7 @@ const TaskSingle = () => {
 		setTaskPerformer(taskPerformerDetails)
 		setAdvertiser(advertiserDetails)
 		setAd(advert)
-	}, [])
+	}, [tasks, users, adverts, id]);
 
 	//console.log(ad)
 
