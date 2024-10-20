@@ -33,6 +33,7 @@ const TaskSingle = () => {
 	const [taskProof, setTaskProof] = useState()
 
 	useEffect(() => {
+		console.log('id is',id);
 		const taskDetails = tasks?.find((task) => task?._id.toString() === id)
 		console.log('taskDetails',taskDetails)
 		const taskPerformerDetails = users?.find(
