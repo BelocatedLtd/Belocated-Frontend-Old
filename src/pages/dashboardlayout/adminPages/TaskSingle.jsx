@@ -33,9 +33,10 @@ const TaskSingle = () => {
 	const [taskProof, setTaskProof] = useState()
 
 	useEffect(() => {
+		console.log('id is ', id)
 		if (tasks?.length && users?.length && adverts?.length) {
 
-			console.log('id is ', id)
+			
 		  const taskDetails = tasks?.find((task) => task?._id === id);
 		  console.log('taskDetail is',taskDetails)
 		  const taskPerformerDetails = users?.find(
