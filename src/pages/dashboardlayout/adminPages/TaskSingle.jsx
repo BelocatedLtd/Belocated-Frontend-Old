@@ -33,14 +33,14 @@ const TaskSingle = () => {
 	const [taskProof, setTaskProof] = useState()
 
 	useEffect(() => {
-		const taskDetails = tasks?.find((task) => task?._id === id)
+		const taskDetails = tasks?.find((task) => task?._id?.toString() === id)
 		const taskPerformerDetails = users?.find(
-			(user) => user._id === taskDetails?.taskPerformerId,
+			(user) => user._id?.toString() === taskDetails?.taskPerformerId,
 		)
 		const advertiserDetails = users?.find(
-			(user) => user._id === taskDetails?.advertiserId,
+			(user) => user._id?.toString() === taskDetails?.advertiserId,
 		)
-		const advert = adverts?.find((ad) => ad._id === taskDetails?.advertId)
+		const advert = adverts?.find((ad) => ad._id?.toString() === taskDetails?.advertId)
 
 		settask(taskDetails)
 		setSlides(taskDetails?.proofOfWorkMediaURL)
