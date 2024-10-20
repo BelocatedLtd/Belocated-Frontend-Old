@@ -34,6 +34,7 @@ const TaskSingle = () => {
 
 	useEffect(() => {
 		const taskDetails = tasks?.find((task) => task?._id?.toString() === id)
+		console.log(taskDetails)
 		const taskPerformerDetails = users?.find(
 			(user) => user._id?.toString() === taskDetails?.taskPerformerId,
 		)
