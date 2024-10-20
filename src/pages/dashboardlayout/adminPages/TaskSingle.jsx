@@ -33,23 +33,26 @@ const TaskSingle = () => {
 	const [taskProof, setTaskProof] = useState()
 
 	useEffect(() => {
-		console.log('id is',id);
-		const taskDetails = tasks?.find((task) => task?._id.toString() === id)
-		console.log('taskDetails',taskDetails)
-		const taskPerformerDetails = users?.find(
-			(user) => user._id.toString() === taskDetails?.taskPerformerId,
-		)
-		const advertiserDetails = users?.find(
-			(user) => user._id.toString() === taskDetails?.advertiserId,
-		)
-		const advert = adverts?.find((ad) => ad._id.toString() === taskDetails?.advertId)
+		if (tasks?.length && users?.length && adverts?.length) {
 
-		settask(taskDetails)
-		setSlides(taskDetails?.proofOfWorkMediaURL)
-		setTaskPerformer(taskPerformerDetails)
-		setAdvertiser(advertiserDetails)
-		setAd(advert)
-	}, [tasks, users, adverts, id]);
+			console.log('id is ', id)
+		  const taskDetails = tasks?.find((task) => task?._id === id);
+		  console.log('taskDetail is',taskDetails)
+		  const taskPerformerDetails = users?.find(
+			(user) => user._id === taskDetails?.taskPerformerId
+		  );
+		  const advertiserDetails = users?.find(
+			(user) => user._id === taskDetails?.advertiserId
+		  );
+		  const advert = adverts?.find((ad) => ad._id === taskDetails?.advertId);
+	  
+		  settask(taskDetails);
+		  setSlides(taskDetails?.proofOfWorkMediaURL || []);
+		  setTaskPerformer(taskPerformerDetails);
+		  setAdvertiser(advertiserDetails);
+		  setAd(advert);
+		}
+	  }, [tasks, users, adverts, id]);
 
 	//console.log(ad)
 
