@@ -123,3 +123,13 @@ export const deleteTask = async (taskId) => {
 		toast.error(message)
 	}
 }
+
+//get task by id
+export const getTaskById = async (id) => {
+	const headers = getAuthHeaders()
+	const response = await axios.get(
+		`${BACKEND_URL}/api/task/${id}`,
+		headers,
+	)
+	return response.data
+}
