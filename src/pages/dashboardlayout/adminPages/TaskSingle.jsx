@@ -14,44 +14,76 @@ import TaskProofModal from '../../../components/ui/TaskProofModal'
 import { selectAllAdverts } from '../../../redux/slices/advertSlice'
 import { selectTasks } from '../../../redux/slices/taskSlice'
 import { selectUsers } from '../../../redux/slices/userSlice'
+import { getTaskById } from '../../../services/taskServices'
 
 const TaskSingle = () => {
 	const { id } = useParams()
 	const tasks = useSelector(selectTasks)
 	const users = useSelector(selectUsers)
 	const adverts = useSelector(selectAllAdverts)
-	const [task, settask] = useState()
 	const navigate = useNavigate()
 	const [taskPerformer, setTaskPerformer] = useState()
 	const [advertiser, setAdvertiser] = useState()
-	const [isLoading, setIsLoading] = useState(false)
+	const [isLoading, setIsLoading] = useState(true)
 	const [modalBtn, setModalBtn] = useState(false)
 	const [delBtn, setDelBtn] = useState(false)
 	const [slides, setSlides] = useState([])
 	const [ad, setAd] = useState()
 	const [toggleTaskProofModal, setToggleTaskProofModal] = useState(false)
 	const [taskProof, setTaskProof] = useState()
-
+	const [task, setTask] = useState(null);
+	
+	
+	
 	useEffect(() => {
-		console.log("useEffect triggered with:", { tasks, users, adverts, id });
-		if (tasks?.length && users?.length && adverts?.length) {
-		  const taskDetails = tasks?.find((task) => task?._id === id);
-		  console.log('taskDetail is',taskDetails)
-		  const taskPerformerDetails = users?.find(
-			(user) => user._id === taskDetails?.taskPerformerId
-		  );
-		  const advertiserDetails = users?.find(
-			(user) => user._id === taskDetails?.advertiserId
-		  );
-		  const advert = adverts?.find((ad) => ad._id === taskDetails?.advertId);
+		const fetchTask = async () => {
+		  try {
+			const taskDetails = await getTaskById(id); 
+			console.log(taskDetails);
+			setTask(taskDetails);
+			setSlides(taskDetails.proofOfWorkMediaURL || []);
+			setTaskPerformer(taskDetails.taskPerformer); 
+			setAdvertiser(taskDetails.advertiser); 
+			setAd(taskDetails.advert); 
+		  } catch (error) {
+			toast.error('Error fetching task: ' + error.message);
+			navigate('/tasks'); 
+		  } finally {
+			setIsLoading(false); 
+		  }
+		};
+	
+		fetchTask();
+	  }, [id, navigate]);
+	
+	  if (isLoading) {
+		return <Loader />; // Show loader while fetching
+	  }
+	
+	  if (!task) {
+		return <div>No task found.</div>; // Handle case when task is not found
+	  }
+
+	// useEffect(() => {
+	// 	console.log("useEffect triggered with:", { tasks, users, adverts, id });
+	// 	if (tasks?.length && users?.length && adverts?.length) {
+	// 	  const taskDetails = tasks?.find((task) => task?._id === id);
+	// 	  console.log('taskDetail is',taskDetails)
+	// 	  const taskPerformerDetails = users?.find(
+	// 		(user) => user._id === taskDetails?.taskPerformerId
+	// 	  );
+	// 	  const advertiserDetails = users?.find(
+	// 		(user) => user._id === taskDetails?.advertiserId
+	// 	  );
+	// 	  const advert = adverts?.find((ad) => ad._id === taskDetails?.advertId);
 	  
-		  settask(taskDetails);
-		  setSlides(taskDetails?.proofOfWorkMediaURL || []);
-		  setTaskPerformer(taskPerformerDetails);
-		  setAdvertiser(advertiserDetails);
-		  setAd(advert);
-		}
-	  }, [tasks, users, adverts, id]);
+	// 	  settask(taskDetails);
+	// 	  setSlides(taskDetails?.proofOfWorkMediaURL || []);
+	// 	  setTaskPerformer(taskPerformerDetails);
+	// 	  setAdvertiser(advertiserDetails);
+	// 	  setAd(advert);
+	// 	}
+	//   }, [tasks, users, adverts, id]);
 
 	//console.log(ad)
 
