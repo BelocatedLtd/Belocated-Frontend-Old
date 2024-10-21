@@ -128,7 +128,7 @@ export const deleteTask = async (taskId) => {
 export const getTaskById = async (id) => {
 	const headers = getAuthHeaders()
 	const response = await axios.get(
-		`${BACKEND_URL}/api/tasks/task/${id}`,
+		`${BACKEND_URL}/api/tasks/tasking/${id}`,
 		headers,
 	)
 	return response.data
