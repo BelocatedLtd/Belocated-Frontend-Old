@@ -40,11 +40,11 @@ const TaskSingle = () => {
 		  try {
 			const taskDetails = await getTaskById(id); 
 			console.log(taskDetails);
-			// setTask(taskDetails);
-			// setSlides(taskDetails.proofOfWorkMediaURL || []);
-			// setTaskPerformer(taskDetails.taskPerformer); 
-			// setAdvertiser(taskDetails.advertiser); 
-			// setAd(taskDetails.advert); 
+			 setTask(taskDetails);
+			setSlides(taskDetails.proofOfWorkMediaURL || []);
+			setTaskPerformer(taskDetails.taskPerformer); 
+			setAdvertiser(taskDetails.advertiser); 
+			 setAd(taskDetails.advert); 
 		  } catch (error) {
 			toast.error('Error fetching task: ' + error.message);
 			// navigate('/tasks'); 
