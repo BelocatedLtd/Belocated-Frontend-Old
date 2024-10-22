@@ -12,7 +12,7 @@ import TaskModal from '../../../components/adminComponents/TaskModal'
 import Loader from '../../../components/loader/Loader'
 import TaskProofModal from '../../../components/ui/TaskProofModal'
 import { selectAllAdverts } from '../../../redux/slices/advertSlice'
-import { selectTasks } from '../../../redux/slices/taskSlice'
+import { selectTasks, selectIsLoading } from '../../../redux/slices/taskSlice'
 import { selectUsers } from '../../../redux/slices/userSlice'
 import { getTaskById } from '../../../services/taskServices'
 
@@ -32,7 +32,7 @@ const TaskSingle = () => {
 	const [toggleTaskProofModal, setToggleTaskProofModal] = useState(false)
 	const [taskProof, setTaskProof] = useState()
 	const [task, setTask] = useState(null);
-	
+	setIsLoading(selectIsLoading)
 	
 	
 	useEffect(() => {
@@ -44,6 +44,7 @@ const TaskSingle = () => {
       console.log(taskDetails);
 
       if (isMounted) {
+	      setIsLoading(fasle)
         setTask(taskDetails);
         setSlides(taskDetails.proofOfWorkMediaURL || []);
         setTaskPerformer(taskDetails.taskPerformer);
@@ -51,12 +52,20 @@ const TaskSingle = () => {
         setAd(taskDetails.advert);
       }
     } catch (error) {
+	    setIsLoading(true)
       console.error('Failed to fetch task:', error);
       toast.error('Unable to load task details');
+	    setIsLoading(false)
     }
   }
+	 fetchTask();
+		return () => {
+    isMounted = false;
+			setIsLoading(false)// Cleanup to avoid memory leaks
+  };
+},[id]);
 
- fetchTask();
+
 	const handleModal = () => {
 		if (ad?.status === 'Completed') {
 		  toast.error('Ad unit is completed and ad is no more running')
@@ -98,10 +107,7 @@ const TaskSingle = () => {
 
  
 setIsLoading(false)
-  return () => {
-    isMounted = false; // Cleanup to avoid memory leaks
-  };
-}, [id]);
+
 	return (
 		<div className='w-full h-fit'>
 			{modalBtn && (
