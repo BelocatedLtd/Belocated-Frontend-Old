@@ -36,26 +36,32 @@ const TaskSingle = () => {
 	
 	
 	useEffect(() => {
-		async function fetchTask() {
-		  
-			const taskDetails = await getTaskById(id); 
-			console.log(taskDetails);
-			 setTask(taskDetails);
-			setSlides(taskDetails.proofOfWorkMediaURL || []);
-			setTaskPerformer(taskDetails.taskPerformer); 
-			setAdvertiser(taskDetails.advertiser); 
-			 setAd(taskDetails.advert); 
-		
-		};
-	
-		fetchTask();
-	  }, []);
-	
-	
-	
-	
+  let isMounted = true; // To avoid state updates on unmounted components
 
-	
+  async function fetchTask() {
+    try {
+      const taskDetails = await getTaskById(id);
+      console.log(taskDetails);
+
+      if (isMounted) {
+        setTask(taskDetails);
+        setSlides(taskDetails.proofOfWorkMediaURL || []);
+        setTaskPerformer(taskDetails.taskPerformer);
+        setAdvertiser(taskDetails.advertiser);
+        setAd(taskDetails.advert);
+      }
+    } catch (error) {
+      console.error('Failed to fetch task:', error);
+      toast.error('Unable to load task details');
+    }
+  }
+
+  fetchTask();
+
+  return () => {
+    isMounted = false; // Cleanup to avoid memory leaks
+  };
+}, [id]);
 
 	const handleModal = () => {
 		if (ad?.status === 'Completed') {
