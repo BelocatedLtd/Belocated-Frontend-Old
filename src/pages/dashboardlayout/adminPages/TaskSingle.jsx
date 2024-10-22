@@ -17,71 +17,114 @@ import { selectUsers } from '../../../redux/slices/userSlice'
 import { getTaskById } from '../../../services/taskServices'
 
 const TaskSingle = () => {
-  const { id } = useParams();
-  const tasks = useSelector(selectTasks);
-  const users = useSelector(selectUsers);
-  const adverts = useSelector(selectAllAdverts);
-  const navigate = useNavigate();
+	const { id } = useParams()
+	const tasks = useSelector(selectTasks)
+	const users = useSelector(selectUsers)
+	const adverts = useSelector(selectAllAdverts)
+	const navigate = useNavigate()
+	const [taskPerformer, setTaskPerformer] = useState()
+	const [advertiser, setAdvertiser] = useState()
+	const [isLoading, setIsLoading] = useState(true)
+	const [modalBtn, setModalBtn] = useState(false)
+	const [delBtn, setDelBtn] = useState(false)
+	const [slides, setSlides] = useState([])
+	const [ad, setAd] = useState()
+	const [toggleTaskProofModal, setToggleTaskProofModal] = useState(false)
+	const [taskProof, setTaskProof] = useState()
+	const [task, setTask] = useState(null);
+	
+	
+	
+	useEffect(() => {
+		const fetchTask = async () => {
+		  try {
+			const taskDetails = await getTaskById(id); 
+			console.log(taskDetails);
+			setTask(taskDetails);
+			setSlides(taskDetails.proofOfWorkMediaURL || []);
+			setTaskPerformer(taskDetails.taskPerformer); 
+			setAdvertiser(taskDetails.advertiser); 
+			setAd(taskDetails.advert); 
+		  } catch (error) {
+			toast.error('Error fetching task: ' + error.message);
+		  } finally {
+			setIsLoading(false); 
+		  }
+		};
+	
+		fetchTask();
+	  }, [id, navigate]);
+	
+	  if (!isLoading) {
+		return <Loader />; // Show loader while fetching
+	  }
+	
+	  if (!task) {
+		return <div>No task found.</div>; // Handle case when task is not found
+	  }
 
-  const [taskPerformer, setTaskPerformer] = useState(null);
-  const [advertiser, setAdvertiser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [modalBtn, setModalBtn] = useState(false);
-  const [delBtn, setDelBtn] = useState(false);
-  const [slides, setSlides] = useState([]);
-  const [ad, setAd] = useState(null);
-  const [toggleTaskProofModal, setToggleTaskProofModal] = useState(false);
-  const [taskProof, setTaskProof] = useState(null);
-  const [task, setTask] = useState(null);
+	// useEffect(() => {
+	// 	console.log("useEffect triggered with:", { tasks, users, adverts, id });
+	// 	if (tasks?.length && users?.length && adverts?.length) {
+	// 	  const taskDetails = tasks?.find((task) => task?._id === id);
+	// 	  console.log('taskDetail is',taskDetails)
+	// 	  const taskPerformerDetails = users?.find(
+	// 		(user) => user._id === taskDetails?.taskPerformerId
+	// 	  );
+	// 	  const advertiserDetails = users?.find(
+	// 		(user) => user._id === taskDetails?.advertiserId
+	// 	  );
+	// 	  const advert = adverts?.find((ad) => ad._id === taskDetails?.advertId);
+	  
+	// 	  settask(taskDetails);
+	// 	  setSlides(taskDetails?.proofOfWorkMediaURL || []);
+	// 	  setTaskPerformer(taskPerformerDetails);
+	// 	  setAdvertiser(advertiserDetails);
+	// 	  setAd(advert);
+	// 	}
+	//   }, [tasks, users, adverts, id]);
 
-  useEffect(() => {
-    const fetchTask = async () => {
-      try {
-        setIsLoading(true); // Ensure loader shows correctly
-        const taskDetails = await getTaskById(id);
+	//console.log(ad)
 
-        if (!taskDetails) throw new Error('Task not found.');
+	const handleModal = () => {
+		// if (ad?.status === 'Completed') {
+		//   toast.error('Ad unit is completed and ad is no more running')
+		//   return
+		// }
 
-        setTask(taskDetails);
-        setSlides(taskDetails.proofOfWorkMediaURL || []);
-        setTaskPerformer(taskDetails.taskPerformer);
-        setAdvertiser(taskDetails.advertiser);
-        setAd(taskDetails.advert);
-      } catch (error) {
-        toast.error(`Error fetching task: ${error.message}`);
-        navigate('/tasks'); // Redirect if error occurs
-      } finally {
-        setIsLoading(false); // Stop loader after fetch
-      }
-    };
+		if (ad?.status === 'Pending Payment') {
+			toast.error('Task is yet to start running')
+			return
+		}
 
-    fetchTask();
-  }, [id]);
+		if (task?.status === 'Awaiting Submission') {
+			toast.error('Task has not being performed yet')
+			return
+		}
 
-  const handleModal = () => {
-    if (ad?.status === 'Pending Payment') {
-      return toast.error('Task is yet to start running.');
-    }
-    if (task?.status === 'Awaiting Submission') {
-      return toast.error('Task has not been performed yet.');
-    }
-    setModalBtn(!modalBtn);
-  };
+		setModalBtn(!modalBtn)
+	}
 
-  const handleDelete = (e) => {
-    e.preventDefault();
-    setDelBtn(!delBtn);
-  };
+	const handleDelete = (e) => {
+		e.preventDefault()
+		setDelBtn(!delBtn)
+	}
 
-  const openPopup = (e, task) => {
-    e.preventDefault();
-    setTaskProof(task);
-    setToggleTaskProofModal(!toggleTaskProofModal);
-  };
+	function openPopup(e, task) {
+		e.preventDefault()
 
- // Render loader during data fetching
+		setTaskProof(task)
+		// if (!task) {
+		//     toast.error("Sorry, proof of task not available")
+		//     return
+		// }
 
-  if (!task) return <div>No task found.</div>; // Handle missing task
+		setToggleTaskProofModal(!toggleTaskProofModal)
+		//window.open(imageUrl, '_blank', 'width=800,height=600,toolbar=no,scrollbars=yes,resizable=yes');
+	}
+	 if (!isLoading) {
+		return <Loader />; // Show loader while fetching
+	  }
 
 	return (
 		<div className='w-full h-fit'>
