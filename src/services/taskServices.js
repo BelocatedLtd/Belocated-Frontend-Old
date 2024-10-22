@@ -126,10 +126,15 @@ export const deleteTask = async (taskId) => {
 
 //get task by id
 export const getTaskById = async (id) => {
-	const headers = getAuthHeaders()
-	const response = await axios.get(
+  try {
+   const response = await axios.get(
 		`${BACKEND_URL}/api/tasks/tasking/${id}`,
 		headers,
 	)
-	return response.data
-}
+    if (!response.ok) throw new Error('Failed to fetch task');
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
