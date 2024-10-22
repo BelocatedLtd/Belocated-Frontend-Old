@@ -85,7 +85,6 @@ const TaskSingle = () => {
 
 	function openPopup(e, task) {
 		e.preventDefault()
-setIsLoading(true)
 		setTaskProof(task)
 		if (!task) {
 		    toast.error("Sorry, proof of task not available")
