@@ -59,9 +59,7 @@ const TaskSingle = () => {
 		return <Loader />; // Show loader while fetching
 	  }
 	
-	  if (!task) {
-		return <div>No task found.</div>; // Handle case when task is not found
-	  }
+	
 
 	// useEffect(() => {
 	// 	console.log("useEffect triggered with:", { tasks, users, adverts, id });
@@ -122,10 +120,12 @@ const TaskSingle = () => {
 		setToggleTaskProofModal(!toggleTaskProofModal)
 		//window.open(imageUrl, '_blank', 'width=800,height=600,toolbar=no,scrollbars=yes,resizable=yes');
 	}
-	 if (!isLoading) {
+	 if (isLoading) {
 		return <Loader />; // Show loader while fetching
 	  }
-
+  if (!task) {
+		return <div>No task found.</div>; // Handle case when task is not found
+	  }
 	return (
 		<div className='w-full h-fit'>
 			{modalBtn && (
