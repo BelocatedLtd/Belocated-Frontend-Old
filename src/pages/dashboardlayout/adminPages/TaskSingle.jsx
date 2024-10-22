@@ -56,7 +56,7 @@ const TaskSingle = () => {
     }
   }
 
-
+ fetchTask();
 	const handleModal = () => {
 		if (ad?.status === 'Completed') {
 		  toast.error('Ad unit is completed and ad is no more running')
@@ -96,8 +96,8 @@ const TaskSingle = () => {
 		setIsLoading(false)
 	}
 
-  fetchTask();
-
+ 
+setIsLoading(false)
   return () => {
     isMounted = false; // Cleanup to avoid memory leaks
   };
