@@ -79,7 +79,7 @@ const TaskSingle = () => {
     setToggleTaskProofModal(!toggleTaskProofModal);
   };
 
-  if (isLoading) return <Loader />; // Render loader during data fetching
+ // Render loader during data fetching
 
   if (!task) return <div>No task found.</div>; // Handle missing task
 
