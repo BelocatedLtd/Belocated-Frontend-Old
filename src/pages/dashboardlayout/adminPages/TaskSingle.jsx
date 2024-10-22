@@ -56,7 +56,7 @@ const TaskSingle = () => {
     };
 
     fetchTask();
-  }, [id, navigate]);
+  }, [id]);
 
   const handleModal = () => {
     if (ad?.status === 'Pending Payment') {
