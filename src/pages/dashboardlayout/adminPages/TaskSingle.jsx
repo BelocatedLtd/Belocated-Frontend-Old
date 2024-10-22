@@ -32,7 +32,7 @@ const TaskSingle = () => {
 	const [toggleTaskProofModal, setToggleTaskProofModal] = useState(false)
 	const [taskProof, setTaskProof] = useState()
 	const [task, setTask] = useState(null);
-	setIsLoading(selectIsLoading)
+	
 	
 	
 	useEffect(() => {
