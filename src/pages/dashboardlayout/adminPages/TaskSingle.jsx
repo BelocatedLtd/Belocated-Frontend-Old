@@ -51,7 +51,7 @@ const TaskSingle = () => {
         setAd(taskDetails.advert);
       } catch (error) {
         toast.error(`Error fetching task: ${error.message}`);
-        navigate('/tasks'); // Redirect on error
+       // navigate('/tasks'); // Redirect on error
       } finally {
         setIsLoading(false);
       }
