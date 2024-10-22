@@ -120,7 +120,7 @@ const TaskSingle = () => {
 		setToggleTaskProofModal(!toggleTaskProofModal)
 		//window.open(imageUrl, '_blank', 'width=800,height=600,toolbar=no,scrollbars=yes,resizable=yes');
 	}
-	 if (isLoading) {
+	 if (!isLoading) {
 		return <Loader />; // Show loader while fetching
 	  }
   if (!task) {
