@@ -1,3 +1,4 @@
+
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
 import { BACKEND_URL } from '../../utils/globalConfig'
@@ -126,15 +127,11 @@ export const deleteTask = async (taskId) => {
 
 //get task by id
 export const getTaskById = async (id) => {
-  try {
-   const response = await axios.get(
+	const headers = getAuthHeaders()
+	const response = await axios.get(
 		`${BACKEND_URL}/api/tasks/tasking/${id}`,
 		headers,
 	)
-    if (!response.ok) throw new Error('Failed to fetch task');
-    return await response.json();
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-};
+	return response.data
+}
+
