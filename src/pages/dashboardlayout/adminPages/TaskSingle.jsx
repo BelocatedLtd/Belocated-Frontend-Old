@@ -36,8 +36,8 @@ const TaskSingle = () => {
 	
 	
 	useEffect(() => {
-		const fetchTask = async () => {
-		  try {
+		async function fetchTask() {
+		  
 			const taskDetails = await getTaskById(id); 
 			console.log(taskDetails);
 			 setTask(taskDetails);
@@ -45,60 +45,34 @@ const TaskSingle = () => {
 			setTaskPerformer(taskDetails.taskPerformer); 
 			setAdvertiser(taskDetails.advertiser); 
 			 setAd(taskDetails.advert); 
-		  } catch (error) {
-			toast.error('Error fetching task: ' + error.message);
-			// navigate('/tasks'); 
-		  } finally {
-			setIsLoading(true); 
-		  }
+		
 		};
 	
 		fetchTask();
-	  }, [id]);
+	  }, []);
 	
-	  if (isLoading === 'false') {
-		return <Loader />; // Show loader while fetching
-	  }
+	
 	
 	
 
-	// useEffect(() => {
-	// 	console.log("useEffect triggered with:", { tasks, users, adverts, id });
-	// 	if (tasks?.length && users?.length && adverts?.length) {
-	// 	  const taskDetails = tasks?.find((task) => task?._id === id);
-	// 	  console.log('taskDetail is',taskDetails)
-	// 	  const taskPerformerDetails = users?.find(
-	// 		(user) => user._id === taskDetails?.taskPerformerId
-	// 	  );
-	// 	  const advertiserDetails = users?.find(
-	// 		(user) => user._id === taskDetails?.advertiserId
-	// 	  );
-	// 	  const advert = adverts?.find((ad) => ad._id === taskDetails?.advertId);
-	  
-	// 	  settask(taskDetails);
-	// 	  setSlides(taskDetails?.proofOfWorkMediaURL || []);
-	// 	  setTaskPerformer(taskPerformerDetails);
-	// 	  setAdvertiser(advertiserDetails);
-	// 	  setAd(advert);
-	// 	}
-	//   }, [tasks, users, adverts, id]);
-
-	//console.log(ad)
+	
 
 	const handleModal = () => {
-		// if (ad?.status === 'Completed') {
-		//   toast.error('Ad unit is completed and ad is no more running')
-		//   return
-		// }
+		if (ad?.status === 'Completed') {
+		  toast.error('Ad unit is completed and ad is no more running')
+		  return
+		}
 
 		if (ad?.status === 'Pending Payment') {
+			setIsLoading(false)
 			toast.error('Task is yet to start running')
-			return
+			
 		}
 
 		if (task?.status === 'Awaiting Submission') {
+			setIsLoading(false)
 			toast.error('Task has not being performed yet')
-			return
+		
 		}
 
 		setModalBtn(!modalBtn)
@@ -111,15 +85,16 @@ const TaskSingle = () => {
 
 	function openPopup(e, task) {
 		e.preventDefault()
-
+setIsLoading(true)
 		setTaskProof(task)
-		// if (!task) {
-		//     toast.error("Sorry, proof of task not available")
-		//     return
-		// }
+		if (!task) {
+		    toast.error("Sorry, proof of task not available")
+		   setIsLoading(false)
+		}
 
 		setToggleTaskProofModal(!toggleTaskProofModal)
-		//window.open(imageUrl, '_blank', 'width=800,height=600,toolbar=no,scrollbars=yes,resizable=yes');
+		window.open(imageUrl, '_blank', 'width=800,height=600,toolbar=no,scrollbars=yes,resizable=yes');
+		setIsLoading(false)
 	}
 
 	return (
