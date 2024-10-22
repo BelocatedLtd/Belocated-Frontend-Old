@@ -128,7 +128,7 @@ const TaskSingle = () => {
 		return <div>No task found.</div>; // Handle case when task is not found
 	  }
 
-	 if (isLoading) {
+	 if (!isLoading) {
 		
 	return (
 		
