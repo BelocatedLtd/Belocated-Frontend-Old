@@ -56,13 +56,11 @@ const TaskSingle = () => {
 		fetchTask();
 	  }, [id]);
 	
-	  if (isLoading) {
+	  if (!isLoading) {
 		return <Loader />; // Show loader while fetching
 	  }
 	
-	  if (!task) {
-		return <div>No task found.</div>; // Handle case when task is not found
-	  }
+	
 
 	// useEffect(() => {
 	// 	console.log("useEffect triggered with:", { tasks, users, adverts, id });
