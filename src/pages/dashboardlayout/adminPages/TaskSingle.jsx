@@ -24,7 +24,7 @@ const TaskSingle = () => {
 	const navigate = useNavigate()
 	const [taskPerformer, setTaskPerformer] = useState()
 	const [advertiser, setAdvertiser] = useState()
-	const [isLoading, setIsLoading] = useState(true)
+	const [isLoading, setIsLoading] = useState(false)
 	const [modalBtn, setModalBtn] = useState(false)
 	const [delBtn, setDelBtn] = useState(false)
 	const [slides, setSlides] = useState([])
@@ -54,7 +54,7 @@ const TaskSingle = () => {
 		};
 	
 		fetchTask();
-	  }, [id, navigate]);
+	  }, [id]);
 	
 	  if (isLoading) {
 		return <Loader />; // Show loader while fetching
