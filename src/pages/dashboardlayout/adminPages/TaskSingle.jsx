@@ -87,47 +87,47 @@ const TaskSingle = () => {
 
 	//console.log(ad)
 
-	const handleModal = () => {
-		// if (ad?.status === 'Completed') {
-		//   toast.error('Ad unit is completed and ad is no more running')
-		//   return
-		// }
+	// const handleModal = () => {
+	// 	// if (ad?.status === 'Completed') {
+	// 	//   toast.error('Ad unit is completed and ad is no more running')
+	// 	//   return
+	// 	// }
 
-		if (ad?.status === 'Pending Payment') {
-			toast.error('Task is yet to start running')
-			return
-		}
+	// 	if (ad?.status === 'Pending Payment') {
+	// 		toast.error('Task is yet to start running')
+	// 		return
+	// 	}
 
-		if (task?.status === 'Awaiting Submission') {
-			toast.error('Task has not being performed yet')
-			return
-		}
+	// 	if (task?.status === 'Awaiting Submission') {
+	// 		toast.error('Task has not being performed yet')
+	// 		return
+	// 	}
 
-		setModalBtn(!modalBtn)
-	}
+	// 	setModalBtn(!modalBtn)
+	// }
 
-	const handleDelete = (e) => {
-		e.preventDefault()
-		setDelBtn(!delBtn)
-	}
+	// const handleDelete = (e) => {
+	// 	e.preventDefault()
+	// 	setDelBtn(!delBtn)
+	// }
 
-	function openPopup(e, task) {
-		e.preventDefault()
+	// function openPopup(e, task) {
+	// 	e.preventDefault()
 
-		setTaskProof(task)
-		// if (!task) {
-		//     toast.error("Sorry, proof of task not available")
-		//     return
-		// }
+	// 	setTaskProof(task)
+	// 	// if (!task) {
+	// 	//     toast.error("Sorry, proof of task not available")
+	// 	//     return
+	// 	// }
 
-		setToggleTaskProofModal(!toggleTaskProofModal)
-		//window.open(imageUrl, '_blank', 'width=800,height=600,toolbar=no,scrollbars=yes,resizable=yes');
-	}
+	// 	setToggleTaskProofModal(!toggleTaskProofModal)
+	// 	//window.open(imageUrl, '_blank', 'width=800,height=600,toolbar=no,scrollbars=yes,resizable=yes');
+	// }
 	
-  if (!task) {
-		return <div>No task found.</div>; 
-	 setIsLoading(false); // Handle case when task is not found
-	  }
+ //  if (!task) {
+	// 	return <div>No task found.</div>; 
+	//  setIsLoading(false); // Handle case when task is not found
+	//   }
 
 	 if (task && isLoading) {
 		
