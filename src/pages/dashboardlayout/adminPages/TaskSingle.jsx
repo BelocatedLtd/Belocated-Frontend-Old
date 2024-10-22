@@ -56,7 +56,7 @@ const TaskSingle = () => {
 	  }, [id, navigate]);
 	
 	  if (!isLoading) {
-		return <Loader />; // Show loader while fetching
+		//return <Loader />; // Show loader while fetching
 	  }
 	
 	
@@ -120,9 +120,7 @@ const TaskSingle = () => {
 		setToggleTaskProofModal(!toggleTaskProofModal)
 		//window.open(imageUrl, '_blank', 'width=800,height=600,toolbar=no,scrollbars=yes,resizable=yes');
 	}
-	 if (!isLoading) {
-		return <Loader />; // Show loader while fetching
-	  }
+	
   if (!task) {
 		return <div>No task found.</div>; // Handle case when task is not found
 	  }
@@ -141,7 +139,7 @@ const TaskSingle = () => {
 			{toggleTaskProofModal && (
 				<TaskProofModal toggleTaskProof={openPopup} task={taskProof} />
 			)}
-			{!isLoading && <Loader />}
+			{isLoading && <Loader />}
 			<div className='flex items-center gap-3 border-b border-gray-200 pb-6'>
 				<MdOutlineKeyboardArrowLeft size={30} onClick={() => navigate(-1)} />
 				<div className='flex flex-col'>
