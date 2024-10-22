@@ -125,10 +125,11 @@ const TaskSingle = () => {
 	}
 	
   if (!task) {
-		return <div>No task found.</div>; // Handle case when task is not found
+		return <div>No task found.</div>; 
+	 setIsLoading(false); // Handle case when task is not found
 	  }
 
-	 if (!isLoading) {
+	 if (task && isLoading) {
 		
 	return (
 		
