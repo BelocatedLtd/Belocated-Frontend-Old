@@ -56,12 +56,6 @@ const TaskSingle = () => {
     }
   }
 
-  fetchTask();
-
-  return () => {
-    isMounted = false; // Cleanup to avoid memory leaks
-  };
-}, [id]);
 
 	const handleModal = () => {
 		if (ad?.status === 'Completed') {
@@ -102,6 +96,12 @@ const TaskSingle = () => {
 		setIsLoading(false)
 	}
 
+  fetchTask();
+
+  return () => {
+    isMounted = false; // Cleanup to avoid memory leaks
+  };
+}, [id]);
 	return (
 		<div className='w-full h-fit'>
 			{modalBtn && (
