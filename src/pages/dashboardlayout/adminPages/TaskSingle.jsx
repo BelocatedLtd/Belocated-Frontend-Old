@@ -49,14 +49,14 @@ const TaskSingle = () => {
 			toast.error('Error fetching task: ' + error.message);
 			// navigate('/tasks'); 
 		  } finally {
-			setIsLoading(false); 
+			setIsLoading(true); 
 		  }
 		};
 	
 		fetchTask();
 	  }, [id]);
 	
-	  if (!isLoading) {
+	  if (isLoading === 'false') {
 		return <Loader />; // Show loader while fetching
 	  }
 	
