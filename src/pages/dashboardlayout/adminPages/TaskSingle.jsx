@@ -39,6 +39,10 @@ const TaskSingle = () => {
 		const fetchTask = async () => {
 		  try {
 			const taskDetails = await getTaskById(id); 
+			  setIsLoading(true); 
+			   if (isLoading) {
+		return <Loader />; // Show loader while fetching
+	  }
 			console.log(taskDetails);
 			setTask(taskDetails);
 			setSlides(taskDetails.proofOfWorkMediaURL || []);
@@ -49,15 +53,14 @@ const TaskSingle = () => {
 			toast.error('Error fetching task: ' + error.message);
 		  } finally {
 			setIsLoading(false); 
+			  
 		  }
 		};
 	
 		fetchTask();
 	  }, [id, navigate]);
 	
-	  if (!isLoading) {
-		//return <Loader />; // Show loader while fetching
-	  }
+	 
 	
 	
 
@@ -124,6 +127,9 @@ const TaskSingle = () => {
   if (!task) {
 		return <div>No task found.</div>; // Handle case when task is not found
 	  }
+
+	 if (isLoading) {
+		
 	return (
 		
 		<div className='w-full h-fit'>
@@ -364,6 +370,7 @@ const TaskSingle = () => {
 			</div>
 		</div>
 	)
+	 }
 }
 
 export default TaskSingle
