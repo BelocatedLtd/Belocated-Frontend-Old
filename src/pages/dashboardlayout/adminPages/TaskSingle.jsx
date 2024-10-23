@@ -113,7 +113,9 @@ const TaskSingle = () => {
               <small className="text-gray-700 mt-[-0.7rem] mb-[1rem] font-semibold">
                 @{taskPerformer?.username}
               </small>
-             <button className="px-4 py-2 bg-secondary text-primary hover:bg-gray-900 mt-2"
+              <button
+                onClick={() => navigate(`/admin/dashboard/user/${taskPerformer?._id}`)}
+                className="px-4 py-2 bg-secondary text-primary hover:bg-gray-900 mt-2"
               >
                 View Task Performer
               </button>
@@ -122,71 +124,27 @@ const TaskSingle = () => {
         </div>
 
         {/* Task Details */}
-        <div className="flex flex flex-col border-b p-3 pb-6">
-		<div className='flex flex-col'>
+        <div className="box flex flex-col border-b p-3 pb-6">
           <label className="text-secondary text-2xl font-bold">Task Details</label>
-<label
-							htmlFor='adverter'
-							className='text-secondary text-[25px] font-bold'>
-							Task Details
-						</label>
-		<p>{task?.title}</p>
-			</div>
-		<div className='flex flex-col mt-4'>
-								<div className='flex flex-col items gap-[3rem] md:flex-row'>
-									<div className='border-b border-gray-50 pb-6 md:border-0'>
-										<label htmlFor='' className='font-bold'>
-											Advertiser Name:
-										</label>
-										<div className='flex items-center cursor-pointer gap-1 hover:text-secondary'>
-{/* 											<p>
-												{
-													users?.find(
-														(user) => user?._id === task?.advertiserId,
-													)?.username
-												}
-											</p> */}
-											<MdKeyboardDoubleArrowRight className='text-secondary ' />
-										</div>
-									</div>
-
-									<div>
-										<label htmlFor='' className='font-bold'>
-											Advert Id:
-										</label>
-										<div className='flex items-center cursor-pointer gap-1 hover:text-secondary'>
-											
-											<p>{task?.advertId}</p>
-											<MdKeyboardDoubleArrowRight className='text-secondary ' />
-										</div>
-									</div>
-								</div>
-							</div>
-		
+		  <div className='box flex-col'>
+          <p>Title: {task.title}</p>
+		  </div>
+		  <div className='box flex-col'>
           <p>Platform: {task.platform}</p>
+		  </div>
+		  <div className='box flex-col'>
           <p>Status: {task.status}</p>
+		  </div>
+		  <div className='box flex-col'>
           <p>Advertiser: {advertiser?.username}</p>
+		  </div>
+		  <div className='box flex-col'>
           <p>Amount to Earn: ₦{task.toEarn}</p>
+		  </div>
         </div>
-
-	      <div className='mt-[1rem]'>
-				<div className='flex flex-col md:flex-row gap-2'>
-					<button
-						onClick={handleModal}
-						className='py-2 px-5 bg-secondary text-primary'>
-						Approve/Reject
-					</button>
-					<button
-						onClick={handleDelete}
-						className='py-2 px-5 bg-tertiary text-primary'>
-						Delete
-					</button>
-				</div>
-			</div>
       </div>
     </div>
   );
 };
 
 export default TaskSingle;
-
