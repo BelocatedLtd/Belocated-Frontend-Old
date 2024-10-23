@@ -127,21 +127,36 @@ const TaskSingle = () => {
         <div className="box flex flex-col border-b p-3 pb-6">
           <label className="text-secondary text-2xl font-bold">Task Details</label>
 		  <div className='box flex-col'>
-          <p>Title: {task.title}</p>
+          <p><label className='font-bold'>Title: </label>{task.title}</p>
 		  </div>
 		  <div className='box flex-col'>
-          <p>Platform: {task.platform}</p>
+		  <p><label className='font-bold'>Platform: {task.platform}</label></p>
 		  </div>
 		  <div className='box flex-col'>
-          <p>Status: {task.status}</p>
+		  <p><label className='font-bold'>Status: {task.status}</label></p>
 		  </div>
 		  <div className='box flex-col'>
-          <p>Advertiser: {advertiser?.username}</p>
+		  <p><label className='font-bold'>Advertiser: {advertiser?.username}</label></p>
 		  </div>
 		  <div className='box flex-col'>
-          <p>Amount to Earn: ₦{task.toEarn}</p>
+		  <p><label className='font-bold'>Amount to Earn: ₦{task.toEarn}</label></p>
 		  </div>
         </div>
+
+		<div className='mt-[1rem]'>
+				<div className='flex flex-col md:flex-row gap-2'>
+					<button
+						onClick={handleModal}
+						className='py-2 px-5 bg-secondary text-primary'>
+						Approve/Reject
+					</button>
+					<button
+						onClick={handleDelete}
+						className='py-2 px-5 bg-tertiary text-primary'>
+						Delete
+					</button>
+				</div>
+			</div>
       </div>
     </div>
   );
