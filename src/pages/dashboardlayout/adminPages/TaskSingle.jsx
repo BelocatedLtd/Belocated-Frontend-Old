@@ -129,21 +129,22 @@ const TaskSingle = () => {
 		  <div className='box flex-col'>
           <p><label className='font-bold'>Title: </label>{task.title}</p>
 		  </div>
-		  <div className='box flex-col'>
+		  <div className='box flex-col mt-3'>
 		  <p><label className='font-bold'>Platform: {task.platform}</label></p>
 		  </div>
-		  <div className='box flex-col'>
+		  <div className='box flex-col mt-3'>
 		  <p><label className='font-bold'>Status: {task.status}</label></p>
 		  </div>
-		  <div className='box flex-col'>
+		  <div className='box flex-col mt-3'>
 		  <p><label className='font-bold'>Advertiser: {advertiser?.username}</label></p>
 		  </div>
-		  <div className='box flex-col'>
+		
+		  <div className='box flex-col mt-3'>
 		  <p><label className='font-bold'>Amount to Earn: ₦{task.toEarn}</label></p>
 		  </div>
         </div>
 
-		<div className='mt-[1rem]'>
+		<div className='mt-3'>
 				<div className='flex flex-col md:flex-row gap-2'>
 					<button
 						onClick={handleModal}
