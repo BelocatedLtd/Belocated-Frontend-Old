@@ -125,8 +125,53 @@ const TaskSingle = () => {
 
         {/* Task Details */}
         <div className="flex flex flex-col border-b p-3 pb-6">
+		<div className='flex flex-col'>
           <label className="text-secondary text-2xl font-bold">Task Details</label>
-          <p>Title: {task.title}</p>
+<label
+							htmlFor='adverter'
+							className='text-secondary text-[25px] font-bold'>
+							Task Details
+						</label>
+		<p>{task?.title}</p>
+			</div>
+		<div className='flex flex-col mt-4'>
+								<div className='flex flex-col items gap-[3rem] md:flex-row'>
+									<div className='border-b border-gray-50 pb-6 md:border-0'>
+										<label htmlFor='' className='font-bold'>
+											Advertiser Name:
+										</label>
+										<div
+											onClick={() =>
+												navigate(`/admin/dashboard/user/${advertiser._id}`)
+											}
+											className='flex items-center cursor-pointer gap-1 hover:text-secondary'>
+{/* 											<p>
+												{
+													users?.find(
+														(user) => user?._id === task?.advertiserId,
+													)?.username
+												}
+											</p> */}
+											<MdKeyboardDoubleArrowRight className='text-secondary ' />
+										</div>
+									</div>
+
+									<div>
+										<label htmlFor='' className='font-bold'>
+											Advert Id:
+										</label>
+										<div
+											onClick={() =>
+												navigate(`/admin/dashboard/advert/${task?.advertId}`)
+											}
+											className='flex items-center cursor-pointer gap-1 hover:text-secondary'>
+											<p>{task?.advertId}</p>
+											<MdKeyboardDoubleArrowRight className='text-secondary ' />
+										</div>
+									</div>
+								</div>
+							</div>
+		
           <p>Platform: {task.platform}</p>
           <p>Status: {task.status}</p>
           <p>Advertiser: {advertiser?.username}</p>
