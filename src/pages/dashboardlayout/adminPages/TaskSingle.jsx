@@ -126,20 +126,20 @@ const TaskSingle = () => {
         {/* Task Details */}
         <div className="box flex flex-col border-b p-3 pb-6">
           <label className="text-secondary text-2xl font-bold">Task Details</label>
-		  <div className='box flex-col'>
+		  <div className='box flex-col mt-5'>
           <p><label className='font-bold'>Title: </label>{task.title}</p>
 		  </div>
-		  <div className='box flex-col mt-3'>
+		  <div className='box flex-col mt-5'>
 		  <p><label className='font-bold'>Platform: </label>{task.platform}</p>
 		  </div>
-		  <div className='box flex-col mt-3'>
+		  <div className='box flex-col mt-5'>
 		  <p><label className='font-bold'>Status:</label> {task.status}</p>
 		  </div>
-		  <div className='box flex-col mt-3'>
+		  <div className='box flex-col mt-5'>
 		  <p><label className='font-bold'>Advertiser:</label> {advertiser?.username}</p>
 		  </div>
 		
-		  <div className='box flex-col mt-3'>
+		  <div className='box flex-col mt-5'>
 		  <p><label className='font-bold'>Amount to Earn:</label> ₦{task.toEarn}</p>
 		  </div>
         </div>
