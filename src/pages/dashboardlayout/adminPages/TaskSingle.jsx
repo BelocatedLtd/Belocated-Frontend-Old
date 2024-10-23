@@ -132,6 +132,21 @@ const TaskSingle = () => {
           <p>Advertiser: {advertiser?.username}</p>
           <p>Amount to Earn: ₦{task.toEarn}</p>
         </div>
+
+	      <div className='mt-[1rem]'>
+				<div className='flex flex-col md:flex-row gap-2'>
+					<button
+						onClick={handleModal}
+						className='py-2 px-5 bg-secondary text-primary'>
+						Approve/Reject
+					</button>
+					<button
+						onClick={handleDelete}
+						className='py-2 px-5 bg-tertiary text-primary'>
+						Delete
+					</button>
+				</div>
+			</div>
       </div>
     </div>
   );
