@@ -113,9 +113,7 @@ const TaskSingle = () => {
               <small className="text-gray-700 mt-[-0.7rem] mb-[1rem] font-semibold">
                 @{taskPerformer?.username}
               </small>
-             <button
-{/*                 onClick={() => navigate(`/admin/dashboard/user/${taskPerformer?._id}`)} */}
-                className="px-4 py-2 bg-secondary text-primary hover:bg-gray-900 mt-2"
+             <button className="px-4 py-2 bg-secondary text-primary hover:bg-gray-900 mt-2"
               >
                 View Task Performer
               </button>
@@ -140,9 +138,7 @@ const TaskSingle = () => {
 										<label htmlFor='' className='font-bold'>
 											Advertiser Name:
 										</label>
-										<div className='flex items-center cursor-pointer gap-1 hover:text-secondary' {/* onClick={() =>
-												navigate(`/admin/dashboard/user/${advertiser._id}`)
-											} */}>
+										<div className='flex items-center cursor-pointer gap-1 hover:text-secondary'>
 {/* 											<p>
 												{
 													users?.find(
@@ -159,9 +155,6 @@ const TaskSingle = () => {
 											Advert Id:
 										</label>
 										<div className='flex items-center cursor-pointer gap-1 hover:text-secondary'>
-{/* 											onClick={() =>
-												navigate(`/admin/dashboard/advert/${task?.advertId}`)
-											} */}
 											
 											<p>{task?.advertId}</p>
 											<MdKeyboardDoubleArrowRight className='text-secondary ' />
@@ -196,3 +189,4 @@ const TaskSingle = () => {
 };
 
 export default TaskSingle;
+
