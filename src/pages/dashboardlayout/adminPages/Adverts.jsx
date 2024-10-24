@@ -1,174 +1,124 @@
-import React, { useEffect, useState } from 'react'
-import DataTable from 'react-data-table-component'
-import { MdArrowDownward, MdOutlineKeyboardArrowLeft } from 'react-icons/md'
-import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import { handleGetALLUserAdverts } from '../../../redux/slices/advertSlice'
-import { selectIsError, selectIsLoading } from '../../../redux/slices/userSlice'
+import React, { useEffect, useState } from 'react';
+import { MdOutlineKeyboardArrowLeft } from 'react-icons/md';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { handleGetALLUserAdverts } from '../../../redux/slices/advertSlice';
+import { selectIsError, selectIsLoading } from '../../../redux/slices/userSlice';
 
 const Adverts = () => {
-	const isLoading = useSelector(selectIsLoading)
-	const isError = useSelector(selectIsError)
-	const navigate = useNavigate()
-	const dispatch = useDispatch()
+  const isLoading = useSelector(selectIsLoading);
+  const isError = useSelector(selectIsError);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-	const [currentPage, setCurrentPage] = useState(1)
-	const [totalRows, setTotalRows] = useState(0)
-	const [rowsPerPage, setRowsPerPage] = useState(10)
-	const [adverts, setAdverts] = useState()
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalRows, setTotalRows] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [adverts, setAdverts] = useState([]);
 
-	const sortIcon = <MdArrowDownward />
+  const fetchAdverts = async (page, rows) => {
+    const response = await dispatch(handleGetALLUserAdverts({ page, limit: rows }));
+    if (response.payload) {
+      setTotalRows(response.payload.totalAdverts);
+      setAdverts(response.payload.adverts);
+    }
+  };
 
-	const columns = [
-		{
-			name: 'Advertiser',
-			selector: (row) => {
-				return (
-					<div className='font-bold text-[13px]'>{row?.userId?.fullname}</div>
-				)
-			},
-		},
-		{
-			name: 'Platform',
-			selector: (row) => row.platform,
-			sortable: true,
-		},
-		{
-			name: 'Service',
-			selector: (row) => row.service,
-		},
-		{
-			name: 'Units',
-			selector: (row) => row.desiredROI,
-			sortable: true,
-		},
-		{
-			name: 'Amount',
-			selector: (row) => row.adAmount,
-			sortable: true,
-		},
-		{
-			name: 'Tasks',
-			selector: (row) => row?.tasks,
-			sortable: true,
-		},
-		{
-			name: 'Ad Url',
-			cell: (row) => (
-				<div className='w-full'>
-					<a
-						href={row?.socialPageLink}
-						target='_blank'
-						className='text-blue-600'>
-						{row?.socialPageLink}
-					</a>
-				</div>
-			),
-			selector: (row) => row?.tasks,
-			sortable: true,
-		},
-		{
-			name: 'Moderator',
-			selector: (row) => row?.tasksModerator,
-			sortable: true,
-		},
-		{
-			name: 'Status',
-			sortable: true,
-			cell: (row) => (
-				<p
-					className={`px-6 py-1 rounded-[5px] 
-          ${row.status === 'Pending' && 'pending'}
-          ${row.status === 'Running' && 'running'}
-          ${row.status === 'Allocating' && 'allocating'}
-          ${row.status === 'Completed' && 'completed'}
-          ${row.status === 'Rejected' && 'rejected'}
-          `}>
-					{row.status}
-				</p>
-			),
-		},
-		{
-			name: 'Actions',
-			button: true,
-			cell: (row) => (
-				<button
-					className={'px-6 py-2 bg-gray-800 text-primary rounded-[5px]'}
-					onClick={(e) => handleButtonClick(e, row._id)}>
-					View
-				</button>
-			),
-		},
-	]
-	const customStyles = {
-		headCells: {
-			style: {
-				backgroundColor: '#18141E',
-				color: '#f4f4f4',
-				fontSize: '15px',
-			},
-		},
-	}
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    fetchAdverts(page, rowsPerPage);
+  };
 
-	const fetchAdverts = async (page, rows) => {
-		const response = await dispatch(
-			handleGetALLUserAdverts({ page, limit: rows }),
-		)
-		if (response.payload) {
-			setTotalRows(response.payload.totalAdverts)
-			setAdverts(response.payload.adverts)
-		}
-	}
+  const handleChangeRowsPerPage = (rowsPerPage) => {
+    setRowsPerPage(rowsPerPage);
+    fetchAdverts(currentPage, rowsPerPage);
+  };
 
-	const handlePageChange = (page) => {
-		setCurrentPage(page)
-		fetchAdverts(page, rowsPerPage)
-	}
+  const handleButtonClick = (e, advertId) => {
+    e.preventDefault();
+    navigate(`/admin/dashboard/advert/${advertId}`);
+  };
 
-	const handleChangeRowsPerPage = (rowsPerPage) => {
-		setRowsPerPage(rowsPerPage)
-		fetchAdverts(currentPage, rowsPerPage)
-	}
+  useEffect(() => {
+    fetchAdverts(currentPage, rowsPerPage);
+  }, []);
 
-	useEffect(() => {
-		fetchAdverts(currentPage, rowsPerPage)
-	}, [])
+  return (
+    <div className="w-full mx-auto mt-[2rem]">
+      <div className="flex items-center justify-between mb-[2rem]">
+        <div className="flex items-center">
+          <MdOutlineKeyboardArrowLeft
+            size={30}
+            onClick={() => navigate(-1)}
+            className="mr-1 cursor-pointer"
+          />
+          <p className="font-semibold text-xl text-gray-700">Adverts</p>
+        </div>
+      </div>
 
-	const handleButtonClick = (e, advertId) => {
-		e.preventDefault()
-		navigate(`/admin/dashboard/advert/${advertId}`)
-	}
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : isError ? (
+        <p>Something went wrong!</p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {adverts.map((advert) => (
+            <div
+              key={advert._id}
+              className="bg-white shadow-lg rounded-lg p-6 relative"
+            >
+              <p className="font-bold text-lg mb-2">{advert.userId?.fullname}</p>
+              <p className="text-sm text-gray-600 mb-1">
+                <strong>Platform:</strong> {advert.platform}
+              </p>
+              <p className="text-sm text-gray-600 mb-1">
+                <strong>Service:</strong> {advert.service}
+              </p>
+              <p className="text-sm text-gray-600 mb-1">
+                <strong>Units:</strong> {advert.desiredROI}
+              </p>
+              <p className="text-sm text-gray-600 mb-1">
+                <strong>Amount:</strong> {advert.adAmount}
+              </p>
+              <p className="text-sm text-gray-600 mb-1">
+                <strong>Tasks:</strong> {advert.tasks}
+              </p>
+              <div className="mb-2">
+                <a
+                  href={advert.socialPageLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:underline"
+                >
+                  {advert.socialPageLink}
+                </a>
+              </div>
+              <p className="text-sm text-gray-600 mb-1">
+                <strong>Moderator:</strong> {advert.tasksModerator}
+              </p>
+              <p
+                className={`px-3 py-1 inline-block rounded-md text-white mb-3
+                  ${advert.status === 'Pending' && 'bg-yellow-400'}
+                  ${advert.status === 'Running' && 'bg-blue-500'}
+                  ${advert.status === 'Allocating' && 'bg-orange-400'}
+                  ${advert.status === 'Completed' && 'bg-green-500'}
+                  ${advert.status === 'Rejected' && 'bg-red-500'}
+                `}
+              >
+                {advert.status}
+              </p>
+              <button
+                onClick={(e) => handleButtonClick(e, advert._id)}
+                className="px-4 py-2 bg-gray-800 text-white rounded-md w-full"
+              >
+                View
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
-	return (
-		<div className='w-full mx-auto mt-[2rem]'>
-			<div className='flex items-center justify-between mb-[2rem]'>
-				<div className='flex items-center'>
-					<MdOutlineKeyboardArrowLeft
-						size={30}
-						onClick={() => navigate(-1)}
-						className='mr-1'
-					/>
-					<p className='font-semibold text-xl text-gray-700'>Adverts</p>
-				</div>
-			</div>
-
-			<DataTable
-				columns={columns}
-				data={adverts}
-				progressPending={isLoading}
-				pagination
-				paginationServer
-				paginationTotalRows={totalRows}
-				onChangePage={handlePageChange}
-				onChangeRowsPerPage={handleChangeRowsPerPage}
-				selectableRows
-				fixedHeader
-				customStyles={customStyles}
-				sortIcon={sortIcon}
-				handleButtonClick={handleButtonClick}
-			/>
-		</div>
-	)
-}
-
-export default Adverts
+export default Adverts;
