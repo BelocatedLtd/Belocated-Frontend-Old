@@ -2,16 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { MdOutlineKeyboardArrowLeft } from 'react-icons/md';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { selectIsLoading, selectTasks } from '../../../redux/slices/taskSlice';
-import { selectUsers } from '../../../redux/slices/userSlice';
-import { getTasksByAdvertId } from '../../../services/taskServices';
+import { selectIsLoading } from '../../../redux/slices/taskSlice';
 import DeleteTaskModal from '../../../components/adminComponents/DeleteTaskModal';
 import TaskModal from '../../../components/adminComponents/TaskModal';
+import { getTasksByAdvertId } from '../../../services/taskServices';
 
 const AdsTasksList = () => {
   const { id } = useParams();
-  const tasks = useSelector(selectTasks);
-  const users = useSelector(selectUsers);
   const navigate = useNavigate();
   const isLoading = useSelector(selectIsLoading);
 
@@ -20,20 +17,26 @@ const AdsTasksList = () => {
   const [modalBtn, setModalBtn] = useState(false);
   const [delBtn, setDelBtn] = useState(false);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage] = useState(5); // Tasks per page
+  const [totalRows, setTotalRows] = useState(0); // Total tasks available
+
   const fetchTasksByAdvertId = async () => {
     const resp = await getTasksByAdvertId({
       advertId: id,
+      page: currentPage,
+      limit: rowsPerPage,
       status: selectedStatus,
     });
     setTaskAdList(resp.tasks);
+    setTotalRows(resp.totalTasks);
   };
 
   useEffect(() => {
     fetchTasksByAdvertId();
-  }, [selectedStatus]);
+  }, [selectedStatus, currentPage]);
 
   const handleModal = () => setModalBtn(!modalBtn);
-
   const handleDelete = (e) => {
     e.preventDefault();
     setDelBtn(!delBtn);
@@ -42,6 +45,8 @@ const AdsTasksList = () => {
   const handleProofClick = (url) => {
     window.open(url, '_blank');
   };
+
+  const totalPages = Math.ceil(totalRows / rowsPerPage);
 
   return (
     <div className="w-full mx-auto mt-8 p-4">
@@ -140,6 +145,23 @@ const AdsTasksList = () => {
             </div>
           ))
         )}
+      </div>
+
+      {/* Pagination */}
+      <div className="flex justify-center mt-6">
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentPage(index + 1)}
+            className={`mx-1 px-3 py-1 border ${
+              currentPage === index + 1
+                ? 'bg-secondary text-white'
+                : 'bg-white text-gray-700'
+            }`}
+          >
+            {index + 1}
+          </button>
+        ))}
       </div>
 
       {/* Modals */}
