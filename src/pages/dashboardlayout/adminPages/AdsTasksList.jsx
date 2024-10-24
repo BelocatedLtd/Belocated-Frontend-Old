@@ -22,7 +22,6 @@ const AdsTasksList = () => {
   const [totalRows, setTotalRows] = useState(0); // Total tasks available
 
   const fetchTasksByAdvertId = async () => {
-      setIsLoading(true); 
     const resp = await getTasksByAdvertId({
       advertId: id,
       page: currentPage,
@@ -31,13 +30,7 @@ const AdsTasksList = () => {
     });
     setTaskAdList(resp.tasks);
     setTotalRows(resp.totalTasks);
- } catch (error) {
-      console.error('Error fetching tasks:', error);
-    } finally {
-      setIsLoading(false); // End loading
-    }
   };
-
 
   useEffect(() => {
     fetchTasksByAdvertId();
@@ -115,6 +108,15 @@ const AdsTasksList = () => {
                   </button>
                 </div>
               </div>
+			  {modalBtn && <TaskModal
+          handleModal={handleModal}
+          task={task}
+          taskPerformer={task.taskPerformer}
+        />}
+     {delBtn && <DeleteTaskModal handleDelete={handleDelete} task={task} />}
+      {toggleTaskProofModal && (
+        <TaskProofModal toggleTaskProof={openPopup} task={taskProof} />
+      )}
 
               <div className="flex justify-between items-center mt-4 text-sm">
                 <div>
@@ -172,8 +174,7 @@ const AdsTasksList = () => {
       </div>
 
       {/* Modals */}
-      {modalBtn && <TaskModal onClose={handleModal} />}
-      {delBtn && <DeleteTaskModal onClose={handleDelete} />}
+      
     </div>
   );
 };
