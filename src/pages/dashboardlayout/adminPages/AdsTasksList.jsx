@@ -22,6 +22,7 @@ const AdsTasksList = () => {
   const [totalRows, setTotalRows] = useState(0); // Total tasks available
 
   const fetchTasksByAdvertId = async () => {
+      setIsLoading(true); 
     const resp = await getTasksByAdvertId({
       advertId: id,
       page: currentPage,
@@ -30,7 +31,13 @@ const AdsTasksList = () => {
     });
     setTaskAdList(resp.tasks);
     setTotalRows(resp.totalTasks);
+ } catch (error) {
+      console.error('Error fetching tasks:', error);
+    } finally {
+      setIsLoading(false); // End loading
+    }
   };
+
 
   useEffect(() => {
     fetchTasksByAdvertId();
