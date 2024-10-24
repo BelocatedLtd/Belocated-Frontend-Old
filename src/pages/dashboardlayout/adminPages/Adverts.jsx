@@ -31,7 +31,8 @@ const Adverts = () => {
 
   const handleChangeRowsPerPage = (rowsPerPage) => {
     setRowsPerPage(rowsPerPage);
-    fetchAdverts(currentPage, rowsPerPage);
+    setCurrentPage(1); // Reset to the first page
+    fetchAdverts(1, rowsPerPage);
   };
 
   const handleButtonClick = (e, advertId) => {
@@ -41,7 +42,7 @@ const Adverts = () => {
 
   useEffect(() => {
     fetchAdverts(currentPage, rowsPerPage);
-  }, []);
+  }, [currentPage, rowsPerPage]);
 
   return (
     <div className="w-full mx-auto mt-[2rem]">
@@ -61,61 +62,101 @@ const Adverts = () => {
       ) : isError ? (
         <p>Something went wrong!</p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {adverts.map((advert) => (
-            <div
-              key={advert._id}
-              className="bg-white shadow-lg rounded-lg p-6 relative"
-            >
-              <p className="font-bold text-lg mb-2">{advert.userId?.fullname}</p>
-              <p className="text-sm text-gray-600 mb-1">
-                <strong>Platform:</strong> {advert.platform}
-              </p>
-              <p className="text-sm text-gray-600 mb-1">
-                <strong>Service:</strong> {advert.service}
-              </p>
-              <p className="text-sm text-gray-600 mb-1">
-                <strong>Units:</strong> {advert.desiredROI}
-              </p>
-              <p className="text-sm text-gray-600 mb-1">
-                <strong>Amount:</strong> {advert.adAmount}
-              </p>
-              <p className="text-sm text-gray-600 mb-1">
-                <strong>Tasks:</strong> {advert.tasks}
-              </p>
-              <div className="mb-2">
-                <a
-                  href={advert.socialPageLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline"
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {adverts.map((advert) => (
+              <div
+                key={advert._id}
+                className="bg-white shadow-lg rounded-lg p-6 relative"
+              >
+                <p className="font-bold text-lg mb-2">{advert.userId?.fullname}</p>
+                <p className="text-sm text-gray-600 mb-1">
+                  <strong>Platform:</strong> {advert.platform}
+                </p>
+                <p className="text-sm text-gray-600 mb-1">
+                  <strong>Service:</strong> {advert.service}
+                </p>
+                <p className="text-sm text-gray-600 mb-1">
+                  <strong>Units:</strong> {advert.desiredROI}
+                </p>
+                <p className="text-sm text-gray-600 mb-1">
+                  <strong>Amount:</strong> {advert.adAmount}
+                </p>
+                <p className="text-sm text-gray-600 mb-1">
+                  <strong>Tasks:</strong> {advert.tasks}
+                </p>
+                <div className="mb-2">
+                  <a
+                    href={advert.socialPageLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline"
+                  >
+                    {advert.socialPageLink}
+                  </a>
+                </div>
+                <p className="text-sm text-gray-600 mb-1">
+                  <strong>Moderator:</strong> {advert.tasksModerator}
+                </p>
+                <p
+                  className={`px-3 py-1 inline-block rounded-md text-white mb-3
+                    ${advert.status === 'Pending' && 'bg-yellow-400'}
+                    ${advert.status === 'Running' && 'bg-blue-500'}
+                    ${advert.status === 'Allocating' && 'bg-orange-400'}
+                    ${advert.status === 'Completed' && 'bg-green-500'}
+                    ${advert.status === 'Rejected' && 'bg-red-500'}
+                  `}
                 >
-                  {advert.socialPageLink}
-                </a>
+                  {advert.status}
+                </p>
+                <button
+                  onClick={(e) => handleButtonClick(e, advert._id)}
+                  className="px-4 py-2 bg-gray-800 text-white rounded-md w-full"
+                >
+                  View
+                </button>
               </div>
-              <p className="text-sm text-gray-600 mb-1">
-                <strong>Moderator:</strong> {advert.tasksModerator}
-              </p>
-              <p
-                className={`px-3 py-1 inline-block rounded-md text-white mb-3
-                  ${advert.status === 'Pending' && 'bg-yellow-400'}
-                  ${advert.status === 'Running' && 'bg-blue-500'}
-                  ${advert.status === 'Allocating' && 'bg-orange-400'}
-                  ${advert.status === 'Completed' && 'bg-green-500'}
-                  ${advert.status === 'Rejected' && 'bg-red-500'}
-                `}
-              >
-                {advert.status}
-              </p>
+            ))}
+          </div>
+
+          {/* Pagination Controls */}
+          <div className="flex justify-between items-center mt-6">
+            <div>
+              <label>
+                Rows per page:
+                <select
+                  value={rowsPerPage}
+                  onChange={(e) => handleChangeRowsPerPage(Number(e.target.value))}
+                  className="ml-2 p-1 border rounded"
+                >
+                  <option value={5}>5</option>
+                  <option value={10}>10</option>
+                  <option value={15}>15</option>
+                  <option value={20}>20</option>
+                </select>
+              </label>
+            </div>
+            <div>
               <button
-                onClick={(e) => handleButtonClick(e, advert._id)}
-                className="px-4 py-2 bg-gray-800 text-white rounded-md w-full"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="px-3 py-1 bg-gray-800 text-white rounded-md disabled:opacity-50"
               >
-                View
+                Previous
+              </button>
+              <span className="mx-3">
+                Page {currentPage} of {Math.ceil(totalRows / rowsPerPage)}
+              </span>
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage * rowsPerPage >= totalRows}
+                className="px-3 py-1 bg-gray-800 text-white rounded-md disabled:opacity-50"
+              >
+                Next
               </button>
             </div>
-          ))}
-        </div>
+          </div>
+        </>
       )}
     </div>
   );
