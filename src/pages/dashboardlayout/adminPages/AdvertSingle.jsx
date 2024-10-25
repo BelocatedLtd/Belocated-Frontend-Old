@@ -11,155 +11,326 @@ import { selectTasks } from '../../../redux/slices/taskSlice'
 import { getSingleAdvertById } from '../../../services/advertService'
 
 const AdvertSingle = () => {
-  const { id } = useParams()
-  const tasks = useSelector(selectTasks)
-  const [isLoading, setIsLoading] = useState(false)
-  const [ad, setAd] = useState()
-  const [adverter, setAdverter] = useState()
-  const [delBtn, setDelBtn] = useState(false)
-  const [isFree, setIsFree] = useState(ad?.isFree)
-  const [slides, setSlides] = useState([])
-  const navigate = useNavigate()
+	const { id } = useParams()
 
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-  }
+	const settings = {
+		dots: true,
+		infinite: true,
+		speed: 500,
+		slidesToShow: 1,
+		slidesToScroll: 1,
+	}
 
-  useEffect(() => {
-    async function getData() {
-      const resp = await getSingleAdvertById(id)
-      setAd(resp)
-      setSlides(resp?.mediaURL)
-      setAdverter(resp.userId)
-    }
-    getData()
-  }, [id])
+	const tasks = useSelector(selectTasks)
+	const [isLoading, setIsLoading] = useState(false)
+	const [ad, setAd] = useState()
+	const navigate = useNavigate()
+	const [adverter, setAdverter] = useState()
+	const [delBtn, setDelBtn] = useState(false)
+	const [isFree, setIsFree] = useState(ad?.isFree)
+	const [slides, setSlides] = useState([])
 
-  const handleFreetaskCheck = async (e) => {
-    e.preventDefault()
-    setIsFree(!isFree)
-    setIsLoading(true)
-    const response = await setAdvertFree(ad?._id)
-    setIsLoading(false)
-    response ? toast.success('Advert type changed') : toast.error('Error switching advert type')
-    navigate(-1)
-  }
+	useEffect(() => {
+		async function getData() {
+			const resp = await getSingleAdvertById(id)
+			setAd(resp)
+			setSlides(resp?.mediaURL)
+			setAdverter(resp.userId)
+			console.log(ad)
+		}
 
-  const handleDelete = (e) => {
-    e.preventDefault()
-    setDelBtn(!delBtn)
-  }
+		getData()
+	}, [])
 
-  const renderMedia = (url) => {
-    if (url.endsWith('.jpg') || url.endsWith('.png') || url.endsWith('.jpeg')) {
-      return <img src={url} alt='Image' className='rounded-lg' />
-    } else if (url.endsWith('.mp4') || url.endsWith('.webm') || url.endsWith('.ogg')) {
-      return (
-        <video width='320' height='240' controls className='rounded-lg'>
-          <source src={url} type='video/mp4' />
-          Your browser does not support the video tag.
-        </video>
-      )
-    } else {
-      return 'Unsupported media type'
-    }
-  }
+	const adIdData = {
+		advertId: ad?._id,
+	}
 
-  return (
-    <div className='container mx-auto p-6'>
-      {isLoading && <Loader />}
-      {delBtn && <DeleteAdvertModal handleDelete={handleDelete} data={ad} />}
+	const { advertId } = adIdData
 
-      <div className='flex items-center gap-3 mb-4'>
-        <MdOutlineKeyboardArrowLeft size={30} onClick={() => navigate(-1)} />
-        <div className='flex flex-col'>
-          <p className='font-semibold text-xl text-gray-700'>Go back to Adverts</p>
-          <small className='text-gray-500'>View details and perform actions on the advert</small>
-        </div>
-      </div>
+	//Handle Input
+	const handleFreetaskCheck = async (e) => {
+		e.preventDefault()
 
-      {/* Advertiser Card */}
-      <div className='card bg-white shadow-lg p-6 mb-6 rounded-lg'>
-        <h2 className='text-xl font-bold mb-4'>Advertiser</h2>
-        <div className='flex gap-6 items-center'>
-          <FaUser size={100} className='text-gray-800 border p-4 rounded-full' />
-          <div>
-            <h3 className='text-2xl'>{adverter?.fullname || adverter?.username}</h3>
-            <small className='text-gray-500'>@{adverter?.username}</small>
-            <button
-              onClick={() => navigate(`/admin/dashboard/user/${adverter?._id}`)}
-              className='mt-2 px-4 py-2 bg-secondary text-white rounded-lg'>
-              View Advertiser
-            </button>
-          </div>
-        </div>
-      </div>
+		setIsFree(!isFree)
 
-      {/* Advert Details Card */}
-      <div className='card bg-white shadow-lg p-6 mb-6 rounded-lg'>
-        <h2 className='text-xl font-bold mb-4'>Advert Details</h2>
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-          <div>
-            <div className='mb-3'>
-              <label className='font-bold'>Platform:</label>
-              <p>{ad?.platform}</p>
-            </div>
-            <div className='mb-3'>
-              <label className='font-bold'>Service:</label>
-              <p>{ad?.service}</p>
-            </div>
-            <div className='mb-3'>
-              <label className='font-bold'>Tasks left:</label>
-              <p>{ad?.tasks} tasks at ₦{ad?.earnPerTask}/task</p>
-            </div>
-          </div>
+		setIsLoading(true)
 
-          <div>
-            <div className='mb-3'>
-              <label className='font-bold'>Ad Units Remaining:</label>
-              <p>{ad?.desiredROI} units at ₦{ad?.costPerTask}/unit</p>
-            </div>
-            <div className='mb-3'>
-              <label className='font-bold'>Total Amount:</label>
-              <p>₦{ad?.adAmount}</p>
-            </div>
-            <div className='mb-3'>
-              <label className='font-bold'>Ad Status:</label>
-              <p className={`status-${ad?.status?.toLowerCase()}`}>{ad?.status}</p>
-            </div>
-          </div>
-        </div>
-      </div>
+		const response = await setAdvertFree(advertId)
 
-      {/* Media Card */}
-      <div className='card bg-white shadow-lg p-6 mb-6 rounded-lg'>
-        <h2 className='text-xl font-bold mb-4'>Media</h2>
-        <Slider {...settings}>
-          {slides.map((slide, index) => (
-            <div key={index}>{renderMedia(slide?.secure_url)}</div>
-          ))}
-        </Slider>
-      </div>
+		setIsLoading(false)
 
-      {/* Advert Controls Card */}
-      <div className='card bg-white shadow-lg p-6 rounded-lg'>
-        <h2 className='text-xl font-bold mb-4'>Controls</h2>
-        <p>{isFree ? 'This advert is set to run as a free task' : 'This advert is set to run as a paid task'}</p>
-        <button
-          onClick={handleFreetaskCheck}
-          className='mt-2 px-4 py-2 bg-gray-700 text-white rounded-lg'>
-          {isLoading ? <LoaderIcon /> : 'Change'}
-        </button>
-        <button onClick={handleDelete} className='mt-2 px-4 py-2 bg-red-500 text-white rounded-lg'>
-          Delete
-        </button>
-      </div>
-    </div>
-  )
+		if (response) {
+			setIsLoading(false)
+			toast.success('Advert type changed')
+			navigate(-1)
+		}
+
+		if (!response) {
+			setIsLoading(false)
+			toast.error('Error switching advert type')
+		}
+
+		setIsLoading(false)
+	}
+
+	const renderMedia = (url) => {
+		if (url.endsWith('.jpg') || url.endsWith('.png') || url.endsWith('.jpeg')) {
+			return <img src={url} alt='Image' />
+		} else if (
+			url.endsWith('.mp4') ||
+			url.endsWith('.webm') ||
+			url.endsWith('.ogg')
+		) {
+			return (
+				<video width='320' height='240' controls>
+					<source src={url} type='video/mp4' />
+					Your browser does not support the video tag.
+				</video>
+			)
+		} else {
+			// Handle other media types if needed
+			return 'Unsupported media type'
+		}
+	}
+
+	const handleDelete = (e) => {
+		e.preventDefault()
+		setDelBtn(!delBtn)
+	}
+
+	return (
+		<div className='w-full h-fit'>
+			{isLoading && <Loader />}
+			{delBtn && <DeleteAdvertModal handleDelete={handleDelete} data={ad} />}
+			<div className='flex items-center gap-3 border-b border-gray-200 pb-6'>
+				<MdOutlineKeyboardArrowLeft size={30} onClick={() => navigate(-1)} />
+				<div className='flex flex-col'>
+					<p className='font-semibold text-xl text-gray-700'>
+						Go back to Adverts
+					</p>
+					<small className='font-medium text-gray-500'>
+						Here you can see the advert details clearly and perform all sorts of
+						actions on it.
+					</small>
+				</div>
+			</div>
+
+			<div className='container shadow-xl py-[2rem] px-[2rem] mt-[2rem]'>
+				{/* Advertiser Details */}
+				<div className='box flex flex-col border-b border-gray-100 p-3 pb-6'>
+					<label
+						htmlFor='adverter'
+						className='text-center md:text-start text-secondary text-[25px] font-bold'>
+						Avertiser
+					</label>
+					<div className='flex flex-col items-center gap-3 mt-3 md:flex-row'>
+						<FaUser
+							size={300}
+							className='text-gray-800 border border-gray-100 p-[2rem] rounded-full'
+						/>
+						<div className='flex flex-col text-center gap-1 md:text-left'>
+							<h3 className='text-[3rem]'>
+								{adverter?.fullname ? adverter?.fullname : adverter?.username}
+							</h3>
+							<small className='text-gray-700 mt-[-0.7rem] mb-[1rem] font-semibold'>
+								@{adverter?.username}
+							</small>
+							<button
+								onClick={() =>
+									navigate(`/admin/dashboard/user/${adverter?._id}`)
+								}
+								className='px-4 py-2 bg-secondary text-primary cursor-pointer hover:bg-gray-900 mt-2'>
+								View Advertiser
+							</button>
+
+							<div>
+								<label>Moderator</label>
+								<p>{ad?.tasksModerator}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				{/* Advert Details */}
+				<div className='flex flex-col  md:flex-row'>
+					{/* Ad Content */}
+					<div className='box flex flex-col border-b border-gray-100 p-3 pb-6'>
+						<label
+							htmlFor='adverter'
+							className='text-secondary text-[25px] font-bold'>
+							Advert Details
+						</label>
+						<div className='user__details__container flex flex-col gap-1 md:gap-[4rem] md:flex-row'>
+							{/* First Column */}
+							<div className='left flex flex-col gap-1 md:gap-[4rem] mt-3'>
+								<div className='flex flex-col border-b border-gray-50 py-3'>
+									<label htmlFor='' className='font-bold'>
+										Platform:
+									</label>
+									<p>{ad?.platform}</p>
+								</div>
+
+								<div className='flex flex-col border-b border-gray-50 py-3'>
+									<label htmlFor='' className='font-bold'>
+										Service:
+									</label>
+									<p>{ad?.service}</p>
+								</div>
+
+								<div className='flex flex-col border-b border-gray-50 py-3'>
+									<label htmlFor='' className='font-bold'>
+										Ad Tasks:
+									</label>
+									<div className='flex flex-col gap-1'>
+										<div className='flex gap-1 items-baseline'>
+											<p>{ad?.tasks}</p>
+											<small className='text-[9px] text-gray-700 font-bold'>
+												₦{ad?.earnPerTask}/task
+											</small>
+										</div>
+										<small
+											onClick={() =>
+												navigate(`/admin/dashboard/advert/tasks/${ad?._id}`)
+											}
+											className='text-secondary cursor-pointer text-[13px]'>
+											View Tasks
+										</small>
+									</div>
+								</div>
+							</div>
+
+							{/* Second Column */}
+							<div className='right flex flex-col gap-1 md:gap-[4rem] mt-3'>
+								<div className='flex flex-col border-b border-gray-50 py-3'>
+									<label htmlFor='' className='font-bold'>
+										Ad Units:
+									</label>
+									<div className='flex gap-1 items-baseline'>
+										<p>{ad?.desiredROI}</p>
+										<small className='text-[9px] text-gray-700 font-bold'>
+											₦{ad?.costPerTask}/unit
+										</small>
+									</div>
+								</div>
+
+								<div className='flex flex-col border-b border-gray-50 py-3'>
+									<label htmlFor='' className='font-bold'>
+										Total Amount:
+									</label>
+									<p>₦{ad?.adAmount}</p>
+								</div>
+
+								<div className='flex flex-col border-b border-gray-50 py-3'>
+									<label htmlFor='' className='font-bold'>
+										Ad Status:
+									</label>
+									<p
+										className={`
+                    ${ad?.status === 'Pending' && 'pending'}
+                    ${ad?.status === 'Running' && 'running'}
+                    ${ad?.status === 'Allocating' && 'allocating'}
+                    ${ad?.status === 'Completed' && 'completed'}
+                    ${ad?.status === 'Rejected' && 'rejected'}
+                    `}>
+										{ad?.status}
+									</p>
+								</div>
+							</div>
+
+							{/* Third COlumn */}
+							<div className='right flex flex-col gap-1 md:gap-[4rem] mt-3'>
+								<div className='flex flex-col border-b border-gray-50 py-3'>
+									<label htmlFor='' className='font-bold'>
+										Target State:
+									</label>
+									<div className='flex gap-1 items-baseline'>
+										<p>{ad?.state}</p>
+										<small className='text-[9px] text-gray-700 font-bold'>
+											Nigeria
+										</small>
+									</div>
+								</div>
+
+								<div className='flex flex-col border-b border-gray-50 py-3'>
+									<label htmlFor='' className='font-bold'>
+										Target LGA:
+									</label>
+									<p>{ad?.lga}</p>
+								</div>
+
+								<div className='flex flex-col border-b border-gray-50 py-3'>
+									<label htmlFor='' className='font-bold'>
+										Gender:
+									</label>
+									<p className=''>{ad?.gender}</p>
+								</div>
+							</div>
+						</div>
+
+						{/* Ad URL */}
+						<div className='right flex flex-col gap-1 md:gap-[4rem] mt-3'>
+							<div className='flex flex-col border-b border-gray-50 py-3'>
+								<label htmlFor='' className='font-bold'>
+									URL:
+								</label>
+								<div className='flex gap-1 items-baseline'>
+									<a
+										href={ad?.socialPageLink}
+										target='_blank'
+										className='text-blue-600'>
+										{ad?.socialPageLink}
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					{/* Media File */}
+					<div className='w-full h-full mx-auto mt-6 md:w-[400px] md:h-[400px]'>
+						{/* {slides?.map((image, index) => (
+                  <img key={index} src={image?.secure_url} alt={`Image ${index}`} />
+              ))} */}
+
+						<div className='media-slider'>
+							<Slider {...settings}>
+								{slides.map((slide, index) => (
+									<div key={index} className='slide'>
+										<img src={slide?.secure_url} alt={`Slide ${index}`} />
+									</div>
+								))}
+							</Slider>
+						</div>
+					</div>
+				</div>
+
+				{/* Advert Controls */}
+				<div className='mt-[1rem]'>
+					<div className='w-full md:w-fit flex flex-col mb-[1rem] gap-1'>
+						<label htmlFor='' className='text-[14px]'>
+							{isFree && <p>This advert is set to run as a free task</p>}
+							{!isFree && <p>This advert is set to run as a paid task</p>}
+						</label>
+						<button
+							onClick={handleFreetaskCheck}
+							className='flex items-center gap-1 justify-center bg-gray-700 text-primary px-5 py-2 hover:bg-tertiary'>
+							Change
+							<span>{isLoading && <LoaderIcon />}</span>
+						</button>
+					</div>
+
+					<div className='flex gap-2'>
+						<button
+							onClick={handleDelete}
+							className='py-2 px-5 bg-tertiary text-primary'>
+							Delete
+						</button>
+						{/* <button className='py-2 px-5 bg-secondary text-primary'>Message Advertiser</button> */}
+					</div>
+				</div>
+			</div>
+		</div>
+	)
 }
 
 export default AdvertSingle
