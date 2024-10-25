@@ -6,6 +6,7 @@ import { selectIsLoading } from '../../../redux/slices/taskSlice';
 import DeleteTaskModal from '../../../components/adminComponents/DeleteTaskModal';
 import TaskModal from '../../../components/adminComponents/TaskModal';
 import { getTasksByAdvertId } from '../../../services/taskServices';
+import TaskProofModal from '../../../components/ui/TaskProofModal';
 
 const AdsTasksList = () => {
   const { id } = useParams();
@@ -16,10 +17,12 @@ const AdsTasksList = () => {
   const [selectedStatus, setSelectedStatus] = useState('All');
   const [modalBtn, setModalBtn] = useState(false);
   const [delBtn, setDelBtn] = useState(false);
-
+  const [taskPerformer, setTaskPerformer] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage] = useState(5); // Tasks per page
   const [totalRows, setTotalRows] = useState(0); // Total tasks available
+  const [toggleTaskProofModal, setToggleTaskProofModal] = useState(false);
+  const [taskProof, setTaskProof] = useState(null);
 
   const fetchTasksByAdvertId = async () => {
     const resp = await getTasksByAdvertId({
@@ -29,8 +32,16 @@ const AdsTasksList = () => {
       status: selectedStatus,
     });
     setTaskAdList(resp.tasks);
+    setTaskPerformer(resp.taskPerformer);
     setTotalRows(resp.totalTasks);
   };
+
+  const openPopup = (e, task) => {
+    e.preventDefault();
+    setTaskProof(task);
+    setToggleTaskProofModal(!toggleTaskProofModal);
+  };
+
 
   useEffect(() => {
     fetchTasksByAdvertId();
@@ -92,7 +103,16 @@ const AdsTasksList = () => {
                     {new Date(task.createdAt).toLocaleDateString()}
                   </p>
                 </div>
-
+				{modalBtn && <TaskModal
+          handleModal={handleModal}
+          task={task}
+          taskPerformer={taskPerformer}
+        />}
+         {delBtn && <DeleteTaskModal handleDelete={handleDelete} task={task} />}
+      {toggleTaskProofModal && (
+        <TaskProofModal toggleTaskProof={openPopup} task={taskProof} />
+      )}
+    
                 <div className="flex flex-col md:flex-row gap-2">
                   <button
                     onClick={handleModal}
@@ -108,15 +128,7 @@ const AdsTasksList = () => {
                   </button>
                 </div>
               </div>
-			  {modalBtn && <TaskModal
-          handleModal={handleModal}
-          task={task}
-          taskPerformer={task.taskPerformer}
-        />}
-     {delBtn && <DeleteTaskModal handleDelete={handleDelete} task={task} />}
-      {toggleTaskProofModal && (
-        <TaskProofModal toggleTaskProof={openPopup} task={taskProof} />
-      )}
+			 
 
               <div className="flex justify-between items-center mt-4 text-sm">
                 <div>
