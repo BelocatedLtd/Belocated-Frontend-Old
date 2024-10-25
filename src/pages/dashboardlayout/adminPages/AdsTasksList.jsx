@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { MdOutlineKeyboardArrowLeft } from 'react-icons/md';
 import { useSelector } from 'react-redux';
@@ -6,10 +7,7 @@ import { selectIsLoading } from '../../../redux/slices/taskSlice';
 import DeleteTaskModal from '../../../components/adminComponents/DeleteTaskModal';
 import TaskModal from '../../../components/adminComponents/TaskModal';
 import { getTasksByAdvertId } from '../../../services/taskServices';
-import { Modal } from '@mui/material';
-
-// Bind the modal to the app's root element
-Modal.setAppElement('#root');
+import TaskProofModal from '../../../components/ui/TaskProofModal';
 
 const AdsTasksList = () => {
   const { id } = useParams();
@@ -24,8 +22,8 @@ const AdsTasksList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage] = useState(5); // Tasks per page
   const [totalRows, setTotalRows] = useState(0); // Total tasks available
-  const [selectedProof, setSelectedProof] = useState(null); // Track selected proof URL
-  const [openProofModal, setOpenProofModal] = useState(false); // Modal state
+  const [toggleTaskProofModal, setToggleTaskProofModal] = useState(false);
+  const [taskProof, setTaskProof] = useState(null);
 
   const fetchTasksByAdvertId = async () => {
     const resp = await getTasksByAdvertId({
@@ -36,18 +34,20 @@ const AdsTasksList = () => {
     });
     setTaskAdList(resp.tasks);
     setTaskPerformer(resp.taskPerformer);
+	  console.log(taskPerformer)
     setTotalRows(resp.totalTasks);
   };
 
-  const handleProofClick = (proofUrl) => {
-    setSelectedProof(proofUrl);
-    setOpenProofModal(true);
+  const openPopup = (e, task) => {
+    e.preventDefault();
+    setTaskProof(task);
+    setToggleTaskProofModal(!toggleTaskProofModal);
   };
 
-  const handleCloseProofModal = () => {
-    setOpenProofModal(false);
-    setSelectedProof(null);
-  };
+
+  useEffect(() => {
+    fetchTasksByAdvertId();
+  }, [selectedStatus, currentPage]);
 
   const handleModal = () => setModalBtn(!modalBtn);
   const handleDelete = (e) => {
@@ -55,9 +55,9 @@ const AdsTasksList = () => {
     setDelBtn(!delBtn);
   };
 
-  useEffect(() => {
-    fetchTasksByAdvertId();
-  }, [selectedStatus, currentPage]);
+  const handleProofClick = (url) => {
+    window.open(url, '_blank');
+  };
 
   const totalPages = Math.ceil(totalRows / rowsPerPage);
 
@@ -105,16 +105,16 @@ const AdsTasksList = () => {
                     {new Date(task.createdAt).toLocaleDateString()}
                   </p>
                 </div>
-
-                {modalBtn && (
-                  <TaskModal
-                    handleModal={handleModal}
-                    task={task}
-                    taskPerformer={taskPerformer}
-                  />
-                )}
-                {delBtn && <DeleteTaskModal handleDelete={handleDelete} task={task} />}
-
+				{modalBtn && <TaskModal
+          handleModal={handleModal}
+          task={task}
+          taskPerformer={taskPerformer}
+        />}
+         {delBtn && <DeleteTaskModal handleDelete={handleDelete} task={task} />}
+      {toggleTaskProofModal && (
+        <TaskProofModal toggleTaskProof={openPopup} task={taskProof} />
+      )}
+    
                 <div className="flex flex-col md:flex-row gap-2">
                   <button
                     onClick={handleModal}
@@ -130,6 +130,7 @@ const AdsTasksList = () => {
                   </button>
                 </div>
               </div>
+			 
 
               <div className="flex justify-between items-center mt-4 text-sm">
                 <div>
@@ -153,7 +154,9 @@ const AdsTasksList = () => {
                 <label>Proof:</label>{' '}
                 {task.proofOfWorkMediaURL?.[0]?.secure_url ? (
                   <span
-                    onClick={() => handleProofClick(task.proofOfWorkMediaURL[0].secure_url)}
+                    onClick={() =>
+                      handleProofClick(task.proofOfWorkMediaURL[0].secure_url)
+                    }
                     className="text-blue-500 hover:text-red-500 cursor-pointer"
                   >
                     View Proof
@@ -166,31 +169,6 @@ const AdsTasksList = () => {
           ))
         )}
       </div>
-
-      {/* Proof Modal */}
-      <Modal
-        isOpen={openProofModal}
-        onRequestClose={handleCloseProofModal}
-        contentLabel="Proof Modal"
-        className="bg-white p-6 rounded shadow-lg max-w-lg mx-auto"
-        overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
-      >
-        {selectedProof ? (
-          <img
-            src={selectedProof}
-            alt="Proof"
-            className="w-full h-auto rounded-md"
-          />
-        ) : (
-          'No proof available.'
-        )}
-        <button
-          onClick={handleCloseProofModal}
-          className="mt-4 bg-gray-500 text-white px-4 py-2 rounded"
-        >
-          Close
-        </button>
-      </Modal>
 
       {/* Pagination */}
       <div className="flex justify-center mt-6">
@@ -208,6 +186,9 @@ const AdsTasksList = () => {
           </button>
         ))}
       </div>
+
+      {/* Modals */}
+      
     </div>
   );
 };
