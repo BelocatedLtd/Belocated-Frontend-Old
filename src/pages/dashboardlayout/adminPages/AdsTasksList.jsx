@@ -109,11 +109,11 @@ const AdsTasksList = () => {
                 {modalBtn && (
                   <TaskModal
                     handleModal={handleModal}
-                    task={task}
+                    task={task._id}
                     taskPerformer={taskPerformer}
                   />
                 )}
-                {delBtn && <DeleteTaskModal handleDelete={handleDelete} task={task} />}
+                {delBtn && <DeleteTaskModal handleDelete={handleDelete} task={task._id} />}
 
                 <div className="flex flex-col md:flex-row gap-2">
                   <button
