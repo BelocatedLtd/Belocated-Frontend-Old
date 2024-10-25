@@ -17,7 +17,7 @@ const DeleteTaskModal = ({handleDelete, task}) => {
     const navigate = useNavigate()
     const adminUser = useSelector(selectUser)
 
-    const { _id } = task._id.toString();
+    const { _id } = task;
 
     const confirmDelete = async(e) => {
         e.preventDefault()
