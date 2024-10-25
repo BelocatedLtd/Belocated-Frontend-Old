@@ -118,11 +118,34 @@ const AdvertSingle = () => {
             <p><strong>Platform:</strong> {ad?.platform}</p>
             <p><strong>Service:</strong> {ad?.service}</p>
             <p>
-              <strong>Tasks:</strong> {ad?.tasks} ({ad?.earnPerTask} ₦/task)
+              <strong>Tasks left: <small
+											onClick={() =>
+												navigate(
+													`/admin/dashboard/advert/tasks/${adverter?._id}`,
+												)
+											}
+											className='text-secondary text-[13px]'>
+											View Tasks
+										</small></strong> {ad?.tasks} ({ad?.earnPerTask} ₦/task)
+              
             </p>
-            <p><strong>Ad Units:</strong> {ad?.desiredROI}</p>
+            <p><strong>Ad Units Submitted:</strong> {ad?.desiredROI}</p>
             <p><strong>Total Amount:</strong> ₦{ad?.adAmount}</p>
-            <p><strong>Status:</strong> {ad?.status}</p>
+            <p>
+									<label htmlFor='' className='font-bold'>
+										Ad Status:
+									</label>
+									<p
+										className={`
+                    ${ad?.status === 'Pending' && 'pending'}
+                    ${ad?.status === 'Running' && 'running'}
+                    ${ad?.status === 'Allocating' && 'allocating'}
+                    ${ad?.status === 'Completed' && 'completed'}
+                    ${ad?.status === 'Rejected' && 'rejected'}
+                    `}>
+										{ad?.status}
+									</p>
+								</p>
             <p><strong>Target State:</strong> {ad?.state}</p>
             <p><strong>Target LGA:</strong> {ad?.lga}</p>
             <p><strong>Gender:</strong> {ad?.gender}</p>
