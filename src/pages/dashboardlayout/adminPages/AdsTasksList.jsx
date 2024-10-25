@@ -34,6 +34,7 @@ const AdsTasksList = () => {
     });
     setTaskAdList(resp.tasks);
     setTaskPerformer(resp.taskPerformer);
+	  console.log(taskPerformer)
     setTotalRows(resp.totalTasks);
   };
 
