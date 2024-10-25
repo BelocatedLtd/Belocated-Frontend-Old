@@ -6,7 +6,7 @@ import { selectIsLoading } from '../../../redux/slices/taskSlice';
 import DeleteTaskModal from '../../../components/adminComponents/DeleteTaskModal';
 import TaskModal from '../../../components/adminComponents/TaskModal';
 import { getTasksByAdvertId } from '../../../services/taskServices';
-import Modal from 'react-modal'; // Import Modal from react-modal
+import { Modal } from '@mui/material';
 
 // Bind the modal to the app's root element
 Modal.setAppElement('#root');
