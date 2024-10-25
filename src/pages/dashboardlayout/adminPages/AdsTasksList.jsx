@@ -42,6 +42,17 @@ const AdsTasksList = () => {
     setToggleTaskProofModal(!toggleTaskProofModal);
   };
 
+  const [openProofModal, setOpenProofModal] = useState(false);
+  const [selectedProof, setSelectedProof] = useState<string | null>(null);
+
+  const handleProofClick = (proofUrl) => {
+    setSelectedProof(proofUrl);
+    setOpenProofModal(true);
+  };
+  const handleCloseProofModal = () => {
+    setOpenProofModal(false);
+    setSelectedProof(null);
+  };
 
   useEffect(() => {
     fetchTasksByAdvertId();
@@ -53,9 +64,7 @@ const AdsTasksList = () => {
     setDelBtn(!delBtn);
   };
 
-  const handleProofClick = (url) => {
-    window.open(url, '_blank');
-  };
+ 
 
   const totalPages = Math.ceil(totalRows / rowsPerPage);
 
@@ -167,6 +176,23 @@ const AdsTasksList = () => {
           ))
         )}
       </div>
+      <Modal open={openProofModal} onClose={handleCloseProofModal} aria-labelledby="proof-modal">
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            {selectedProof ? (
+              <Image src={selectedProof} alt="Proof" width={600} height={600} className="rounded-md" />
+            ) : (
+              'No proof available.'
+            )}
+            <button
+              onClick={handleCloseProofModal}
+              className="mt-4 bg-gray-500 text-white px-4 py-2 rounded"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </Modal>
 
       {/* Pagination */}
       <div className="flex justify-center mt-6">
