@@ -12,14 +12,15 @@ import { getSingleAdvertById } from '../../../services/advertService'
 
 const AdvertSingle = () => {
   const { id } = useParams()
+  const navigate = useNavigate()
   const tasks = useSelector(selectTasks)
+
   const [isLoading, setIsLoading] = useState(false)
   const [ad, setAd] = useState()
   const [adverter, setAdverter] = useState()
   const [delBtn, setDelBtn] = useState(false)
   const [isFree, setIsFree] = useState(ad?.isFree)
   const [slides, setSlides] = useState([])
-  const navigate = useNavigate()
 
   const settings = {
     dots: true,
@@ -35,6 +36,7 @@ const AdvertSingle = () => {
       setAd(resp)
       setSlides(resp?.mediaURL)
       setAdverter(resp.userId)
+      console.log(ad)
     }
     getData()
   }, [id])
@@ -43,10 +45,30 @@ const AdvertSingle = () => {
     e.preventDefault()
     setIsFree(!isFree)
     setIsLoading(true)
+
     const response = await setAdvertFree(ad?._id)
     setIsLoading(false)
-    response ? toast.success('Advert type changed') : toast.error('Error switching advert type')
-    navigate(-1)
+
+    if (response) {
+      toast.success('Advert type changed')
+      navigate(-1)
+    } else {
+      toast.error('Error switching advert type')
+    }
+  }
+
+  const renderMedia = (url) => {
+    if (url.endsWith('.jpg') || url.endsWith('.png') || url.endsWith('.jpeg')) {
+      return <img src={url} alt='Image' className='w-full h-auto rounded' />
+    } else if (url.endsWith('.mp4') || url.endsWith('.webm') || url.endsWith('.ogg')) {
+      return (
+        <video width='320' height='240' controls className='w-full'>
+          <source src={url} type='video/mp4' />
+          Your browser does not support the video tag.
+        </video>
+      )
+    }
+    return 'Unsupported media type'
   }
 
   const handleDelete = (e) => {
@@ -54,107 +76,80 @@ const AdvertSingle = () => {
     setDelBtn(!delBtn)
   }
 
-  const renderMedia = (url) => {
-    if (url.endsWith('.jpg') || url.endsWith('.png') || url.endsWith('.jpeg')) {
-      return <img src={url} alt='Image' className='rounded-lg' />
-    } else if (url.endsWith('.mp4') || url.endsWith('.webm') || url.endsWith('.ogg')) {
-      return (
-        <video width='320' height='240' controls className='rounded-lg'>
-          <source src={url} type='video/mp4' />
-          Your browser does not support the video tag.
-        </video>
-      )
-    } else {
-      return 'Unsupported media type'
-    }
-  }
-
   return (
-    <div className='container mx-auto p-6'>
+    <div className='w-full h-fit p-6'>
       {isLoading && <Loader />}
       {delBtn && <DeleteAdvertModal handleDelete={handleDelete} data={ad} />}
 
-      <div className='flex items-center gap-3 mb-4'>
+      {/* Header */}
+      <div className='flex items-center gap-3 mb-6'>
         <MdOutlineKeyboardArrowLeft size={30} onClick={() => navigate(-1)} />
-        <div className='flex flex-col'>
-          <p className='font-semibold text-xl text-gray-700'>Go back to Adverts</p>
-          <small className='text-gray-500'>View details and perform actions on the advert</small>
+        <div>
+          <h1 className='text-xl font-semibold'>Go back to Adverts</h1>
+          <p className='text-sm text-gray-500'>
+            Here you can see the advert details clearly and perform all sorts of actions.
+          </p>
         </div>
       </div>
 
-      {/* Advertiser Card */}
-      <div className='card bg-white shadow-lg p-6 mb-6 rounded-lg'>
-        <h2 className='text-xl font-bold mb-4'>Advertiser</h2>
-        <div className='flex gap-6 items-center'>
-          <FaUser size={100} className='text-gray-800 border p-4 rounded-full' />
-          <div>
-            <h3 className='text-2xl'>{adverter?.fullname || adverter?.username}</h3>
-            <small className='text-gray-500'>@{adverter?.username}</small>
+      {/* Card Container */}
+      <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+        {/* Advertiser Card */}
+        <div className='bg-white shadow-lg rounded-lg p-6'>
+          <h2 className='text-2xl font-bold text-center mb-4'>Advertiser</h2>
+          <div className='flex flex-col items-center'>
+            <FaUser size={100} className='text-gray-500 mb-4' />
+            <h3 className='text-lg font-semibold'>
+              {adverter?.fullname || adverter?.username}
+            </h3>
+            <p className='text-gray-600 mb-2'>@{adverter?.username}</p>
             <button
               onClick={() => navigate(`/admin/dashboard/user/${adverter?._id}`)}
-              className='mt-2 px-4 py-2 bg-secondary text-white rounded-lg'>
+              className='bg-blue-500 text-white px-4 py-2 rounded mt-2'>
               View Advertiser
             </button>
           </div>
         </div>
-      </div>
 
-      {/* Advert Details Card */}
-      <div className='card bg-white shadow-lg p-6 mb-6 rounded-lg'>
-        <h2 className='text-xl font-bold mb-4'>Advert Details</h2>
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-          <div>
-            <div className='mb-3'>
-              <label className='font-bold'>Platform:</label>
-              <p>{ad?.platform}</p>
-            </div>
-            <div className='mb-3'>
-              <label className='font-bold'>Service:</label>
-              <p>{ad?.service}</p>
-            </div>
-            <div className='mb-3'>
-              <label className='font-bold'>Tasks left:</label>
-              <p>{ad?.tasks} tasks at ₦{ad?.earnPerTask}/task</p>
-            </div>
+        {/* Advert Details Card */}
+        <div className='bg-white shadow-lg rounded-lg p-6'>
+          <h2 className='text-2xl font-bold mb-4'>Advert Details</h2>
+          <div className='space-y-4'>
+            <p><strong>Platform:</strong> {ad?.platform}</p>
+            <p><strong>Service:</strong> {ad?.service}</p>
+            <p>
+              <strong>Tasks:</strong> {ad?.tasks} ({ad?.earnPerTask} ₦/task)
+            </p>
+            <p><strong>Ad Units:</strong> {ad?.desiredROI}</p>
+            <p><strong>Total Amount:</strong> ₦{ad?.adAmount}</p>
+            <p><strong>Status:</strong> {ad?.status}</p>
+            <p><strong>Target State:</strong> {ad?.state}</p>
+            <p><strong>Target LGA:</strong> {ad?.lga}</p>
+            <p><strong>Gender:</strong> {ad?.gender}</p>
+            <a href={ad?.socialPageLink} target='_blank' rel='noopener noreferrer' className='text-blue-600'>
+              {ad?.socialPageLink}
+            </a>
           </div>
+        </div>
 
-          <div>
-            <div className='mb-3'>
-              <label className='font-bold'>Ad Units Remaining:</label>
-              <p>{ad?.desiredROI} units at ₦{ad?.costPerTask}/unit</p>
-            </div>
-            <div className='mb-3'>
-              <label className='font-bold'>Total Amount:</label>
-              <p>₦{ad?.adAmount}</p>
-            </div>
-            <div className='mb-3'>
-              <label className='font-bold'>Ad Status:</label>
-              <p className={`status-${ad?.status?.toLowerCase()}`}>{ad?.status}</p>
-            </div>
-          </div>
+        {/* Media Card */}
+        <div className='bg-white shadow-lg rounded-lg p-6'>
+          <h2 className='text-2xl font-bold mb-4'>Media</h2>
+          <Slider {...settings}>
+            {slides.map((slide, index) => (
+              <div key={index}>{renderMedia(slide?.secure_url)}</div>
+            ))}
+          </Slider>
         </div>
       </div>
 
-      {/* Media Card */}
-      <div className='card bg-white shadow-lg p-6 mb-6 rounded-lg'>
-        <h2 className='text-xl font-bold mb-4'>Media</h2>
-        <Slider {...settings}>
-          {slides.map((slide, index) => (
-            <div key={index}>{renderMedia(slide?.secure_url)}</div>
-          ))}
-        </Slider>
-      </div>
-
-      {/* Advert Controls Card */}
-      <div className='card bg-white shadow-lg p-6 rounded-lg'>
-        <h2 className='text-xl font-bold mb-4'>Controls</h2>
-        <p>{isFree ? 'This advert is set to run as a free task' : 'This advert is set to run as a paid task'}</p>
-        <button
-          onClick={handleFreetaskCheck}
-          className='mt-2 px-4 py-2 bg-gray-700 text-white rounded-lg'>
-          {isLoading ? <LoaderIcon /> : 'Change'}
+      {/* Controls */}
+      <div className='flex gap-4 mt-6'>
+        <button onClick={handleFreetaskCheck} className='bg-gray-700 text-white px-4 py-2 rounded'>
+          {isFree ? 'Set as Paid Task' : 'Set as Free Task'}
+          {isLoading && <LoaderIcon className='ml-2' />}
         </button>
-        <button onClick={handleDelete} className='mt-2 px-4 py-2 bg-red-500 text-white rounded-lg'>
+        <button onClick={handleDelete} className='bg-red-500 text-white px-4 py-2 rounded'>
           Delete
         </button>
       </div>
