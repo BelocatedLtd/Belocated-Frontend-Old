@@ -110,7 +110,7 @@ const AdsTasksList = () => {
           task={task}
           taskPerformer={taskPerformer}
         />}
-         {delBtn && <DeleteTaskModal handleDelete={handleDelete} task={task} />}
+         {delBtn && <DeleteTaskModal handleDelete={handleDelete} task={task._id} />}
       {toggleTaskProofModal && (
         <TaskProofModal toggleTaskProof={openPopup} task={taskProof} />
       )}
