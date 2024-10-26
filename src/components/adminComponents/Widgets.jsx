@@ -17,24 +17,6 @@ const Widgets = ({ type, totalUsers, totalAdverts, totalTrx, totalTasks }) => {
 	const dispatch = useDispatch()
 		const [task, setTask] = useState(null)
 
-	
-useEffect(() => {
-		async function getTaskData() {
-			const data = await getAllSubmiitedTask()
-
-			if (!data || data === undefined) {
-				toast.error('Unable to retrieve all tasks, session will be terminated')
-				await dispatch(SET_LOGOUT())
-				navigate('/')
-				return
-			}
-                 setTask(data);
-			
-		}
-		getTaskData()
-	}, [])
-
-
 	useEffect(() => {
 		async function getUserData() {
 			const data = await getUser()
@@ -108,7 +90,7 @@ useEffect(() => {
 		case 'tasks':
 			data = {
 				title: 'SUBMITTED TASKS',
-				count: task,
+				count: totalTasks,
 				link: 'See All Tasks',
 				url: `/admin/dashboard/tasks/${user?.username}`,
 				icon: (
