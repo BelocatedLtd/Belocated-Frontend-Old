@@ -118,7 +118,7 @@ const AdvertSingle = () => {
             <p><strong>Platform:</strong> {ad?.platform}</p>
             <p><strong>Service:</strong> {ad?.service}</p>
             <p>
-              <strong>Tasks left: <small
+              <strong>Tasks Submitted: <small
 											onClick={() =>
 												navigate(`/admin/dashboard/advert/tasks/${ad?._id}`)
 											}
@@ -127,7 +127,7 @@ const AdvertSingle = () => {
 										</small></strong> {ad?.tasks} ({ad?.earnPerTask} ₦/task)
               
             </p>
-            <p><strong>Ad Units Submitted:</strong> {ad?.desiredROI}</p>
+            <p><strong>Ad Units Remaining:</strong> {ad?.desiredROI}</p>
             <p><strong>Total Amount:</strong> ₦{ad?.adAmount}</p>
             <p>
 									<label htmlFor='' className='font-bold'>
