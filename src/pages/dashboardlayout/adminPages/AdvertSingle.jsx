@@ -120,11 +120,9 @@ const AdvertSingle = () => {
             <p>
               <strong>Tasks left: <small
 											onClick={() =>
-												navigate(
-													`/admin/dashboard/advert/tasks/${adverter?._id}`,
-												)
+												navigate(`/admin/dashboard/advert/tasks/${ad?._id}`)
 											}
-											className='text-secondary text-[13px]'>
+											className='text-secondary cursor-pointer text-[13px]'>
 											View Tasks
 										</small></strong> {ad?.tasks} ({ad?.earnPerTask} ₦/task)
               
