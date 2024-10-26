@@ -45,6 +45,19 @@ export const getUserTasks = async () => {
 	return response.data
 }
 
+//Get Total Submitted Task User
+export const getAllSubmiitedTask = async() => {
+    const headers = getAuthHeaders();
+    try {
+         const response = await axios.get(`${BACKEND_URL}/api/tasks/submitted`, headers)
+        return response.data
+     } catch (error) {
+         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+         toast.error(`${message}, Error retrieving user data`)
+     }
+            
+}
+
 // Get User Tasks Gets a specific user tasks
 export const getTasksByUserId = async ({ userId, page, limit, status }) => {
 	const headers = getAuthHeaders()
