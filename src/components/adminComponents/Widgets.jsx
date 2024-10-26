@@ -18,7 +18,8 @@ const Widgets = ({ type, totalUsers, totalAdverts, totalTrx, totalTasks }) => {
 		const [task, setTask] = useState(null)
 
 	
-async function getTaskData() {
+useEffect(() => {
+		async function getTaskData() {
 			const data = await getAllSubmiitedTask()
 
 			if (!data || data === undefined) {
@@ -32,7 +33,6 @@ async function getTaskData() {
 		}
 		getTaskData()
 	}, [])
-
 
 
 	useEffect(() => {
