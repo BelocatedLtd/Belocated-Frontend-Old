@@ -8,11 +8,32 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { SET_LOGOUT, SET_USER, selectUser } from '../../redux/slices/authSlice'
 import { getUser } from '../../services/authServices'
+import { getAllSubmiitedTask } from '../../services/taskServices'
+
 
 const Widgets = ({ type, totalUsers, totalAdverts, totalTrx, totalTasks }) => {
 	const [percentage, setPercentage] = useState(20)
 	const user = useSelector(selectUser)
 	const dispatch = useDispatch()
+		const [task, setTask] = useState(null)
+
+	
+async function getTaskData() {
+			const data = await getAllSubmiitedTask()
+
+			if (!data || data === undefined) {
+				toast.error('Unable to retrieve all tasks, session will be terminated')
+				await dispatch(SET_LOGOUT())
+				navigate('/')
+				return
+			}
+                 setTask(data);
+			
+		}
+		getTaskData()
+	}, [])
+
+
 
 	useEffect(() => {
 		async function getUserData() {
@@ -86,8 +107,8 @@ const Widgets = ({ type, totalUsers, totalAdverts, totalTrx, totalTasks }) => {
 
 		case 'tasks':
 			data = {
-				title: 'TASKS',
-				count: totalTasks,
+				title: 'SUBMITTED TASKS',
+				count: task,
 				link: 'See All Tasks',
 				url: `/admin/dashboard/tasks/${user?.username}`,
 				icon: (
