@@ -209,7 +209,7 @@ const handleModal = () => setModalBtn(!modalBtn);
         >
           <div
              className="bg-white p-5 rounded-md shadow-lg"
-      style={{ width: '80%', height: '80%', maxWidth:'800px'}} 
+      style={{ width: '100%', height: '100%', maxWidth:'800px'}} 
             onClick={(e) => e.stopPropagation()}
           >
             <button
@@ -220,7 +220,7 @@ const handleModal = () => setModalBtn(!modalBtn);
             </button>
             <iframe
               src={modalContent}
-              className="w-full h-84 rounded-md"
+              className="w-full h-full rounded-md"
               title="Proof of Work"
               frameBorder="0"
                style={{
