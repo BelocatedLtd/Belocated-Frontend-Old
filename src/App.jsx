@@ -63,7 +63,7 @@ import FAQ from "./pages/mainlayout/FAQ";
 import WithdrawalRequests from "./pages/dashboardlayout/adminPages/WithdrawalRequests";
 import WithdrawalModal from "./components/adminComponents/WithdrawalModal";
 import AdsTasksList from "./pages/dashboardlayout/adminPages/AdsTasksList";
-import AllTasksList from "../../src/pages/dashboardlayout/adminPages/AllTask";
+import AllTasksList from "./pages/dashboardlayout/adminPages/AllTask";
 import KnowledgeBase from "./pages/dashboardlayout/userPages/KnowledgeBase";
 import Maintainance from "./pages/mainlayout/Maintainance";
 import RefChallenge from "./pages/dashboardlayout/userPages/RefChallenge";
