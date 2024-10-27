@@ -500,6 +500,18 @@ const handleCloseMenu = () => {
         }
         />
 
+          {/* Admin  All Tasks to Approve*/}
+      <Route 
+        path="/admin/dashboard/allTasks/:username" 
+        element={
+          <SidebarLeft>
+            <DashLayout>
+              <Tasks />
+            </DashLayout>
+          </SidebarLeft>
+        }
+        />
+
         {/* Admin Tasks Single User*/}
       <Route 
         path="/admin/dashboard/tasks/user/:userId" 
