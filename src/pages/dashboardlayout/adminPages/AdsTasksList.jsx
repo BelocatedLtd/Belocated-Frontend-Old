@@ -22,8 +22,8 @@ const AdsTasksList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage] = useState(5); // Tasks per page
   const [totalRows, setTotalRows] = useState(0); // Total tasks available
-  const [toggleTaskProofModal, setToggleTaskProofModal] = useState(false);
-  const [taskProof, setTaskProof] = useState(null);
+const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState('');
 
   const fetchTasksByAdvertId = async () => {
     const resp = await getTasksByAdvertId({
@@ -55,8 +55,14 @@ const AdsTasksList = () => {
     setDelBtn(!delBtn);
   };
 
-  const handleProofClick = (url) => {
-    window.open(url, '_blank');
+ const handleProofClick = (url) => {
+    setModalContent(url);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setModalContent('');
   };
 
   const totalPages = Math.ceil(totalRows / rowsPerPage);
@@ -150,21 +156,47 @@ const AdsTasksList = () => {
                 </div>
               </div>
 
-              <div className="mt-2">
-                <label>Proof:</label>{' '}
-                {task.proofOfWorkMediaURL?.[0]?.secure_url ? (
-                  <span
-                    onClick={() =>
-                      handleProofClick(task.proofOfWorkMediaURL[0].secure_url)
-                    }
-                    className="text-blue-500 hover:text-red-500 cursor-pointer"
-                  >
-                    View Proof
-                  </span>
-                ) : (
-                  'N/A'
-                )}
-              </div>
+               {/* Proof Modal */}
+      <div className="mt-2">
+        <label>Proof:</label>{' '}
+        {task.proofOfWorkMediaURL?.[0]?.secure_url ? (
+          <span
+            onClick={() => handleProofClick(task.proofOfWorkMediaURL[0].secure_url)}
+            className="text-blue-500 hover:text-red-500 cursor-pointer"
+          >
+            View Proof
+          </span>
+        ) : (
+          'N/A'
+        )}
+
+        {/* Modal */}
+        {isModalOpen && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+            onClick={closeModal} // Close modal when clicking outside the content
+          >
+            <div
+              className="bg-white p-5 rounded-md shadow-lg max-w-lg w-full relative"
+              onClick={(e) => e.stopPropagation()} // Prevent click from closing modal
+            >
+              <button
+                className="absolute top-2 right-2 text-gray-500 hover:text-red-500"
+                onClick={closeModal}
+              >
+                ✕
+              </button>
+              <h2 className="text-lg font-semibold mb-4">Proof of Work</h2>
+              <iframe
+                src={modalContent}
+                className="w-full h-64 rounded-md"
+                title="Proof of Work"
+                frameBorder="0"
+              />
+            </div>
+          </div>
+        )}
+      </div>
             </div>
           ))
         )}
