@@ -6,11 +6,19 @@ import { selectIsLoading } from '../../../redux/slices/taskSlice';
 import DeleteTaskModal from '../../../components/adminComponents/DeleteTaskModal';
 import TaskModal from '../../../components/adminComponents/TaskModal';
 import { getTasksByAdvertId } from '../../../services/taskServices';
+import { handleApproveTask, selectIsError, selectIsSuccess } from '../../../redux/slices/taskSlice';
+import io from 'socket.io-client';
+import { BACKEND_URL } from '../../../utils/globalConfig';
+import Loader from '../loader/Loader';
+
+const socket = io.connect(`${BACKEND_URL}`);
 
 const AdsTasksList = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const isLoading = useSelector(selectIsLoading);
+  const isError = useSelector(selectIsError);
+  const isSuccess = useSelector(selectIsSuccess);
   const [taskAdList, setTaskAdList] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState('All');
   const [modalBtn, setModalBtn] = useState(false);
@@ -47,6 +55,36 @@ const AdsTasksList = () => {
     setIsModalOpen(true);
   };
 
+
+	const handleApprove = async (task) => {
+    const approveTaskData = {
+      taskId: task._id,
+      status: 'Approved',
+      message: '',
+    };
+
+    if (!approveTaskData.taskId) {
+      toast.error('Task information missing');
+      return;
+    }
+
+    dispatch(handleApproveTask(approveTaskData));
+
+    if (isError) {
+      toast.error('Error Approving Task');
+      return;
+    }
+
+    if (isSuccess) {
+      toast.success('Task Approved Successfully');
+      socket.emit('sendActivity', {
+        userId: task.taskPerformerId,
+        action: `@${taskPerformer?.username} from ${taskPerformer?.location} just earned ₦${task.toEarn} from a task completed`,
+      });
+      fetchTasksByAdvertId(); // Refresh task list after approval
+    }
+  };
+	
     
 const handleModal = () => setModalBtn(!modalBtn);
   const handleDelete = (e) => {
@@ -111,12 +149,14 @@ const handleModal = () => setModalBtn(!modalBtn);
          {delBtn && <DeleteTaskModal handleDelete={handleDelete} task={task} />}  
 
                 <div className="flex flex-col md:flex-row gap-2">
+                  <div className="flex gap-2">
                   <button
-                    onClick={() => setModalBtn(true)}
-                    className="py-2 px-5 bg-secondary text-primary"
+                    onClick={() => handleApprove(task)}
+                    className="py-2 px-5 bg-green-500 text-white rounded"
                   >
                     Approve
                   </button>
+                </div>
                   <button
                     onClick={() => setDelBtn(true)}
                     className="py-2 px-5 bg-tertiary text-primary"
