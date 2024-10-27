@@ -57,7 +57,7 @@ const AdsTasksList = () => {
   };
 	
 const approveTask = async (taskId) => {
-    await dispatch(handleApproveTask({ taskId, status: 'Approved' ,  message: 'The advertiser approved this task'});
+    await dispatch(handleApproveTask({ taskId, status: 'Approved' ,  message: 'The advertiser approved this task'}));
   };
 	
 const handleTaskApproval = async (e, task) => {
