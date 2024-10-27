@@ -103,6 +103,17 @@ const handleModal = () => setModalBtn(!modalBtn);
                     {new Date(task.createdAt).toLocaleDateString()}
                   </p>
                 </div>
+	{modalBtn && <TaskModal
+          handleModal={handleModal}
+          task={task}
+          taskPerformer={taskPerformer}
+        />}
+         {delBtn && <DeleteTaskModal handleDelete={handleDelete} task={task} />}
+      {toggleTaskProofModal && (
+        <TaskProofModal toggleTaskProof={openPopup} task={taskProof} />
+      )}
+    
+                
 
                 <div className="flex flex-col md:flex-row gap-2">
                   <button
