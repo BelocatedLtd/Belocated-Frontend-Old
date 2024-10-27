@@ -167,7 +167,7 @@ const AdsTasksList = () => {
             </button>
             <iframe
               src={modalContent}
-              className="w-full h-64 rounded-md"
+              className="w-full h-84 rounded-md"
               title="Proof of Work"
               frameBorder="0"
             />
