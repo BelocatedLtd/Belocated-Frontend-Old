@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { MdOutlineKeyboardArrowLeft } from 'react-icons/md';
 import { useSelector } from 'react-redux';
@@ -7,7 +6,6 @@ import { selectIsLoading } from '../../../redux/slices/taskSlice';
 import DeleteTaskModal from '../../../components/adminComponents/DeleteTaskModal';
 import TaskModal from '../../../components/adminComponents/TaskModal';
 import { getTasksByAdvertId } from '../../../services/taskServices';
-import TaskProofModal from '../../../components/ui/TaskProofModal';
 
 const AdsTasksList = () => {
   const { id } = useParams();
@@ -22,40 +20,30 @@ const AdsTasksList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage] = useState(5); // Tasks per page
   const [totalRows, setTotalRows] = useState(0); // Total tasks available
-const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState('');
 
   const fetchTasksByAdvertId = async () => {
-    const resp = await getTasksByAdvertId({
-      advertId: id,
-      page: currentPage,
-      limit: rowsPerPage,
-      status: selectedStatus,
-    });
-    setTaskAdList(resp.tasks);
-    setTaskPerformer(resp.taskPerformer);
-	  console.log(taskPerformer)
-    setTotalRows(resp.totalTasks);
+    try {
+      const resp = await getTasksByAdvertId({
+        advertId: id,
+        page: currentPage,
+        limit: rowsPerPage,
+        status: selectedStatus,
+      });
+      setTaskAdList(resp.tasks);
+      setTaskPerformer(resp.taskPerformer);
+      setTotalRows(resp.totalTasks);
+    } catch (error) {
+      console.error('Failed to fetch tasks:', error);
+    }
   };
-
-  const openPopup = (e, task) => {
-    e.preventDefault();
-    setTaskProof(task);
-    setToggleTaskProofModal(!toggleTaskProofModal);
-  };
-
 
   useEffect(() => {
     fetchTasksByAdvertId();
   }, [selectedStatus, currentPage]);
 
-  const handleModal = () => setModalBtn(!modalBtn);
-  const handleDelete = (e) => {
-    e.preventDefault();
-    setDelBtn(!delBtn);
-  };
-
- const handleProofClick = (url) => {
+  const handleProofClick = (url) => {
     setModalContent(url);
     setIsModalOpen(true);
   };
@@ -64,8 +52,6 @@ const [isModalOpen, setIsModalOpen] = useState(false);
     setIsModalOpen(false);
     setModalContent('');
   };
-
-  const totalPages = Math.ceil(totalRows / rowsPerPage);
 
   return (
     <div className="w-full mx-auto mt-8 p-4">
@@ -111,32 +97,22 @@ const [isModalOpen, setIsModalOpen] = useState(false);
                     {new Date(task.createdAt).toLocaleDateString()}
                   </p>
                 </div>
-				{modalBtn && <TaskModal
-          handleModal={handleModal}
-          task={task}
-          taskPerformer={taskPerformer}
-        />}
-         {delBtn && <DeleteTaskModal handleDelete={handleDelete} task={task} />}
-      {toggleTaskProofModal && (
-        <TaskProofModal toggleTaskProof={openPopup} task={taskProof} />
-      )}
-    
+
                 <div className="flex flex-col md:flex-row gap-2">
                   <button
-                    onClick={handleModal}
+                    onClick={() => setModalBtn(true)}
                     className="py-2 px-5 bg-secondary text-primary"
                   >
                     Approve/Reject
                   </button>
                   <button
-                    onClick={handleDelete}
+                    onClick={() => setDelBtn(true)}
                     className="py-2 px-5 bg-tertiary text-primary"
                   >
                     Delete
                   </button>
                 </div>
               </div>
-			 
 
               <div className="flex justify-between items-center mt-4 text-sm">
                 <div>
@@ -156,71 +132,48 @@ const [isModalOpen, setIsModalOpen] = useState(false);
                 </div>
               </div>
 
-               {/* Proof Modal */}
-      <div className="mt-2">
-        <label>Proof:</label>{' '}
-        {task.proofOfWorkMediaURL?.[0]?.secure_url ? (
-          <span
-            onClick={() => handleProofClick(task.proofOfWorkMediaURL[0].secure_url)}
-            className="text-blue-500 hover:text-red-500 cursor-pointer"
-          >
-            View Proof
-          </span>
-        ) : (
-          'N/A'
-        )}
-
-        {/* Modal */}
-        {isModalOpen && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
-            onClick={closeModal} // Close modal when clicking outside the content
-          >
-            <div
-              className="bg-white p-5 rounded-md shadow-lg max-w-lg w-full relative"
-              onClick={(e) => e.stopPropagation()} // Prevent click from closing modal
-            >
-              <button
-                className="absolute top-2 right-2 text-gray-500 hover:text-red-500"
-                onClick={closeModal}
-              >
-                ✕
-              </button>
-              <h2 className="text-lg font-semibold mb-4">Proof of Work</h2>
-              <iframe
-                src={modalContent}
-                className="w-full h-64 rounded-md"
-                title="Proof of Work"
-                frameBorder="0"
-              />
-            </div>
-          </div>
-        )}
-      </div>
+              <div className="mt-2">
+                <label>Proof:</label>{' '}
+                {task.proofOfWorkMediaURL?.[0]?.secure_url ? (
+                  <span
+                    onClick={() => handleProofClick(task.proofOfWorkMediaURL[0].secure_url)}
+                    className="text-blue-500 hover:text-red-500 cursor-pointer"
+                  >
+                    View Proof
+                  </span>
+                ) : (
+                  'N/A'
+                )}
+              </div>
             </div>
           ))
         )}
       </div>
 
-      {/* Pagination */}
-      <div className="flex justify-center mt-6">
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentPage(index + 1)}
-            className={`mx-1 px-3 py-1 border ${
-              currentPage === index + 1
-                ? 'bg-secondary text-white'
-                : 'bg-white text-gray-700'
-            }`}
+      {isModalOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+          onClick={closeModal}
+        >
+          <div
+            className="bg-white p-5 rounded-md shadow-lg max-w-lg w-full relative"
+            onClick={(e) => e.stopPropagation()}
           >
-            {index + 1}
-          </button>
-        ))}
-      </div>
-
-      {/* Modals */}
-      
+            <button
+              className="absolute top-2 right-2 text-gray-500 hover:text-red-500"
+              onClick={closeModal}
+            >
+              ✕
+            </button>
+            <iframe
+              src={modalContent}
+              className="w-full h-64 rounded-md"
+              title="Proof of Work"
+              frameBorder="0"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
