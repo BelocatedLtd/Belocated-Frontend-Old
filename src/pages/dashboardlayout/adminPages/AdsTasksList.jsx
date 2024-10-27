@@ -115,7 +115,7 @@ const handleModal = () => setModalBtn(!modalBtn);
                     onClick={() => setModalBtn(true)}
                     className="py-2 px-5 bg-secondary text-primary"
                   >
-                    Approve/Reject
+                    Approve
                   </button>
                   <button
                     onClick={() => setDelBtn(true)}
@@ -169,14 +169,14 @@ const handleModal = () => setModalBtn(!modalBtn);
         >
           <div
              className="bg-white p-5 rounded-md shadow-lg"
-      style={{ width: '600px', height: '400px' }} 
+      style={{ width: '80%', height: '80%', maxWidth:'800px'}} 
             onClick={(e) => e.stopPropagation()}
           >
             <button
               className="absolute top-2 right-2 text-gray-500 hover:text-red-500"
               onClick={closeModal}
             >
-              ✕
+              Close here
             </button>
             <iframe
               src={modalContent}
