@@ -47,6 +47,13 @@ const AdsTasksList = () => {
     setIsModalOpen(true);
   };
 
+    
+const handleModal = () => setModalBtn(!modalBtn);
+  const handleDelete = (e) => {
+    e.preventDefault();
+    setDelBtn(!delBtn);
+  };
+  
   const closeModal = () => {
     setIsModalOpen(false);
     setModalContent('');
