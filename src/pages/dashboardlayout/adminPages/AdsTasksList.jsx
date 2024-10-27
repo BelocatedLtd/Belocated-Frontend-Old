@@ -11,7 +11,6 @@ const AdsTasksList = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const isLoading = useSelector(selectIsLoading);
-
   const [taskAdList, setTaskAdList] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState('All');
   const [modalBtn, setModalBtn] = useState(false);
