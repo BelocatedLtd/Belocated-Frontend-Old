@@ -33,7 +33,7 @@ const DeleteTaskModal = ({handleDelete, task}) => {
         if (response) {
             toast.error("Task deleted")
             setIsLoading(false)
-            navigate(`/admin/dashboard/tasks/${adminUser.username}`)
+           
             
         }
         setIsLoading(false)
