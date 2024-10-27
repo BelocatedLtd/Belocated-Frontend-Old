@@ -156,7 +156,8 @@ const AdsTasksList = () => {
           onClick={closeModal}
         >
           <div
-            className="bg-white p-5 rounded-md shadow-lg max-w-lg w-full relative"
+             className="bg-white p-5 rounded-md shadow-lg"
+      style={{ width: '600px', height: '400px' }} 
             onClick={(e) => e.stopPropagation()}
           >
             <button
@@ -170,6 +171,7 @@ const AdsTasksList = () => {
               className="w-full h-84 rounded-md"
               title="Proof of Work"
               frameBorder="0"
+               style={{ borderRadius: '10px' }} 
             />
           </div>
         </div>
