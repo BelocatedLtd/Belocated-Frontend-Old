@@ -105,6 +105,22 @@ const Widgets = ({ type, totalUsers, totalAdverts, totalTrx, totalTasks }) => {
 			}
 			//setPercentage(totalTasks.length)
 			break
+
+			case 'allTask':
+			data = {
+				title: 'All TASK tO APPROVE',
+				count: task,
+				link: 'See All Task To Approve',
+				url: `/admin/dashboard/allTasks/${user?.username}`,
+				icon: (
+					<HiUsers
+						className='icon text-[30px] p-[5px] rounded-[5px] self-end'
+						style={{ color: 'red', backgroundColor: 'rgba(0, 118, 0, 0.2' }}
+					/>
+				),
+			}
+			//setPercentage(totalAdverts.length)
+			break
 		default:
 			break
 	}
