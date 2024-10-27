@@ -9,7 +9,6 @@ import { getTasksByAdvertId } from '../../../services/taskServices';
 import { handleApproveTask, selectIsError, selectIsSuccess } from '../../../redux/slices/taskSlice';
 import io from 'socket.io-client';
 import { BACKEND_URL } from '../../../../utils/globalConfig';
-import Loader from '../loader/Loader';
 
 const socket = io.connect(`${BACKEND_URL}`);
 
