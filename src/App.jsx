@@ -63,7 +63,7 @@ import FAQ from "./pages/mainlayout/FAQ";
 import WithdrawalRequests from "./pages/dashboardlayout/adminPages/WithdrawalRequests";
 import WithdrawalModal from "./components/adminComponents/WithdrawalModal";
 import AdsTasksList from "./pages/dashboardlayout/adminPages/AdsTasksList";
-import AllTasksList from "./pages/dashboardlayout/adminPages/AllTask";
+//import AllTasksList from "./pages/dashboardlayout/adminPages/AllTask";
 import KnowledgeBase from "./pages/dashboardlayout/userPages/KnowledgeBase";
 import Maintainance from "./pages/mainlayout/Maintainance";
 import RefChallenge from "./pages/dashboardlayout/userPages/RefChallenge";
@@ -502,7 +502,7 @@ const handleCloseMenu = () => {
         />
 
          {/* Admin  All Tasks to Approve*/}
-      <Route 
+{/*       <Route 
         path="/admin/dashboard/allTasks/:username" 
         element={
           <SidebarLeft>
@@ -511,7 +511,7 @@ const handleCloseMenu = () => {
             </DashLayout>
           </SidebarLeft>
         }
-        />
+        /> */}
 
         {/* Admin Tasks Single User*/}
       <Route 
