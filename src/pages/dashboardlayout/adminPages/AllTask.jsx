@@ -29,21 +29,20 @@ const AllTasksList = () => {
 
   const fetchTasks = async () => {
     try {
-      const resp = await axios.get('/api/tasks', {
-        params: {
-          page: currentPage,
-          limit: rowsPerPage,
-          status: selectedStatus,
-        },
-      });
-      setTasks(resp.data.tasks); // Update with the tasks array
-      // `taskPerformers` is populated via task fetching. You can derive it from `tasks` if needed.
-      setTaskPerformers(resp.data.tasks.map(task => task.taskPerformerId)); // This assumes taskPerformerId contains user data
-      setTotalRows(resp.data.totalTasks); // Update total rows count
+        const resp = await getTasks({
+            page: currentPage,
+            limit: rowsPerPage,
+            status:selectedStatus,
+          });
+          setTasks(resp.tasks);
+          setTaskPerformers(resp.taskPerformer);
+          setTotalRows(resp.totalTasks);
+      
     } catch (error) {
       console.error('Error fetching tasks:', error);
     }
   };
+
 
   const handleProofClick = (url) => {
     setModalContent(url);
