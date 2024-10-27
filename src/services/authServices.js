@@ -111,7 +111,7 @@ export const getUser = async() => {
         return response.data
      } catch (error) {
          const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-         toast.error(`${message}, Error retrieving user data`)
+         toast.error(`${message}, Error retrieving user data, Please Logout`)
      }
             
 }
