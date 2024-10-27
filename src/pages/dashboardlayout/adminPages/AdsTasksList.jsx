@@ -188,7 +188,11 @@ const handleModal = () => setModalBtn(!modalBtn);
               className="w-full h-84 rounded-md"
               title="Proof of Work"
               frameBorder="0"
-               style={{ borderRadius: '10px' }} 
+               style={{
+          objectFit: 'cover',
+          borderRadius: '10px',
+          overflow: 'hidden',
+        }}
             />
           </div>
         </div>
