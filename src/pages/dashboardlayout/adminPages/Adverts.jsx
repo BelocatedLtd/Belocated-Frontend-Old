@@ -77,13 +77,13 @@ const Adverts = () => {
                   <strong>Service:</strong> {advert.service}
                 </p>
                 <p className="text-sm text-gray-600 mb-1">
-                  <strong>Units:</strong> {advert.desiredROI}
+                  <strong>Units left:</strong> {advert.desiredROI}
                 </p>
                 <p className="text-sm text-gray-600 mb-1">
                   <strong>Amount:</strong> {advert.adAmount}
                 </p>
                 <p className="text-sm text-gray-600 mb-1">
-                  <strong>Tasks:</strong> {advert.tasks}
+                  <strong>Tasks Submitted:</strong> {advert.tasks}
                 </p>
                 <div className="mb-2">
                   <a
