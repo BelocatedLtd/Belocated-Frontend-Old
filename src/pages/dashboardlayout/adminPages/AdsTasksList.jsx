@@ -24,7 +24,7 @@ const AdsTasksList = () => {
   const [modalBtn, setModalBtn] = useState(false);
   const [delBtn, setDelBtn] = useState(false);
   const [taskPerformer, setTaskPerformer] = useState(null);
-	const [taskPerformers, setTaskPerformers] = useState(null)
+	const [taskPerformers, setTaskPerformers] = useState(taskAdList || [])
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage] = useState(5); // Tasks per page
   const [totalRows, setTotalRows] = useState(0); // Total tasks available
