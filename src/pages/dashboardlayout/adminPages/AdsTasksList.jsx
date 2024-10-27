@@ -24,6 +24,7 @@ const AdsTasksList = () => {
   const [modalBtn, setModalBtn] = useState(false);
   const [delBtn, setDelBtn] = useState(false);
   const [taskPerformer, setTaskPerformer] = useState(null);
+	const [taskPerformers, setTaskPerformers] = useState(null)
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage] = useState(5); // Tasks per page
   const [totalRows, setTotalRows] = useState(0); // Total tasks available
@@ -55,33 +56,45 @@ const AdsTasksList = () => {
     setIsModalOpen(true);
   };
 
+const handleTaskApproval = async (e, task) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-	const handleApprove = async (task) => {
-    const approveTaskData = {
-      taskId: task._id,
-      status: 'Approved',
-      message: '',
-    };
+    if (task.status === 'Approved') {
+      toast.success('Task has already been approved');
+      return;
+    }
 
-    if (!approveTaskData.taskId) {
+    if (!task?._id) {
       toast.error('Task information missing');
       return;
     }
 
-    dispatch(handleApproveTask(approveTaskData));
+    const updatedTask = { ...task, status: 'Approved' };
+
+    // Optimistically update UI
+    setTaskPerformers((prevTaskPerformers) =>
+      prevTaskPerformers.map((task) =>
+        task._id === task._id ? updatedTask : task
+      )
+    );
+
+    await approveTask(task._id);
 
     if (isError) {
       toast.error('Error Approving Task');
-      return;
-    }
-
-    if (isSuccess) {
-      toast.success('Task Approved Successfully');
+      // Revert UI update on error
+      setTaskPerformers((prevTaskPerformers) =>
+        prevTaskPerformers.map((task) =>
+          task._id === task._id ? { ...task, status: 'Pending' } : task
+        )
+      );
+    } else if (isSuccess) {
+      toast.success('Task Approved');
       socket.emit('sendActivity', {
         userId: task.taskPerformerId,
-        action: `@${taskPerformer?.username} from ${taskPerformer?.location} just earned ₦${task.toEarn} from a task completed`,
+        action: `@${task.taskPerformerId?.username} just earned ₦${task.toEarn} from a task completed`,
       });
-      fetchTasksByAdvertId(); // Refresh task list after approval
     }
   };
 	
@@ -150,11 +163,15 @@ const handleModal = () => setModalBtn(!modalBtn);
 
                 <div className="flex flex-col md:flex-row gap-2">
                   <div className="flex gap-2">
-                  <button
-                    onClick={() => handleApprove(task)}
-                    className="py-2 px-5 bg-green-500 text-white rounded"
+                                    <button
+                    onClick={(e) => handleTaskApproval(e, task)}
+                    className={`px-4 py-2 text-xs rounded ${
+                      task.status === 'Approved'
+                        ? 'bg-green-500'
+                        : 'bg-yellow-500 hover:bg-green-500'
+                    } text-white`}
                   >
-                    Approve
+                    {task.status === 'Approved' ? 'Approved' : 'Approve'}
                   </button>
                 </div>
                   <button
