@@ -56,7 +56,7 @@ const AdsTasksList = () => {
     setIsModalOpen(true);
   };
 	
-const approveTask = async (taskId: string) => {
+const approveTask = async (taskId) => {
     await dispatch(handleApproveTask({ taskId, status: 'Approved' ,  message: 'The advertiser approved this task'}) as any);
   };
 	
