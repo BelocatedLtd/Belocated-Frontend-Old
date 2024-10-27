@@ -100,6 +100,11 @@ const SidebarLeft = ({children}) => {
         icon: <FaTasks className='md:mr-2 text-[15px] md:text-[30px]'/>,
         path: `/admin/dashboard/tasks/${user?.username}`,
       },
+         {
+        title: "All Tasks To Approve",
+        icon: <FaTasks className='md:mr-2 text-[15px] md:text-[30px]'/>,
+        path: `/admin/dashboard/allTasks/${user?.username}`,
+      },
       {
         title: "All Transactions",
         icon: <GrTransaction className='md:mr-2 text-[15px] md:text-[30px]'/>,
