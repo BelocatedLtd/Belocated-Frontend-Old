@@ -109,8 +109,9 @@ const Adverts = () => {
                 >
                   {advert.status}
                 </p>
-                <button
-                  onClick={(e) => handleButtonClick(e, advert._id)}
+                <button onClick={() =>
+												navigate(`/admin/dashboard/advert/tasks/${advert?._id}`)
+                  }
                   className="px-4 py-2 bg-gray-800 text-white rounded-md w-full"
                 >
                   View
