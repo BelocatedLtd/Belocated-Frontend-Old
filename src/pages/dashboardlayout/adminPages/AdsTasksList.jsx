@@ -167,16 +167,20 @@ const handleModal = () => setModalBtn(!modalBtn);
 
                 <div className="flex flex-col md:flex-row gap-2">
                   <div className="flex gap-2">
+			  {taskPerformers?.map((tp) => (
                                     <button
+					    key={tp._id}
                     onClick={(e) => handleTaskApproval(e, task)}
                     className={`px-4 py-2 text-xs rounded ${
-                      task.status === 'Approved'
+                      tp.status === 'Approved'
                         ? 'bg-green-500'
                         : 'bg-yellow-500 hover:bg-green-500'
                     } text-white`}
                   >
-                    {task.status === 'Approved' ? 'Approved' : 'Approve'}
+                    {tp.status === 'Approved' ? 'Approved' : 'Approve'}
                   </button>
+))}
+
                 </div>
                   <button
                     onClick={() => setDelBtn(true)}
@@ -230,18 +234,19 @@ const handleModal = () => setModalBtn(!modalBtn);
         >
           <div
              className="bg-white p-5 rounded-md shadow-lg"
-      style={{ width: '100%', height: '100%', maxWidth:'800px'}} 
+      style={{ width: '80%', height: '80%', maxWidth:'800px'}} 
             onClick={(e) => e.stopPropagation()}
           >
             <button
               className="absolute top-2 right-2 text-gray-500 hover:text-red-500"
+		    style={{color:red}}
               onClick={closeModal}
             >
               Close here
             </button>
             <iframe
               src={modalContent}
-              className="w-full h-full rounded-md"
+              className="w-full h-84 rounded-md"
               title="Proof of Work"
               frameBorder="0"
                style={{
