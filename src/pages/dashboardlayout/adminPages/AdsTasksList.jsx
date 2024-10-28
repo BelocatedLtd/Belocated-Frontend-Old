@@ -36,11 +36,15 @@ const AdsTasksList = () => {
         advertId: id,
        
       });
+	    if(!resp){
+toast.error(resp.data.message)
+	    }
       setTaskAdList(resp.tasks);
       setTaskPerformer(resp.taskPerformer);
       setTotalRows(resp.totalTasks);
     } catch (error) {
       console.error('Failed to fetch tasks:', error);
+	    toast.error('failed to fetch tasks')
     }
   };
 
