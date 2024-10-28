@@ -241,7 +241,7 @@ const handleModal = () => setModalBtn(!modalBtn);
       />
     </div>
   </div>
-)}
+)}) 
 
     </div>
   );
