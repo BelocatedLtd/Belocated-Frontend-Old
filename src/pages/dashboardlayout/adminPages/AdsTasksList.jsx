@@ -25,8 +25,7 @@ const AdsTasksList = () => {
   const [delBtn, setDelBtn] = useState(false);
   const [taskPerformer, setTaskPerformer] = useState(null);
 	const [taskPerformers, setTaskPerformers] = useState(taskAdList || [])
-  const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage] = useState(5); // Tasks per page
+
   const [totalRows, setTotalRows] = useState(0); // Total tasks available
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState('');
@@ -35,9 +34,7 @@ const AdsTasksList = () => {
     try {
       const resp = await getTasksByAdvertId({
         advertId: id,
-        page: currentPage,
-        limit: rowsPerPage,
-        status: selectedStatus,
+       
       });
       setTaskAdList(resp.tasks);
       setTaskPerformer(resp.taskPerformer);
@@ -49,7 +46,7 @@ const AdsTasksList = () => {
 
   useEffect(() => {
     fetchTasksByAdvertId();
-  }, [selectedStatus, currentPage]);
+  }, [id]);
 
   const handleProofClick = (url) => {
     setModalContent(url);
@@ -126,17 +123,7 @@ const handleModal = () => setModalBtn(!modalBtn);
           <p className="font-semibold text-xl text-gray-700">User Tasks</p>
         </div>
 
-        <select
-          value={selectedStatus}
-          onChange={(e) => setSelectedStatus(e.target.value)}
-          className="py-2 px-4 border border-gray-400 rounded-md"
-        >
-          <option value="All">All</option>
-          <option value="Approved">Approved</option>
-          <option value="Submitted">Submitted</option>
-          <option value="Awaiting Submission">Awaiting Submission</option>
-          <option value="Rejected">Rejected</option>
-        </select>
+        
       </div>
 
       <div className="space-y-6">
