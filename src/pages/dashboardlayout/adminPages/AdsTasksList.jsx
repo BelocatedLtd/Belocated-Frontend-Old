@@ -61,47 +61,47 @@ const approveTask = async (taskId) => {
   };
 	
 const handleTaskApproval = async (e, clickedTask) => {
-    e.preventDefault();
-    e.stopPropagation();
+  e.preventDefault();
+  e.stopPropagation();
 
-    if (clickedTask.status === 'Approved') {
-      toast.success('Task has already been approved');
-      return;
-    }
+  if (clickedTask.status === 'Approved') {
+    toast.success('Task has already been approved');
+    return;
+  }
 
-    if (!clickedTask?._id) {
-      toast.error('Task information missing');
-      return;
-    }
+  if (!clickedTask?._id) {
+    toast.error('Task information missing');
+    return;
+  }
 
-    const updatedTask = { ...clickedTask, status: 'Approved' };
+  const updatedTask = { ...clickedTask, status: 'Approved' };
 
-    // Optimistically update UI
-    setTaskPerformers((prevTaskPerformers) =>
-      prevTaskPerformers.map((tp) =>
-        tp._id === clickedTask._id ? updatedTask : tp
+  // Optimistically update taskAdList
+  setTaskAdList((prevList) =>
+    prevList.map((task) =>
+      task._id === clickedTask._id ? updatedTask : task
+    )
+  );
+
+  await approveTask(clickedTask._id);
+
+  if (isError) {
+    toast.error('Error Approving Task');
+    // Revert UI update if error occurs
+    setTaskAdList((prevList) =>
+      prevList.map((task) =>
+        task._id === clickedTask._id ? { ...task, status: 'Pending' } : task
       )
     );
+  } else if (isSuccess) {
+    toast.success('Task Approved');
+    socket.emit('sendActivity', {
+      userId: clickedTask.taskPerformerId,
+      action: `@${clickedTask.taskPerformerId?.username} just earned ₦${clickedTask.toEarn} from a task completed`,
+    });
+  }
+};
 
-    await approveTask(clickedTask._id);
-
-    if (isError) {
-      toast.error('Error Approving Task');
-      // Revert UI update on error
-      setTaskPerformers((prevTaskPerformers) =>
-        prevTaskPerformers.map((tp) =>
-          tp._id === clickedTask._id ? { ...tp, status: 'Pending' } : tp
-        )
-      );
-    } else if (isSuccess) {
-      toast.success('Task Approved');
-      socket.emit('sendActivity', {
-        userId: task.taskPerformerId,
-        action: `@${task.taskPerformerId?.username} just earned ₦${task.toEarn} from a task completed`,
-      });
-    }
-  };
-	
     
 const handleModal = () => setModalBtn(!modalBtn);
   const handleDelete = (e) => {
@@ -144,53 +144,47 @@ const handleModal = () => setModalBtn(!modalBtn);
           <p>Loading...</p>
         ) : (
           taskAdList.map((task) => (
-            <div key={task._id} className="border-b pb-6">
-              <h3 className="font-bold text-lg">Task: {task.title}</h3>
-              <div className="flex justify-between items-center mt-4">
-                <div>
-                  <p className="text-sm">
-                    <strong>Performer:</strong> {task.taskPerformerId?.fullname}
-                  </p>
-                  <p className="text-sm">
-                    <strong>Advertiser:</strong> {task.advertiserId?.fullname}
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    {new Date(task.createdAt).toLocaleDateString()}
-                  </p>
-                </div>
-	{modalBtn && <TaskModal
-          handleModal={handleModal}
-          task={task}
-          taskPerformer={taskPerformer}
-        />}
-         {delBtn && <DeleteTaskModal handleDelete={handleDelete} task={task} />}  
+  <div key={task._id} className="border-b pb-6">
+    <h3 className="font-bold text-lg">Task: {task.title}</h3>
+    <div className="flex justify-between items-center mt-4">
+      <div>
+        <p className="text-sm">
+          <strong>Performer:</strong> {task.taskPerformerId?.fullname}
+        </p>
+        <p className="text-sm">
+          <strong>Advertiser:</strong> {task.advertiserId?.fullname}
+        </p>
+        <p className="text-xs text-gray-500">
+          {new Date(task.createdAt).toLocaleDateString()}
+        </p>
+      </div>
 
-                <div className="flex flex-col md:flex-row gap-2">
-                  <div className="flex gap-2">
-			  {taskPerformers?.map((tp) => (
-                                    <button
-					    key={tp._id}
-                    onClick={(e) => handleTaskApproval(e, task)}
-                    className={`px-4 py-2 text-xs rounded ${
-                      task.status === 'Approved'
-                        ? 'bg-green-500'
-                        : 'bg-yellow-500 hover:bg-green-500'
-                    } text-white`}
-                  >
-                    {task.status === 'Approved' ? 'Approved' : 'Approve'}
-                  </button>
-))}
+      <div className="flex flex-col md:flex-row gap-2">
+        <div className="flex gap-2">
+          {/* Ensure performers are fetched correctly from task object */}
+          {task.taskPerformers?.map((performer) => (
+            <button
+              key={performer._id}
+              onClick={(e) => handleTaskApproval(e, task)}
+              className={`px-4 py-2 text-xs rounded ${
+                task.status === 'Approved'
+                  ? 'bg-green-500'
+                  : 'bg-yellow-500 hover:bg-green-500'
+              } text-white`}
+            >
+              {task.status === 'Approved' ? 'Approved' : 'Approve'}
+            </button>
+          ))}
+        </div>
 
-                </div>
-                  <button
-                    onClick={() => setDelBtn(true)}
-                    className="py-2 px-5 bg-tertiary text-primary"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-
+        <button
+          onClick={() => setDelBtn(true)}
+          className="py-2 px-5 bg-tertiary text-primary"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
               <div className="flex justify-between items-center mt-4 text-sm">
                 <div>
                   <label>Social Media:</label>{' '}
@@ -210,54 +204,45 @@ const handleModal = () => setModalBtn(!modalBtn);
               </div>
 
               <div className="mt-2">
-                <label>Proof:</label>{' '}
-                {task.proofOfWorkMediaURL?.[0]?.secure_url ? (
-                  <span
-                    onClick={() => handleProofClick(task.proofOfWorkMediaURL[0].secure_url)}
-                    className="text-blue-500 hover:text-red-500 cursor-pointer"
-                  >
-                    View Proof
-                  </span>
-                ) : (
-                  'N/A'
-                )}
-              </div>
-            </div>
-          ))
-        )}
-      </div>
+  <label>Proof:</label>{' '}
+  {task.proofOfWorkMediaURL?.[0]?.secure_url ? (
+    <span
+      onClick={() => handleProofClick(task.proofOfWorkMediaURL[0].secure_url)}
+      className="text-blue-500 hover:text-red-500 cursor-pointer"
+    >
+      View Proof
+    </span>
+  ) : (
+    'N/A'
+  )}
+</div>
 
-      {isModalOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
-          onClick={closeModal}
-        >
-          <div
-             className="bg-white p-5 rounded-md shadow-lg"
-      style={{ width: '80%', height: '80%', maxWidth:'800px'}} 
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              className="absolute top-2 right-2 text-gray-500 hover:text-red-500"
-		    style={{color:'red'}}
-              onClick={closeModal}
-            >
-              Close here
-            </button>
-            <iframe
-              src={modalContent}
-              className="w-full h-84 rounded-md"
-              title="Proof of Work"
-              frameBorder="0"
-               style={{
-          objectFit: 'cover',
-          borderRadius: '10px',
-          overflow: 'hidden',
-        }}
-            />
-          </div>
-        </div>
-      )}
+{isModalOpen && (
+  <div
+    className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+    onClick={closeModal}
+  >
+    <div
+      className="bg-white p-5 rounded-md shadow-lg relative"
+      style={{ width: '80%', height: '80%', maxWidth: '800px' }}
+      onClick={(e) => e.stopPropagation()}
+    >
+      <button
+        className="absolute top-2 right-2 text-gray-500 hover:text-red-500"
+        onClick={closeModal}
+      >
+        Close
+      </button>
+      <img
+        src={modalContent}
+        alt="Proof of Work"
+        className="w-full h-full object-contain rounded-md"
+	      style={{width:'80%', height:'80%'}}
+      />
+    </div>
+  </div>
+)}
+
     </div>
   );
 };
