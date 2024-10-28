@@ -232,6 +232,7 @@ const handleModal = () => setModalBtn(!modalBtn);
       <button
         className="absolute top-2 right-2 text-gray-500 hover:text-red-500"
         onClick={closeModal}
+	      style={{backgroundColor:'red'}}
       >
         Close
       </button>
@@ -239,7 +240,7 @@ const handleModal = () => setModalBtn(!modalBtn);
         src={modalContent}
         alt="Proof of Work"
         className="w-full h-full object-contain rounded-md"
-	      style={{width:'80%', height:'80%'}}    
+	      style={{width:'100%', height:'100%'}}    
             />
           </div>
         </div>
