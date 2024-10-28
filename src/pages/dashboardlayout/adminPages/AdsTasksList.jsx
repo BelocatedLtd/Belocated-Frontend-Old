@@ -215,7 +215,11 @@ const handleModal = () => setModalBtn(!modalBtn);
   ) : (
     'N/A'
   )}
-</div>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
 
 {isModalOpen && (
   <div
@@ -243,7 +247,7 @@ const handleModal = () => setModalBtn(!modalBtn);
         </div>
       ) }
     </div>
-  )))) 
+  )
 };
 
 export default AdsTasksList;
