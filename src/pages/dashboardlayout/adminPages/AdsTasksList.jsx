@@ -243,7 +243,7 @@ const handleModal = () => setModalBtn(!modalBtn);
         </div>
       ) }
     </div>
-  );
+  ));
 };
 
 export default AdsTasksList;
