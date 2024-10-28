@@ -41,11 +41,11 @@ export const icons = [
         icon: linkedin
     },
     {
-        platform: 'appstore',
+        platform: 'iOS App Download',
         icon: appstore
     },
     {
-        platform: 'playstore',
+        platform: 'android app download',
         icon: playstore
     },
     {
