@@ -9,7 +9,7 @@ import { getTasksByAdvertId } from '../../../services/taskServices';
 import { handleApproveTask, selectIsError, selectIsSuccess } from '../../../redux/slices/taskSlice';
 import io from 'socket.io-client';
 import { BACKEND_URL } from '../../../../utils/globalConfig';
-
+import toast from 'react-hot-toast';
 const socket = io.connect(`${BACKEND_URL}`);
 
 const AdsTasksList = () => {
@@ -60,37 +60,37 @@ const approveTask = async (taskId) => {
     await dispatch(handleApproveTask({ taskId, status: 'Approved' ,  message: 'The advertiser approved this task'}));
   };
 	
-const handleTaskApproval = async (e, task) => {
+const handleTaskApproval = async (e, clickedTask) => {
     e.preventDefault();
     e.stopPropagation();
 
-    if (task.status === 'Approved') {
+    if (clickedTask.status === 'Approved') {
       toast.success('Task has already been approved');
       return;
     }
 
-    if (!task?._id) {
+    if (!clickedTask?._id) {
       toast.error('Task information missing');
       return;
     }
 
-    const updatedTask = { ...task, status: 'Approved' };
+    const updatedTask = { ...clickedTask, status: 'Approved' };
 
     // Optimistically update UI
     setTaskPerformers((prevTaskPerformers) =>
-      prevTaskPerformers.map((task) =>
-        task._id === task._id ? updatedTask : task
+      prevTaskPerformers.map((tp) =>
+        tp._id === clickedTask._id ? updatedTask : tp
       )
     );
 
-    await approveTask(task._id);
+    await approveTask(clickedTask._id);
 
     if (isError) {
       toast.error('Error Approving Task');
       // Revert UI update on error
       setTaskPerformers((prevTaskPerformers) =>
-        prevTaskPerformers.map((task) =>
-          task._id === task._id ? { ...task, status: 'Pending' } : task
+        prevTaskPerformers.map((tp) =>
+          tp._id === clickedTask._id ? { ...tp, status: 'Pending' } : tp
         )
       );
     } else if (isSuccess) {
