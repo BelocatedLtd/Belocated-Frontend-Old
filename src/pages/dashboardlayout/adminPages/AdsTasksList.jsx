@@ -170,14 +170,14 @@ const handleModal = () => setModalBtn(!modalBtn);
 			  {taskPerformers?.map((tp) => (
                                     <button
 					    key={tp._id}
-                    onClick={(e) => handleTaskApproval(e, tp)}
+                    onClick={(e) => handleTaskApproval(e, task)}
                     className={`px-4 py-2 text-xs rounded ${
-                      tp.status === 'Approved'
+                      task.status === 'Approved'
                         ? 'bg-green-500'
                         : 'bg-yellow-500 hover:bg-green-500'
                     } text-white`}
                   >
-                    {tp.status === 'Approved' ? 'Approved' : 'Approve'}
+                    {task.status === 'Approved' ? 'Approved' : 'Approve'}
                   </button>
 ))}
 
@@ -239,7 +239,7 @@ const handleModal = () => setModalBtn(!modalBtn);
           >
             <button
               className="absolute top-2 right-2 text-gray-500 hover:text-red-500"
-		    style={{color:red}}
+		    style={{color:'red'}}
               onClick={closeModal}
             >
               Close here
