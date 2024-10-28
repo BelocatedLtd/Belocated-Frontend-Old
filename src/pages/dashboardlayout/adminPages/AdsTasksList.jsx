@@ -162,10 +162,8 @@ const handleModal = () => setModalBtn(!modalBtn);
       <div className="flex flex-col md:flex-row gap-2">
         <div className="flex gap-2">
           {/* Ensure performers are fetched correctly from task object */}
-          {task.taskPerformers?.map((performer) => (
-            <button
-              key={performer._id}
-              onClick={(e) => handleTaskApproval(e, task)}
+	
+            <button onClick={(e) => handleTaskApproval(e, task)}
               className={`px-4 py-2 text-xs rounded ${
                 task.status === 'Approved'
                   ? 'bg-green-500'
@@ -174,7 +172,7 @@ const handleModal = () => setModalBtn(!modalBtn);
             >
               {task.status === 'Approved' ? 'Approved' : 'Approve'}
             </button>
-          ))}
+          
         </div>
 
         <button
