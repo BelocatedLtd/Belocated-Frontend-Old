@@ -230,9 +230,9 @@ const handleModal = () => setModalBtn(!modalBtn);
       onClick={(e) => e.stopPropagation()}
     >
       <button
-        className="absolute top-2 right-2 text-gray-500 hover:text-red-500"
+        className="absolute top-2 right-2 text-gray-500 hover:text-red-500 p-3"
         onClick={closeModal}
-	      style={{backgroundColor:'red'}}
+	      style={{backgroundColor:'red', color:'white'}}
       >
         Close
       </button>
