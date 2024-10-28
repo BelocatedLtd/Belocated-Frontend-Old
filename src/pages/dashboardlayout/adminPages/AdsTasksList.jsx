@@ -237,12 +237,11 @@ const handleModal = () => setModalBtn(!modalBtn);
         src={modalContent}
         alt="Proof of Work"
         className="w-full h-full object-contain rounded-md"
-	      style={{width:'80%', height:'80%'}}
-      />
-    </div>
-  </div>
-)}) 
-
+	      style={{width:'80%', height:'80%'}}    
+            />
+          </div>
+        </div>
+      ) }
     </div>
   );
 };
