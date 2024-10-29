@@ -5,7 +5,7 @@ import {
   MdKeyboardDoubleArrowRight,
   MdOutlineKeyboardArrowLeft,
 } from 'react-icons/md';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch} from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import DeleteTaskModal from '../../../components/adminComponents/DeleteTaskModal';
 import TaskModal from '../../../components/adminComponents/TaskModal';
@@ -19,6 +19,7 @@ import { getTaskById } from '../../../services/taskServices';
 const TaskSingle = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+    const dispatch = useDispatch()
   const adverts = useSelector(selectAllAdverts);
   const users = useSelector(selectUsers);
 
