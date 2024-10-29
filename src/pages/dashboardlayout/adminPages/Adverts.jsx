@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { handleGetALLUserAdverts } from '../../../redux/slices/advertSlice';
 import { selectIsError, selectIsLoading } from '../../../redux/slices/userSlice';
 import { icons } from '../../../components/data/socialIcon';
+import DeleteAdvertButton from '../../../components/adminComponents/DeleteAdvertModal';
 
 const Adverts = () => {
   const isLoading = useSelector(selectIsLoading);
@@ -129,7 +130,9 @@ const Adverts = () => {
               <div className="mt-2">
                 {renderStatusBadge(advert.status)}
               </div>
-
+ <div className="mt-2">
+			  <DeleteAdvertButton advertId={advert._id} />
+</div>
               <div className="mt-4 flex justify-end">
                 <button
                   onClick={() => navigate(`/admin/dashboard/advert/tasks/${advert._id}`)}
