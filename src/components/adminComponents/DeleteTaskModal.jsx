@@ -18,6 +18,8 @@ const DeleteTaskModal = ({handleDelete, task}) => {
     const adminUser = useSelector(selectUser)
 
     const { _id } = task
+     const {advertId} = task.advertId
+
 
     const confirmDelete = async(e) => {
         e.preventDefault()
@@ -33,7 +35,7 @@ const DeleteTaskModal = ({handleDelete, task}) => {
         if (response) {
             toast.error("Task deleted")
             setIsLoading(false)
-           
+             navigate(`/admin/dashboard/advert/tasks/${advertId}`)
             
         }
         setIsLoading(false)
