@@ -29,6 +29,8 @@ const AdsTasksList = () => {
   const [totalRows, setTotalRows] = useState(0); // Total tasks available
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState('');
+  const [loadingTaskId, setLoadingTaskId] = useState(null);
+
 
   const fetchTasksByAdvertId = async () => {
     try {
@@ -36,9 +38,10 @@ const AdsTasksList = () => {
         advertId: id,
        
       });
-	    if(!resp){
-toast.error(resp.data.message)
-	    }
+      if (!resp || resp.tasks.length === 0) {
+        toast.info('No submitted tasks available');
+        return;
+      }
       setTaskAdList(resp.tasks);
       setTaskPerformer(resp.taskPerformer);
       setTotalRows(resp.totalTasks);
@@ -75,25 +78,23 @@ const handleTaskApproval = async (e, clickedTask) => {
     return;
   }
 
-  const updatedTask = { ...clickedTask, status: 'Approved' };
+  setLoadingTaskId(clickedTask._id);
 
-  // Optimistically update taskAdList
-  setTaskAdList((prevList) =>
-    prevList.map((task) =>
-      task._id === clickedTask._id ? updatedTask : task
-    )
-  );
+ 
+    try {
+      const updatedTask = { ...clickedTask, status: 'Approved' };
+
+      // Optimistically update taskAdList
+      setTaskAdList((prevList) =>
+        prevList.filter((task) => task._id !== clickedTask._id) // Remove approved task from UI
+      );
 
   await approveTask(clickedTask._id);
 
   if (isError) {
     toast.error('Error Approving Task');
     // Revert UI update if error occurs
-    setTaskAdList((prevList) =>
-      prevList.map((task) =>
-        task._id === clickedTask._id ? { ...task, status: 'Pending' } : task
-      )
-    );
+    setTaskAdList((prevList) => [...prevList, clickedTask]);
   } else if (isSuccess) {
     toast.success('Task Approved');
     socket.emit('sendActivity', {
@@ -101,6 +102,9 @@ const handleTaskApproval = async (e, clickedTask) => {
       action: `@${clickedTask.taskPerformerId?.username} just earned ₦${clickedTask.toEarn} from a task completed`,
     });
   }
+} finally {
+  setLoadingTaskId(null); // Reset loading state
+}
 };
 
     
@@ -131,8 +135,10 @@ const handleModal = () => setModalBtn(!modalBtn);
       </div>
 
       <div className="space-y-6">
-        {isLoading ? (
+      {isLoading ? (
           <p>Loading...</p>
+        ) : taskAdList.length === 0 ? (
+          <p className="text-center text-gray-500">No Submitted tasks available</p>
         ) : (
           taskAdList.map((task) => (
   <div key={task._id} className="border-b pb-6">
@@ -149,6 +155,7 @@ const handleModal = () => setModalBtn(!modalBtn);
           {new Date(task.createdAt).toLocaleDateString()}
         </p>
       </div>
+      {delBtn && <DeleteTaskModal handleDelete={handleDelete} task={task} />}
 
       <div className="flex flex-col md:flex-row gap-2">
         <div className="flex gap-2">
