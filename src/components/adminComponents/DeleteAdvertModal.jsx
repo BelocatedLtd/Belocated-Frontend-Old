@@ -11,48 +11,36 @@ import { selectUser } from '../../redux/slices/authSlice'
 import { deleteAdvert } from '../../services/advertService'
 
 
-const DeleteAdvertModal = ({handleDelete, data}) => {
-    const [isLoading, setIsLoading] = useState(false)
-    const navigate = useNavigate()
-    const adminUser = useSelector(selectUser)
+const DeleteAdvertButton = ({ advertId }) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
+    const adminUser = useSelector(selectUser);
 
-    const {_id} = data
+    const confirmDelete = async (e) => {
+        e.preventDefault();
+        setIsLoading(true);
 
-    const confirmDelete = async(e) => {
-        e.preventDefault()
+        const response = await deleteAdvert(advertId);
 
-        setIsLoading(true)
-        const response = await deleteAdvert(_id)
-
-        setIsLoading(false)
+        setIsLoading(false);
 
         if (!response) {
-            toast.error("Failed to delete Advert")
+            toast.error("Failed to delete Advert");
+        } else {
+            toast.success("Advert deleted");
+            navigate(`/admin/dashboard/adverts/${adminUser.username}`);
         }
+    };
 
-        if (response) {
-            toast.error("Advert deleted")
-            navigate(`/admin/dashboard/adverts/${adminUser.username}`)
-        }
-    }
+    return (
+        <button 
+            onClick={confirmDelete} 
+           className='py-2 px-4 text-[15px] bg-red-600 text-white rounded-full hover:bg-red-700 transition'
+            disabled={isLoading} // Disable the button while loading
+        >
+            {isLoading ? 'Deleting...' : 'Delete Advert'}
+        </button>
+    );
+};
 
-
-    return ReactDOM.createPortal(
-        <div className='wrapper'>
-          {isLoading && <Loader />}
-            <div className='relative modal w-[350px] h-[300px] bg-primary md:w-[400px]'>
-              <img src={close} alt="close" onClick={handleDelete} size={40} className='absolute top-[-1rem] right-[-1rem] text-tertiary' />
-              <div className='w-full h-full modal__header__text flex flex-col items-center justify-center'>
-                <h3 className='text-2xl text-gray-800 font-bold px-6 mb-4 text-center'>
-                Delete Advert</h3>
-                <div className='flex items-center gap-2'>
-                    <button onClick={confirmDelete} className='py-2 px-4 text-[15px] bg-tertiary text-primary rounded-full'>Delete</button>
-                </div>
-              </div>
-            </div>
-        </div>,
-        document.getElementById("backdrop")
-      )
-}
-
-export default DeleteAdvertModal
+export default DeleteAdvertButton;
