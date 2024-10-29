@@ -109,6 +109,18 @@ const Adverts = () => {
                   <strong>Units Left:</strong> {advert.desiredROI}
                 </p>
               </div>
+		    <div className="mt-2 grid grid-cols-2 gap-4 text-xs">
+								<div>
+									<span className="font-bold">Gender:</span> {advert.gender}
+								</div>
+								<div>
+									<span className="font-bold">LGA:</span> {advert.lga}
+								</div>
+								<div>
+									<span className="font-bold">State:</span> {advert.state}
+								</div>
+							</div>
+
 
               <div className="mt-2">
                 <p>
