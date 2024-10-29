@@ -96,7 +96,7 @@ const Adverts = () => {
                   <strong>Amount:</strong> ₦{advert.adAmount}
                 </p>
                  <p>
-                  <strong>Tasks Submitted:</strong> {advert.tasks}
+                  <strong>Tasks Submitted:</strong> {advert.submittedTaskCount}
                 </p>
 				<p>
                   <strong>Tasks Approved:</strong> {advert.approvedTaskCount}
