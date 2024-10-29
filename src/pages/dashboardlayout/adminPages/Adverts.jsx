@@ -95,8 +95,11 @@ const Adverts = () => {
                 <p>
                   <strong>Amount:</strong> ₦{advert.adAmount}
                 </p>
-                <p>
+                 <p>
                   <strong>Tasks Submitted:</strong> {advert.tasks}
+                </p>
+				<p>
+                  <strong>Tasks Approved:</strong> {advert.approvedTaskCount}
                 </p>
                 <p>
                   <strong>Units Left:</strong> {advert.desiredROI}
