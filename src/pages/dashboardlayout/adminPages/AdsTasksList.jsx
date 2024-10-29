@@ -6,7 +6,7 @@ import { selectIsLoading } from '../../../redux/slices/taskSlice';
 import DeleteTaskModal from '../../../components/adminComponents/DeleteTaskModal';
 import TaskModal from '../../../components/adminComponents/TaskModal';
 import { getTasksByAdvertId } from '../../../services/taskServices';
-import { handleApproveTask, selectIsError, selectIsSuccess } from '../../../redux/slices/taskSlice';
+import { handleApproveTask, handleRejectTask, selectIsError, selectIsSuccess } from '../../../redux/slices/taskSlice';
 import io from 'socket.io-client';
 import { BACKEND_URL } from '../../../../utils/globalConfig';
 import toast from 'react-hot-toast';
@@ -64,6 +64,31 @@ const approveTask = async (taskId) => {
     await dispatch(handleApproveTask({ taskId, status: 'Approved' ,  message: 'The advertiser approved this task'}));
   };
 	
+
+  const rejectTask = async (taskId, message) => {
+    if (!message) {
+      toast.error('Please provide a reason for rejection');
+      return;
+    }
+
+    setIsRejecting(true);
+    await dispatch(handleRejectTask({ taskId, status: 'Rejected', message }));
+    setIsRejecting(false);
+
+    if (isError) {
+      toast.error('Error Rejecting Task');
+    } else if (isSuccess) {
+      toast.success('Task Rejected');
+      setTaskAdList((prevList) => prevList.filter((task) => task._id !== taskId)); // Remove rejected task
+    }
+  };
+
+  const handleRejectClick = (taskId) => {
+    const message = prompt('Please provide a reason for rejection:');
+    if (message) {
+      rejectTask(taskId, message);
+    }
+  };
 const handleTaskApproval = async (e, clickedTask) => {
   e.preventDefault();
   e.stopPropagation();
@@ -174,11 +199,22 @@ const handleModal = () => setModalBtn(!modalBtn);
         </div>
 
         <button
+                  onClick={() => handleRejectClick(task._id)}
+                  className={`px-4 py-2 rounded bg-red-500 text-white ${
+                    isRejecting ? 'opacity-50' : ''
+                  }`}
+                  disabled={isRejecting}
+                >
+                  {isRejecting ? 'Rejecting...' : 'Reject'}
+                </button>
+
+        <button
           onClick={() => setDelBtn(true)}
           className="py-2 px-5 bg-tertiary text-primary"
         >
           Delete
         </button>
+
       </div>
     </div>
               <div className="flex justify-between items-center mt-4 text-sm">
