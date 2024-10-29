@@ -22,7 +22,8 @@ const TaskSingle = () => {
     const dispatch = useDispatch()
   const adverts = useSelector(selectAllAdverts);
   const users = useSelector(selectUsers);
-
+const isError = useSelector(selectIsError);
+  const isSuccess = useSelector(selectIsSuccess);
   const [task, setTask] = useState(null);
   const [taskPerformer, setTaskPerformer] = useState(null);
   const [advertiser, setAdvertiser] = useState(null);
