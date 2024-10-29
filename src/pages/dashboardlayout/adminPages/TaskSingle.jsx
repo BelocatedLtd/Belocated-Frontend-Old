@@ -12,7 +12,7 @@ import TaskModal from '../../../components/adminComponents/TaskModal';
 import Loader from '../../../components/loader/Loader';
 import TaskProofModal from '../../../components/ui/TaskProofModal';
 import { selectAllAdverts } from '../../../redux/slices/advertSlice';
-import { selectTasks, handleApproveTask, handleRejectTask, } from '../../../redux/slices/taskSlice';
+import { selectTasks, handleApproveTask, handleRejectTask, selectIsError, selectIsSuccess } from '../../../redux/slices/taskSlice';
 import { selectUsers } from '../../../redux/slices/userSlice';
 import { getTaskById } from '../../../services/taskServices';
 
