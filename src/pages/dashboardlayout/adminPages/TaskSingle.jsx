@@ -231,7 +231,7 @@ const TaskSingle = () => {
             )}
 
             {task?.proofOfWorkMediaURL?.length >= 1 && (
-              <div className='w-full h-[400px]'>
+              <div className='w-full h-[40px]'>
                 {/* <img src={task?.proofOfWorkMediaURL[0]?.secure_url} className='w-full h-full object-cover'/> */}
                 <a
                   onClick={(e) => openPopup(e, task)}
