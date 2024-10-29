@@ -108,30 +108,31 @@ const handleTaskApproval = async (e, clickedTask) => {
   setLoadingTaskId(clickedTask._id);
 
  
-    try {
-      const updatedTask = { ...clickedTask, status: 'Approved' };
+    const updatedTask = { ...clickedTask, status: 'Approved' };
 
-      // Optimistically update taskAdList
-      setTaskAdList((prevList) =>
-        prevList.filter((task) => task._id !== clickedTask._id) // Remove approved task from UI
-      );
-
-  await approveTask(clickedTask._id);
+  // Optimistically update taskAdList
+  setTaskAdList((prevList) =>
+    prevList.map((task) =>
+      task._id === clickedTask._id ? updatedTask : task
+    )
+  );
+   await approveTask(clickedTask._id);
 
   if (isError) {
     toast.error('Error Approving Task');
     // Revert UI update if error occurs
-    setTaskAdList((prevList) => [...prevList, clickedTask]);
-  } else if (isSuccess) {
+    setTaskAdList((prevList) =>
+		prevList.map((task) =>
+		  task._id === clickedTask._id ? { ...task, status: 'Pending' } : task
+		)
+	  );
+	  } else if (isSuccess) {
     toast.success('Task Approved');
     socket.emit('sendActivity', {
       userId: clickedTask.taskPerformerId,
       action: `@${clickedTask.taskPerformerId?.username} just earned ₦${clickedTask.toEarn} from a task completed`,
     });
   }
-} finally {
-  setLoadingTaskId(null); // Reset loading state
-}
 };
 
     
