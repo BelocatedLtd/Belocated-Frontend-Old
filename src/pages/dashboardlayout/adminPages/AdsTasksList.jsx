@@ -30,6 +30,8 @@ const AdsTasksList = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState('');
   const [loadingTaskId, setLoadingTaskId] = useState(null);
+  const [rejectMessage, setRejectMessage] = useState('');
+  const [isRejecting, setIsRejecting] = useState(false);
 
 
   const fetchTasksByAdvertId = async () => {
