@@ -35,6 +35,7 @@ const TaskSingle = () => {
   const [taskProof, setTaskProof] = useState(null);
   const [rejectMessage, setRejectMessage] = useState('');
   const [isRejecting, setIsRejecting] = useState(false);
+    const [loadingTaskId, setLoadingTaskId] = useState(null);
 
   // Fetch task details on component mount
   useEffect(() => {
