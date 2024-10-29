@@ -35,7 +35,7 @@ const TaskSingle = () => {
   const [taskProof, setTaskProof] = useState(null);
   const [rejectMessage, setRejectMessage] = useState('');
   const [isRejecting, setIsRejecting] = useState(false);
-    const [loadingTaskId, setLoadingTaskId] = useState(null);
+  const [loadingTaskId, setLoadingTaskId] = useState(null);
 
   // Fetch task details on component mount
   useEffect(() => {
@@ -58,79 +58,79 @@ const TaskSingle = () => {
     fetchTask();
   }, [id]);
 
-  	
-const approveTask = async (taskId) => {
-  await dispatch(handleApproveTask({ taskId, status: 'Approved' ,  message: 'The advertiser approved this task'}));
-};
+
+  const approveTask = async (taskId) => {
+    await dispatch(handleApproveTask({ taskId, status: 'Approved', message: 'The advertiser approved this task' }));
+  };
 
 
-const rejectTask = async (taskId, message) => {
-  if (!message) {
-    toast.error('Please provide a reason for rejection');
-    return;
-  }
+  const rejectTask = async (taskId, message) => {
+    if (!message) {
+      toast.error('Please provide a reason for rejection');
+      return;
+    }
 
-  setIsRejecting(true);
-  await dispatch(handleRejectTask({ taskId, status: 'Rejected', message }));
-  setIsRejecting(false);
+    setIsRejecting(true);
+    await dispatch(handleRejectTask({ taskId, status: 'Rejected', message }));
+    setIsRejecting(false);
 
-  if (isError) {
-    toast.error('Error Rejecting Task');
-  } else if (isSuccess) {
-    toast.success('Task Rejected');
-    setTask((prevList) => prevList.filter((task) => task._id !== taskId)); // Remove rejected task
-  }
-};
+    if (isError) {
+      toast.error('Error Rejecting Task');
+    } else if (isSuccess) {
+      toast.success('Task Rejected');
+      setTask((prevList) => prevList.filter((task) => task._id !== taskId)); // Remove rejected task
+    }
+  };
 
-const handleRejectClick = (taskId) => {
-  const message = prompt('Please provide a reason for rejection:');
-  if (message) {
-    rejectTask(taskId, message);
-  }
-};
-const handleTaskApproval = async (e, clickedTask) => {
-e.preventDefault();
-e.stopPropagation();
+  const handleRejectClick = (taskId) => {
+    const message = prompt('Please provide a reason for rejection:');
+    if (message) {
+      rejectTask(taskId, message);
+    }
+  };
+  const handleTaskApproval = async (e, clickedTask) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-if (clickedTask.status === 'Approved') {
-  toast.success('Task has already been approved');
-  return;
-}
+    if (clickedTask.status === 'Approved') {
+      toast.success('Task has already been approved');
+      return;
+    }
 
-if (!clickedTask?._id) {
-  toast.error('Task information missing');
-  return;
-}
+    if (!clickedTask?._id) {
+      toast.error('Task information missing');
+      return;
+    }
 
-setLoadingTaskId(clickedTask._id);
+    setLoadingTaskId(clickedTask._id);
 
 
-  const updatedTask = { ...clickedTask, status: 'Approved' };
+    const updatedTask = { ...clickedTask, status: 'Approved' };
 
-// Optimistically update taskAdList
-setTask((prevList) =>
-  prevList.map((task) =>
-    task._id === clickedTask._id ? updatedTask : task
-  )
-);
- await approveTask(clickedTask._id);
+    // Optimistically update taskAdList
+    setTask((prevList) =>
+      prevList.map((task) =>
+        task._id === clickedTask._id ? updatedTask : task
+      )
+    );
+    await approveTask(clickedTask._id);
 
-if (isError) {
-  toast.error('Error Approving Task');
-  // Revert UI update if error occurs
-  setTask((prevList) =>
-  prevList.map((task) =>
-    task._id === clickedTask._id ? { ...task, status: 'Pending' } : task
-  )
-  );
-  } else if (isSuccess) {
-  toast.success('Task Approved');
-  socket.emit('sendActivity', {
-    userId: clickedTask.taskPerformerId,
-    action: `@${clickedTask.taskPerformerId?.username} just earned ₦${clickedTask.toEarn} from a task completed`,
-  });
-}
-};
+    if (isError) {
+      toast.error('Error Approving Task');
+      // Revert UI update if error occurs
+      setTask((prevList) =>
+        prevList.map((task) =>
+          task._id === clickedTask._id ? { ...task, status: 'Pending' } : task
+        )
+      );
+    } else if (isSuccess) {
+      toast.success('Task Approved');
+      socket.emit('sendActivity', {
+        userId: clickedTask.taskPerformerId,
+        action: `@${clickedTask.taskPerformerId?.username} just earned ₦${clickedTask.toEarn} from a task completed`,
+      });
+    }
+  };
 
 
   if (isLoading) {
@@ -155,7 +155,7 @@ if (isError) {
 
   return (
     <div className="w-full h-fit">
-     
+
       {delBtn && <DeleteTaskModal handleDelete={handleDelete} task={task} />}
       {toggleTaskProofModal && (
         <TaskProofModal toggleTaskProof={openPopup} task={taskProof} />
@@ -214,15 +214,42 @@ if (isError) {
           <div className='box flex-col mt-5'>
             <p><label className='font-bold'>Amount to Earn:</label> ₦{task.toEarn}</p>
           </div>
+
+          <div className='box flex-col mt-5'>
+            <p> <label className='font-bold'>
+              Task Proof URL:
+            </label>
+
+              {task?.nameOnSocialPlatform}</p>
+
+          </div>
+          <div className='box flex-col mt-5'>
+            {task?.proofOfWorkMediaURL?.length === 0 && (
+              <div className='max-w-lg '>
+                <p>No Proof uploaded yet</p>
+              </div>
+            )}
+
+            {task?.proofOfWorkMediaURL?.length >= 1 && (
+              <div className='w-full h-[400px]'>
+                {/* <img src={task?.proofOfWorkMediaURL[0]?.secure_url} className='w-full h-full object-cover'/> */}
+                <a
+                  onClick={(e) => openPopup(e, task)}
+                  className='text-blue-600 hover:text-red-600'>
+                  Click to view
+                </a>
+              </div>
+            )}
+
+          </div>
         </div>
 
         <div className='mt-3'>
-       
           <div className='flex flex-col md:flex-row gap-2'>
             <button onClick={(e) => handleTaskApproval(e, task)}
               className={`px-4 py-2 text-xs rounded ${task.status === 'Approved'
-                  ? 'bg-green-500'
-                  : 'bg-yellow-500 hover:bg-green-500'
+                ? 'bg-green-500'
+                : 'bg-yellow-500 hover:bg-green-500'
                 } text-white`}
             >
               {task.status === 'Approved' ? 'Approved' : 'Approve'}
