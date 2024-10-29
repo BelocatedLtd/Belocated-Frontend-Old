@@ -12,7 +12,7 @@ const Tasks = () => {
 	const navigate = useNavigate()
 	const isLoading = useSelector(selectIsLoading)
 	const sortIcon = <MdArrowDownward />
-	const [selectedStatus, setSelectedStatus] = useState('All')
+	
 
 	const [currentPage, setCurrentPage] = useState(1)
 	const [totalRows, setTotalRows] = useState(0)
@@ -20,7 +20,7 @@ const Tasks = () => {
 	const [tasks, setTasks] = useState([])
 
 	const fetchTasks = async (page, rows) => {
-		const response = await getTasks(page, rows, selectedStatus)
+		const response = await getTasks(page, rows)
 
 		if (response) {
 			setTotalRows(response.totalTasks)
@@ -30,7 +30,7 @@ const Tasks = () => {
 
 	useEffect(() => {
 		fetchTasks(currentPage, rowsPerPage)
-	}, [selectedStatus])
+	}, [])
 
 	const handlePageChange = (page) => {
 		setCurrentPage(page)
@@ -148,21 +148,6 @@ const Tasks = () => {
 						className='mr-1'
 					/>
 					<p className='font-semibold text-xl text-gray-700'>Tasks</p>
-				</div>
-
-				<div>
-					<select
-						name=''
-						id=''
-						value={selectedStatus}
-						onChange={(e) => setSelectedStatus(e.target.value)}
-						className='py-3 p-3 border border-gray-400 rounded-xl '>
-						<option value='All'>All</option>
-						<option value='Approved'>Approved</option>
-						<option value='Submitted'>Submitted</option>
-						<option value='Awaiting Submission'>Awaiting Submission</option>
-						<option value='Rejected'>Rejected</option>
-					</select>
 				</div>
 			</div>
 			<DataTable
