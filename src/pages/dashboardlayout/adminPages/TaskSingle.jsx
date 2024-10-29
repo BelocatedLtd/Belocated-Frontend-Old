@@ -12,7 +12,7 @@ import TaskModal from '../../../components/adminComponents/TaskModal';
 import Loader from '../../../components/loader/Loader';
 import TaskProofModal from '../../../components/ui/TaskProofModal';
 import { selectAllAdverts } from '../../../redux/slices/advertSlice';
-import { selectTasks } from '../../../redux/slices/taskSlice';
+import { selectTasks, handleApproveTask, handleRejectTask, } from '../../../redux/slices/taskSlice';
 import { selectUsers } from '../../../redux/slices/userSlice';
 import { getTaskById } from '../../../services/taskServices';
 
@@ -33,6 +33,8 @@ const TaskSingle = () => {
   const [delBtn, setDelBtn] = useState(false);
   const [toggleTaskProofModal, setToggleTaskProofModal] = useState(false);
   const [taskProof, setTaskProof] = useState(null);
+  const [rejectMessage, setRejectMessage] = useState('');
+  const [isRejecting, setIsRejecting] = useState(false);
 
   // Fetch task details on component mount
   useEffect(() => {
@@ -54,6 +56,81 @@ const TaskSingle = () => {
 
     fetchTask();
   }, [id]);
+
+  	
+const approveTask = async (taskId) => {
+  await dispatch(handleApproveTask({ taskId, status: 'Approved' ,  message: 'The advertiser approved this task'}));
+};
+
+
+const rejectTask = async (taskId, message) => {
+  if (!message) {
+    toast.error('Please provide a reason for rejection');
+    return;
+  }
+
+  setIsRejecting(true);
+  await dispatch(handleRejectTask({ taskId, status: 'Rejected', message }));
+  setIsRejecting(false);
+
+  if (isError) {
+    toast.error('Error Rejecting Task');
+  } else if (isSuccess) {
+    toast.success('Task Rejected');
+    setTask((prevList) => prevList.filter((task) => task._id !== taskId)); // Remove rejected task
+  }
+};
+
+const handleRejectClick = (taskId) => {
+  const message = prompt('Please provide a reason for rejection:');
+  if (message) {
+    rejectTask(taskId, message);
+  }
+};
+const handleTaskApproval = async (e, clickedTask) => {
+e.preventDefault();
+e.stopPropagation();
+
+if (clickedTask.status === 'Approved') {
+  toast.success('Task has already been approved');
+  return;
+}
+
+if (!clickedTask?._id) {
+  toast.error('Task information missing');
+  return;
+}
+
+setLoadingTaskId(clickedTask._id);
+
+
+  const updatedTask = { ...clickedTask, status: 'Approved' };
+
+// Optimistically update taskAdList
+setTask((prevList) =>
+  prevList.map((task) =>
+    task._id === clickedTask._id ? updatedTask : task
+  )
+);
+ await approveTask(clickedTask._id);
+
+if (isError) {
+  toast.error('Error Approving Task');
+  // Revert UI update if error occurs
+  setTask((prevList) =>
+  prevList.map((task) =>
+    task._id === clickedTask._id ? { ...task, status: 'Pending' } : task
+  )
+  );
+  } else if (isSuccess) {
+  toast.success('Task Approved');
+  socket.emit('sendActivity', {
+    userId: clickedTask.taskPerformerId,
+    action: `@${clickedTask.taskPerformerId?.username} just earned ₦${clickedTask.toEarn} from a task completed`,
+  });
+}
+};
+
 
   if (isLoading) {
     return <Loader />; // Show loader while loading
@@ -77,13 +154,7 @@ const TaskSingle = () => {
 
   return (
     <div className="w-full h-fit">
-      {modalBtn && (
-        <TaskModal
-          handleModal={handleModal}
-          task={task}
-          taskPerformer={taskPerformer}
-        />
-      )}
+     
       {delBtn && <DeleteTaskModal handleDelete={handleDelete} task={task} />}
       {toggleTaskProofModal && (
         <TaskProofModal toggleTaskProof={openPopup} task={taskProof} />
@@ -101,9 +172,9 @@ const TaskSingle = () => {
       </div>
 
       <div className="container shadow-xl py-8 px-8 mt-8">
-	            {/* Task Performer Details */}
+        {/* Task Performer Details */}
         <div className="box flex flex-col border-b border-gray-100 p-3 pb-6">
-          <label 	htmlFor='adverter' className="text-secondary text-2xl font-bold">
+          <label htmlFor='adverter' className="text-secondary text-2xl font-bold">
             Task Performer
           </label>
           <div className="flex flex-col items-center gap-3 mt-3 md:flex-row">
@@ -126,38 +197,51 @@ const TaskSingle = () => {
         {/* Task Details */}
         <div className="box flex flex-col border-b p-3 pb-6">
           <label className="text-secondary text-2xl font-bold">Task Details</label>
-		  <div className='box flex-col mt-5'>
-          <p><label className='font-bold'>Title: </label>{task.title}</p>
-		  </div>
-		  <div className='box flex-col mt-5'>
-		  <p><label className='font-bold'>Platform: </label>{task.platform}</p>
-		  </div>
-		  <div className='box flex-col mt-5'>
-		  <p><label className='font-bold'>Status:</label> {task.status}</p>
-		  </div>
-		  <div className='box flex-col mt-5'>
-		  <p><label className='font-bold'>Advertiser:</label> {advertiser?.username}</p>
-		  </div>
-		
-		  <div className='box flex-col mt-5'>
-		  <p><label className='font-bold'>Amount to Earn:</label> ₦{task.toEarn}</p>
-		  </div>
+          <div className='box flex-col mt-5'>
+            <p><label className='font-bold'>Title: </label>{task.title}</p>
+          </div>
+          <div className='box flex-col mt-5'>
+            <p><label className='font-bold'>Platform: </label>{task.platform}</p>
+          </div>
+          <div className='box flex-col mt-5'>
+            <p><label className='font-bold'>Status:</label> {task.status}</p>
+          </div>
+          <div className='box flex-col mt-5'>
+            <p><label className='font-bold'>Advertiser:</label> {advertiser?.username}</p>
+          </div>
+
+          <div className='box flex-col mt-5'>
+            <p><label className='font-bold'>Amount to Earn:</label> ₦{task.toEarn}</p>
+          </div>
         </div>
 
-		<div className='mt-3'>
-				<div className='flex flex-col md:flex-row gap-2'>
-					<button
-						onClick={handleModal}
-						className='py-2 px-5 bg-secondary text-primary'>
-						Approve/Reject
-					</button>
-					<button
-						onClick={handleDelete}
-						className='py-2 px-5 bg-tertiary text-primary'>
-						Delete
-					</button>
-				</div>
-			</div>
+        <div className='mt-3'>
+       
+          <div className='flex flex-col md:flex-row gap-2'>
+            <button onClick={(e) => handleTaskApproval(e, task)}
+              className={`px-4 py-2 text-xs rounded ${task.status === 'Approved'
+                  ? 'bg-green-500'
+                  : 'bg-yellow-500 hover:bg-green-500'
+                } text-white`}
+            >
+              {task.status === 'Approved' ? 'Approved' : 'Approve'}
+            </button>
+            <button
+              onClick={() => handleRejectClick(task._id)}
+              className={`px-4 py-2 rounded bg-red-500 text-white ${isRejecting ? 'opacity-50' : ''
+                }`}
+              disabled={isRejecting}
+            >
+              {isRejecting ? 'Rejecting...' : 'Reject'}
+            </button>
+            <button
+              onClick={() => setDelBtn(true)}
+              className="py-2 px-5 bg-tertiary text-primary"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
