@@ -78,10 +78,10 @@ export const getTasksByAdvertId = async ({advertId}) => {
 }
 
 // Get All Tasks Get all tasks from db
-export const getTasks = async (page, limit) => {
+export const getTasks = async () => {
 	const headers = getAuthHeaders()
 	const response = await axios.get(
-		`${BACKEND_URL}/api/tasks?page=${page}&limit=${limit}`,
+		`${BACKEND_URL}/api/tasks`,
 		headers,
 	)
 	return response.data
