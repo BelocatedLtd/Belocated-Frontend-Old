@@ -169,7 +169,7 @@ const closeModal = () => {
 	  <div className="flex justify-between items-center mt-4">
 		<div>
 		  <p className="text-sm">
-			<strong>Performer:</strong> {task.taskPerformerId?.fullname}
+			<strong>Performer:</strong> {task.taskPerformerId?.username}
 		  </p>
 		  <p className="text-sm">
 			<strong>Advertiser:</strong> {task.advertiserId?.fullname}
