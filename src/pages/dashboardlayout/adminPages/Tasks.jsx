@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { MdOutlineKeyboardArrowLeft } from 'react-icons/md';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { selectIsLoading } from '../../../redux/slices/taskSlice';
