@@ -139,11 +139,13 @@ const Adverts = () => {
                 </p>
               </div>
 
-              <div className="mt-2">
-                {renderStatusBadge(advert.status)}
-              </div>
- <div className="mt-2">
-			  <DeleteAdvertButton advertId={advert._id} />
+            <div className="advert-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+  <div>
+    {renderStatusBadge(advert.status)}
+  </div>
+  <div>
+    <DeleteAdvertButton advertId={advert._id} />
+  </div>
 </div>
               <div className="mt-4 flex justify-end">
                 <button
