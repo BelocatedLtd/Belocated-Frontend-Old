@@ -92,21 +92,21 @@ export const handleSubmitTask = createAsyncThunk(
 
 // Approve Task
 export const handleApproveTask = createAsyncThunk(
-	'create/handleapproveTask',
-	async (approveTaskData, thunkAPI) => {
-		try {
-			return await approveTask(approveTaskData)
-		} catch (error) {
-			const message =
-				(error.response &&
-					error.response.data &&
-					error.response.data.message) ||
-				error.message ||
-				error.toString()
-			return thunkAPI.rejectWithValue(message)
-		}
-	},
-)
+    'create/handleApproveTask',
+    async (approveTaskData, thunkAPI) => {
+        try {
+            return await approveTask(approveTaskData);
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue(message);
+        }
+    }
+);
 
 // Reject Task
 export const handleRejectTask = createAsyncThunk(
@@ -209,23 +209,22 @@ const taskSlice = createSlice({
 
 			// Approve Task
 			.addCase(handleApproveTask.pending, (state) => {
-				state.isLoading = true
-			})
-			.addCase(handleApproveTask.fulfilled, (state, action) => {
-				state.isLoading = false
-				state.isSuccess = true
-				state.isError = false
-				state.task = action.payload
-				state.tasks.push(action.payload)
-				toast.success('Task has been approved by admin')
-			})
-			.addCase(handleApproveTask.rejected, (state, action) => {
-				state.isLoading = false
-				state.isError = true
-				state.message = action.payload
-				toast.error(action.payload)
-			})
-
+    state.isLoading = true;
+})
+.addCase(handleApproveTask.fulfilled, (state, action) => {
+    state.isLoading = false;
+    state.isSuccess = true;
+    state.isError = false;
+    state.task = action.payload;
+    state.tasks.push(action.payload);
+    toast.success('Task has been approved by admin');
+})
+.addCase(handleApproveTask.rejected, (state, action) => {
+    state.isLoading = false;
+    state.isError = true;
+    state.message = action.payload;
+    toast.error(action.payload);
+});
 			// Reject Task
 			.addCase(handleRejectTask.pending, (state) => {
 				state.isLoading = true
