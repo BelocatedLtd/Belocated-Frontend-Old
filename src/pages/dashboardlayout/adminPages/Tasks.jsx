@@ -117,7 +117,7 @@ const Tasks = () => {
 	  if (isError) {
 		toast.error('Error Approving Task');
 		// Revert UI update if error occurs
-		setTask((prevList) =>
+		setTasks((prevList) =>
 			prevList.map((task) =>
 			  task._id === clickedTask._id ? { ...task, status: 'Pending' } : task
 			)
