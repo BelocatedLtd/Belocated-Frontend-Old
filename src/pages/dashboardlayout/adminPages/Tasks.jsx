@@ -59,8 +59,8 @@ const Tasks = () => {
 	  };
 		
 	const approveTask = async (taskId) => {
-		await dispatch(handleApproveTask({ taskId, status: 'Approved' ,  message: 'The advertiser approved this task'}));
-	  };
+    await dispatch(handleApproveTask({ taskId, status: 'Approved', message: 'The advertiser approved this task' }));
+};
 		
 	
 	  const rejectTask = async (taskId, message) => {
@@ -87,49 +87,47 @@ const Tasks = () => {
 		  rejectTask(taskId, message);
 		}
 	  };
-	const handleTaskApproval = async (e, clickedTask) => {
-	  e.preventDefault();
-	  e.stopPropagation();
 	
-	  if (clickedTask.status === 'Approved') {
-		toast.success('Task has already been approved');
-		return;
-	  }
-	
-	  if (!clickedTask?._id) {
-		toast.error('Task information missing');
-		return;
-	  }
-	
-	  setLoadingTaskId(clickedTask._id);
-	
-	 
-		const updatedTask = { ...clickedTask, status: 'Approved' };
-	
-	  // Optimistically update task
-	  setTasks((prevList) =>
-		prevList.map((task) =>
-		  task._id === clickedTask._id ? updatedTask : task
-		)
-	  );
-	   await approveTask(clickedTask._id);
-	
-	  if (isError) {
-		toast.error('Error Approving Task');
-		// Revert UI update if error occurs
-		setTasks((prevList) =>
-			prevList.map((task) =>
-			  task._id === clickedTask._id ? { ...task, status: 'Pending' } : task
-			)
-		  );
-		  } else if (isSuccess) {
-		toast.success('Task Approved');
-		socket.emit('sendActivity', {
-		  userId: clickedTask.taskPerformerId,
-		  action: `@${clickedTask.taskPerformerId?.username} just earned ₦${clickedTask.toEarn} from a task completed`,
-		});
-	  }
-	};
+
+const handleTaskApproval = async (e, clickedTask) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (clickedTask.status === 'Approved') {
+        toast.success('Task has already been approved');
+        return;
+    }
+
+    if (!clickedTask?._id) {
+        toast.error('Task information missing');
+        return;
+    }
+
+    setLoadingTaskId(clickedTask._id);
+
+    const updatedTask = { ...clickedTask, status: 'Approved' };
+
+    // Optimistically update task in UI
+    setTasks((prevList) =>
+        prevList.map((task) => (task._id === clickedTask._id ? updatedTask : task))
+    );
+
+    try {
+        await approveTask(clickedTask._id);
+        toast.success('Task Approved');
+        socket.emit('sendActivity', {
+            userId: clickedTask.taskPerformerId,
+            action: `@${clickedTask.taskPerformerId?.username} just earned ₦${clickedTask.toEarn} from a task completed`,
+        });
+    } catch (error) {
+        toast.error('Error Approving Task');
+        setTasks((prevList) =>
+            prevList.map((task) =>
+                task._id === clickedTask._id ? { ...task, status: 'Pending' } : task
+            )
+        );
+    }
+};
 	    
 const handleModal = () => setModalBtn(!modalBtn);
 const handleDelete = (e) => {
