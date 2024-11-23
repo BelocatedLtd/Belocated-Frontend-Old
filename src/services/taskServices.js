@@ -100,14 +100,14 @@ export const submitTask = async (formData) => {
 
 // Approve task
 export const approveTask = async (taskData) => {
-	const headers = getAuthHeaders()
-	const response = await axios.post(
-		`${BACKEND_URL}/api/tasks/approve`,
-		taskData,
-		headers,
-	)
-	return response.data
-}
+    const headers = getAuthHeaders();
+    const response = await axios.post(
+        `${BACKEND_URL}/api/tasks/approve`,
+        taskData,
+        headers
+    );
+    return response.data;
+};
 
 // Reject task
 export const rejectTask = async (taskData) => {
