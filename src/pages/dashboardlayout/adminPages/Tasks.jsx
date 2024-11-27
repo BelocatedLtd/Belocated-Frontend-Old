@@ -115,10 +115,10 @@ const handleTaskApproval = async (e, clickedTask) => {
     try {
         await approveTask(clickedTask._id);
         toast.success('Task Approved');
-        socket.emit('sendActivity', {
-            userId: clickedTask.taskPerformerId,
-            action: `@${clickedTask.taskPerformerId?.username} just earned ₦${clickedTask.toEarn} from a task completed`,
-        });
+        // socket.emit('sendActivity', {
+        //     userId: clickedTask.taskPerformerId,
+        //     action: `@${clickedTask.taskPerformerId?.username} just earned ₦${clickedTask.toEarn} from a task completed`,
+        // });
     } catch (error) {
         toast.error('Error Approving Task');
         setTasks((prevList) =>
