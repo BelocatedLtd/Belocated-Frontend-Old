@@ -153,7 +153,7 @@ const taskSlice = createSlice({
 				toast.error(action.payload)
 			})
 
-			// Get User Tasks handleGetTasks
+		// Get User Tasks handleGetTasks
 			.addCase(handleGetUserTasks.pending, (state) => {
 				state.isLoading = true
 			})
