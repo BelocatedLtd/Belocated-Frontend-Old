@@ -95,7 +95,7 @@ export const handleApproveTask = createAsyncThunk(
     'create/handleApproveTask',
     async (approveTaskData, thunkAPI) => {
         try {
-            return await approveTask(approveTaskData);
+            return await approveTask(approveTaskData); // Service call
         } catch (error) {
             const message =
                 (error.response &&
@@ -107,6 +107,7 @@ export const handleApproveTask = createAsyncThunk(
         }
     }
 );
+
 
 // Reject Task
 export const handleRejectTask = createAsyncThunk(
@@ -215,16 +216,24 @@ const taskSlice = createSlice({
     state.isLoading = false;
     state.isSuccess = true;
     state.isError = false;
-    state.task = action.payload;
-    state.tasks.push(action.payload);
-    toast.success('Task has been approved by admin');
+
+    // Ensure action.payload is valid
+    if (action.payload) {
+        state.task = action.payload;
+        state.tasks = [...state.tasks, action.payload]; // Immutable update
+        toast.success('Task has been approved by admin'); // Optional: Move to middleware
+    }
 })
 .addCase(handleApproveTask.rejected, (state, action) => {
     state.isLoading = false;
     state.isError = true;
-    state.message = action.payload;
-    toast.error(action.payload);
+
+    // Validate action.payload for readable error message
+    const errorMessage = action.payload?.message || 'Task approval failed';
+    state.message = errorMessage;
+    toast.error(errorMessage); // Optional: Move to middleware
 });
+
 			// Reject Task
 			.addCase(handleRejectTask.pending, (state) => {
 				state.isLoading = true
