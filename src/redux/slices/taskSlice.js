@@ -93,7 +93,7 @@ export const handleSubmitTask = createAsyncThunk(
 // Approve Task
 export const handleApproveTask = createAsyncThunk(
     'create/handleApproveTask',
-    async (approveTaskData, thunkAPI) => {
+    async (approveTask, thunkAPI) => {
         try {
             return await approveTask(approveTaskData); // Service call
         } catch (error) {
@@ -229,9 +229,7 @@ const taskSlice = createSlice({
     state.isError = true;
 
     // Validate action.payload for readable error message
-    const errorMessage = action.payload?.message || 'Task approval failed';
-    state.message = errorMessage;
-    toast.error(errorMessage); // Optional: Move to middleware
+   // Optional: Move to middleware
 })
 
 			// Reject Task
