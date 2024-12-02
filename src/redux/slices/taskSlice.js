@@ -232,7 +232,7 @@ const taskSlice = createSlice({
     const errorMessage = action.payload?.message || 'Task approval failed';
     state.message = errorMessage;
     toast.error(errorMessage); // Optional: Move to middleware
-});
+})
 
 			// Reject Task
 			.addCase(handleRejectTask.pending, (state) => {
