@@ -58,10 +58,6 @@ const Tasks = () => {
 		setIsModalOpen(true);
 	  };
 		
-	const approveTask = async (taskId) => {
-    await dispatch(handleApproveTask({ taskId, status: 'Approved', message: 'The advertiser approved this task' }));
-};
-		
 	
 	  const rejectTask = async (taskId, message) => {
 		if (!message) {
@@ -103,32 +99,44 @@ const handleTaskApproval = async (e, clickedTask) => {
         return;
     }
 
-    setLoadingTaskId(clickedTask._id);
-
-    const updatedTask = { ...clickedTask, status: 'Approved' };
-
-    // Optimistically update task in UI
-    setTasks((prevList) =>
-        prevList.map((task) => (task._id === clickedTask._id ? updatedTask : task))
-    );
+    setLoadingTaskId(clickedTask._id); // Indicate loading for the specific task
 
     try {
-        await approveTask(clickedTask._id);
-        toast.success('Task Approved');
-        // socket.emit('sendActivity', {
-        //     userId: clickedTask.taskPerformerId,
-        //     action: `@${clickedTask.taskPerformerId?.username} just earned ₦${clickedTask.toEarn} from a task completed`,
-        // });
-    } catch (error) {
-        toast.error('Error Approving Task');
+        // Dispatch action to approve task
+        await dispatch(
+            handleApproveTask({
+                taskId: clickedTask._id,
+                status: 'Approved',
+                message: 'The advertiser approved this task',
+            })
+        );
+
+        // Optimistically update UI (assuming `setTasks` modifies a local list of tasks)
         setTasks((prevList) =>
             prevList.map((task) =>
-                task._id === clickedTask._id ? { ...task, status: 'Pending' } : task
+                task._id === clickedTask._id
+                    ? { ...task, status: 'Approved' }
+                    : task
             )
         );
+
+        toast.success('Task Approved'); // Optional, since toast is in Redux logic
+    } catch (error) {
+        // Rollback UI update in case of failure
+        setTasks((prevList) =>
+            prevList.map((task) =>
+                task._id === clickedTask._id
+                    ? { ...task, status: 'Pending' }
+                    : task
+            )
+        );
+
+        toast.error('Error approving task'); // This can stay here for additional context
+    } finally {
+        setLoadingTaskId(null); // Reset loading indicator
     }
 };
-	    
+
 const handleModal = () => setModalBtn(!modalBtn);
 const handleDelete = (e) => {
   e.preventDefault();
