@@ -95,7 +95,7 @@ export const handleApproveTask = createAsyncThunk(
     'create/handleApproveTask',
     async (approveTask, thunkAPI) => {
         try {
-            return await approveTask(approveTaskData); // Service call
+            return await approveTask(approveTask); // Service call
         } catch (error) {
             const message =
                 (error.response &&
