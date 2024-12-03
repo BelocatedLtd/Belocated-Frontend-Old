@@ -92,21 +92,21 @@ export const handleSubmitTask = createAsyncThunk(
 
 // Approve Task
 export const handleApproveTask = createAsyncThunk(
-    'create/handleApproveTask',
-    async (approveTask, thunkAPI) => {
-        try {
-            return await approveTask(approveTask); // Service call
-        } catch (error) {
-            const message =
-                (error.response &&
-                    error.response.data &&
-                    error.response.data.message) ||
-                error.message ||
-                error.toString();
-            return thunkAPI.rejectWithValue(message);
-        }
-    }
-);
+	'tasks/handleApproveTask',
+	async (approveTaskData, thunkAPI) => {
+		try {
+			return await approveTask(approveTaskData)
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString()
+			return thunkAPI.rejectWithValue(message)
+		}
+	},
+)
 
 
 // Reject Task
@@ -210,27 +210,40 @@ const taskSlice = createSlice({
 
 			// Approve Task
 			.addCase(handleApproveTask.pending, (state) => {
-    state.isLoading = true;
-})
-.addCase(handleApproveTask.fulfilled, (state, action) => {
-    state.isLoading = false;
-    state.isSuccess = true;
-    state.isError = false;
-
-    // Ensure action.payload is valid
-    if (action.payload) {
-        state.task = action.payload;
-        state.tasks = [...state.tasks, action.payload]; // Immutable update
-        toast.success('Task has been approved by admin'); // Optional: Move to middleware
-    }
-})
-.addCase(handleApproveTask.rejected, (state, action) => {
-    state.isLoading = false;
-    state.isError = true;
-
-    // Validate action.payload for readable error message
-   // Optional: Move to middleware
-})
+				state.isLoading = true
+			})
+			.addCase(
+				handleApproveTask.fulfilled,
+				(state, action) => {
+					state.isLoading = false;
+					state.isSuccess = true;
+					state.isError = false;
+			
+					// Find the task to update by ID and update its status
+					const updatedTaskIndex = state.tasks.findIndex(
+						(task) => task._id === action.payload._id
+					);
+			
+					if (updatedTaskIndex !== -1) {
+						state.tasks[updatedTaskIndex] = {
+							...state.tasks[updatedTaskIndex],
+							...action.payload,
+						};
+					}
+			
+					toast.success('Task has been approved by admin');
+				}
+			)
+			.addCase(
+				handleApproveTask.rejected,
+				(state, action) => {
+					state.isLoading = false
+					state.isError = true
+					state.message = action.payload
+					toast.error(action.payload)
+					
+				},
+			)
 
 			// Reject Task
 			.addCase(handleRejectTask.pending, (state) => {
