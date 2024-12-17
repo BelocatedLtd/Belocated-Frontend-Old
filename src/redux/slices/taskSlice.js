@@ -1,15 +1,39 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { toast } from 'react-hot-toast'
 import {
 	approveTask,
 	createTask,
 	getTasks,
+	getUserTaskById,
 	getUserTasks,
 	rejectTask,
 	submitTask,
 } from '../../services/taskServices'
 
-const initialState = {
+// Define the initial state type
+interface TaskState {
+	task: any | null
+	tasks: any[]
+	isError: boolean
+	isSuccess: boolean
+	isLoading: boolean
+	message: string
+	
+}
+
+// Define task data types
+interface TaskData {
+	taskId: any
+	status: string
+	message: string
+}
+
+interface FormData {
+	formData: any
+}
+
+// Initial state
+const initialState: TaskState = {
 	task: null,
 	tasks: [],
 	isError: false,
@@ -18,13 +42,13 @@ const initialState = {
 	message: '',
 }
 
-// Creat New Task
-export const createNewTask = createAsyncThunk(
+// Create New Task
+export const createNewTask = createAsyncThunk<any, any>(
 	'create/createNewTask',
 	async (taskData, thunkAPI) => {
 		try {
 			return await createTask(taskData)
-		} catch (error) {
+		} catch (error: any) {
 			const message =
 				(error.response &&
 					error.response.data &&
@@ -36,13 +60,13 @@ export const createNewTask = createAsyncThunk(
 	},
 )
 
-// Get User Tasks Get a specific user task
-export const handleGetUserTasks = createAsyncThunk(
+// Get User Tasks
+export const handleGetUserTasks = createAsyncThunk<any, void>(
 	'get/handleGetUserTasks',
-	async (__, thunkAPI) => {
+	async (_, thunkAPI) => {
 		try {
-			return await getUserTasks()
-		} catch (error) {
+			return await getUserTasks({})
+		} catch (error: any) {
 			const message =
 				(error.response &&
 					error.response.data &&
@@ -54,13 +78,13 @@ export const handleGetUserTasks = createAsyncThunk(
 	},
 )
 
-// Get Tasks  Get all tasks from db
-export const handleGetTasks = createAsyncThunk(
+// Get Tasks
+export const handleGetTasks = createAsyncThunk<any, void>(
 	'get/handleGetTasks',
-	async ({ page, limit }, thunkAPI) => {
+	async (_, thunkAPI) => {
 		try {
-			return await getTasks(page,limit)
-		} catch (error) {
+			return await getTasks()
+		} catch (error: any) {
 			const message =
 				(error.response &&
 					error.response.data &&
@@ -73,30 +97,30 @@ export const handleGetTasks = createAsyncThunk(
 )
 
 // Submit Task
-export const handleSubmitTask = createAsyncThunk(
-	'create/handlesubmitTask',
-	async ({ formData }, thunkAPI) => {
-		try {
-			return await submitTask(formData)
-		} catch (error) {
-			const message =
-				(error.response &&
-					error.response.data &&
-					error.response.data.message) ||
-				error.message ||
-				error.toString()
-			return thunkAPI.rejectWithValue(message)
-		}
-	},
-)
+export const handleSubmitTask = createAsyncThunk<any, FormData>(
+  'create/handlesubmitTask',
+  async (formData, thunkAPI) => {
+    try {
+      const response = await submitTask(formData);
+      if (response.status !== 200) {
+        throw new Error(response.data.message || 'Task submission failed');
+      }
+      return response.data;
+    } catch (error: any) {
+      const message = error.response?.data?.message || error.message || 'Task submission error';
+      toast.error(message);  // Ensure toast is here for visibility
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 // Approve Task
-export const handleApproveTask = createAsyncThunk(
+export const handleApproveTask = createAsyncThunk<any, TaskData>(
 	'tasks/handleApproveTask',
 	async (approveTaskData, thunkAPI) => {
 		try {
 			return await approveTask(approveTaskData)
-		} catch (error) {
+		} catch (error: any) {
 			const message =
 				(error.response &&
 					error.response.data &&
@@ -108,14 +132,32 @@ export const handleApproveTask = createAsyncThunk(
 	},
 )
 
-
 // Reject Task
-export const handleRejectTask = createAsyncThunk(
+
+
+export const handleRejectTask = createAsyncThunk<any, string>(
 	'create/handleRejectTask',
 	async (taskData, thunkAPI) => {
 		try {
 			return await rejectTask(taskData)
-		} catch (error) {
+		} catch (error: any) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString()
+			return thunkAPI.rejectWithValue(message)
+		}
+	},
+)
+export const handleGetTaskById = createAsyncThunk<any, string>(
+	'get/handleGetTaskById',
+	async (taskId, thunkAPI) => {
+		try {
+			const response = await getUserTaskById(taskId)
+			return response
+		} catch (error: any) {
 			const message =
 				(error.response &&
 					error.response.data &&
@@ -133,38 +175,23 @@ const taskSlice = createSlice({
 	reducers: {},
 	extraReducers: (builder) => {
 		builder
-
 			// Create New Task
 			.addCase(createNewTask.pending, (state) => {
 				state.isLoading = true
 			})
-			.addCase(createNewTask.fulfilled, (state, action) => {
+			.addCase(createNewTask.fulfilled, (state, action: PayloadAction<any>) => {
 				state.isLoading = false
 				state.isSuccess = true
 				state.isError = false
-				//console.log(action.payload)
 				state.task = action.payload
-				state.tasks.push(action.payload)
 				toast.success('Task Created Successfully')
+				if (Array.isArray(state.tasks)) {
+					state.tasks.push(action.payload)
+				} else {
+					state.tasks = [action.payload]
+				}
 			})
-			.addCase(createNewTask.rejected, (state, action) => {
-				state.isLoading = false
-				state.isError = true
-				state.message = action.payload
-				toast.error(action.payload)
-			})
-
-		// Get User Tasks handleGetTasks
-			.addCase(handleGetUserTasks.pending, (state) => {
-				state.isLoading = true
-			})
-			.addCase(handleGetUserTasks.fulfilled, (state, action) => {
-				state.isLoading = false
-				state.isSuccess = true
-				state.isError = false
-				state.tasks = action.payload
-			})
-			.addCase(handleGetUserTasks.rejected, (state, action) => {
+			.addCase(createNewTask.rejected, (state, action: PayloadAction<any>) => {
 				state.isLoading = false
 				state.isError = true
 				state.message = action.payload
@@ -172,16 +199,42 @@ const taskSlice = createSlice({
 			})
 
 			// Get User Tasks
+			.addCase(handleGetUserTasks.pending, (state) => {
+				state.isLoading = true
+			})
+			.addCase(
+				handleGetUserTasks.fulfilled,
+				(state, action: PayloadAction<any>) => {
+					state.isLoading = false
+					state.isSuccess = true
+					state.isError = false
+					state.tasks = action.payload
+				},
+			)
+			.addCase(
+				handleGetUserTasks.rejected,
+				(state, action: PayloadAction<any>) => {
+					state.isLoading = false
+					state.isError = true
+					state.message = action.payload
+					toast.error(action.payload)
+				},
+			)
+
+			// Get Tasks
 			.addCase(handleGetTasks.pending, (state) => {
 				state.isLoading = true
 			})
-			.addCase(handleGetTasks.fulfilled, (state, action) => {
-				state.isLoading = false
-				state.isSuccess = true
-				state.isError = false
-				state.tasks = action.payload
-			})
-			.addCase(handleGetTasks.rejected, (state, action) => {
+			.addCase(
+				handleGetTasks.fulfilled,
+				(state, action: PayloadAction<any>) => {
+					state.isLoading = false
+					state.isSuccess = true
+					state.isError = false
+					state.tasks = action.payload
+				},
+			)
+			.addCase(handleGetTasks.rejected, (state, action: PayloadAction<any>) => {
 				state.isLoading = false
 				state.isError = true
 				state.message = action.payload
@@ -192,21 +245,26 @@ const taskSlice = createSlice({
 			.addCase(handleSubmitTask.pending, (state) => {
 				state.isLoading = true
 			})
-			.addCase(handleSubmitTask.fulfilled, (state, action) => {
-				state.isLoading = false
-				state.isSuccess = true
-				state.isError = false
-				state.task = action.payload
-				console.log(action.payload)
-				state.tasks.push(action.payload)
-				toast.success('Task Submitted Successfully')
-			})
-			.addCase(handleSubmitTask.rejected, (state, action) => {
-				state.isLoading = false
-				state.isError = true
-				state.message = action.payload
-				toast.error(action.payload)
-			})
+			.addCase(
+				handleSubmitTask.fulfilled,
+				(state, action: PayloadAction<any>) => {
+					state.isLoading = false
+					state.isSuccess = true
+					state.isError = false
+					state.task = action.payload
+					state.tasks.push(action.payload)
+					toast.success('Task Submitted Successfully')
+				},
+			)
+			.addCase(
+				handleSubmitTask.rejected,
+				(state, action: PayloadAction<any>) => {
+					state.isLoading = false
+					state.isError = true
+					state.message = action.payload
+					toast.error(action.payload)
+				},
+			)
 
 			// Approve Task
 			.addCase(handleApproveTask.pending, (state) => {
@@ -214,7 +272,7 @@ const taskSlice = createSlice({
 			})
 			.addCase(
 				handleApproveTask.fulfilled,
-				(state, action) => {
+				(state, action: PayloadAction<any>) => {
 					state.isLoading = false;
 					state.isSuccess = true;
 					state.isError = false;
@@ -236,7 +294,7 @@ const taskSlice = createSlice({
 			)
 			.addCase(
 				handleApproveTask.rejected,
-				(state, action) => {
+				(state, action: PayloadAction<any>) => {
 					state.isLoading = false
 					state.isError = true
 					state.message = action.payload
@@ -249,28 +307,56 @@ const taskSlice = createSlice({
 			.addCase(handleRejectTask.pending, (state) => {
 				state.isLoading = true
 			})
-			.addCase(handleRejectTask.fulfilled, (state, action) => {
-				state.isLoading = false
-				state.isSuccess = true
-				state.isError = false
-				state.task = action.payload
-				state.tasks.push(action.payload)
-				toast.success('Task has been rejected by admin')
+			.addCase(
+				handleRejectTask.fulfilled,
+				(state, action: PayloadAction<any>) => {
+					state.isLoading = false
+					state.isSuccess = true
+					state.isError = false
+					state.task = action.payload
+					state.tasks.push(action.payload)
+					toast.success('Task has been rejected by admin')
+				},
+			)
+			.addCase(
+				handleRejectTask.rejected,
+				(state, action: PayloadAction<any>) => {
+					state.isLoading = false
+					state.isError = true
+					state.message = action.payload
+					toast.error(action.payload)
+				},
+			)
+			.addCase(handleGetTaskById.pending, (state) => {
+				state.isLoading = true
 			})
-			.addCase(handleRejectTask.rejected, (state, action) => {
-				state.isLoading = false
-				state.isError = true
-				state.message = action.payload
-				toast.error(action.payload)
-			})
+			.addCase(
+				handleGetTaskById.fulfilled,
+				(state, action: PayloadAction<any>) => {
+					state.isLoading = false
+					state.isSuccess = true
+					state.isError = false
+					state.task = action.payload
+				},
+			)
+			.addCase(
+				handleGetTaskById.rejected,
+				(state, action: PayloadAction<any>) => {
+					state.isLoading = false
+					state.isError = true
+					state.message = action.payload
+					toast.error(action.payload)
+				},
+			)
 	},
 })
 
-export const {} = taskSlice.actions
-export const selectTask = (state) => state.task.task
-export const selectTasks = (state) => state.task.tasks
-export const selectIsLoading = (state) => state.task.isLoading
-export const selectIsSuccess = (state) => state.task.isSuccess
-export const selectIsError = (state) => state.task.isError
+export const selectTask = (state: { task: TaskState }) => state.task.task
+export const selectTasks = (state: { task: TaskState }) => state.task.tasks
+export const selectIsLoading = (state: { task: TaskState }) =>
+	state.task.isLoading
+export const selectIsSuccess = (state: { task: TaskState }) =>
+	state.task.isSuccess
+export const selectIsError = (state: { task: TaskState }) => state.task.isError
 
 export default taskSlice.reducer
