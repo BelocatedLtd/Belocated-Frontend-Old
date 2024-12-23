@@ -24,6 +24,7 @@ export const getAllUser = async (page, limit, search) => {
 			}`,
 			headers,
 		)
+		console.log('getAllUser Response:', response.data);
 		return response.data
 	} catch (error) {
 		const message =
