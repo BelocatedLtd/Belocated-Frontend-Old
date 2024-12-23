@@ -70,6 +70,7 @@ const Transactions = () => {
         const user = users.find((user) => user._id === row?.userId);
         console.log('Row User ID:', row?.userId); // Log row userId
         console.log('Found User:', user); // Log found user
+        console.log('Found Userss:', users); 
         return (
           <div className="font-bold text-[13px]">
             {user?.fullname || user?.username || 'Unknown User'}
