@@ -16,20 +16,60 @@ const Transactions = () => {
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
+
+   const fetchUsers = async (page, limit) => {
+    try {
+      const response = await getAllUser(page, limit);
+      if (response && response.users) {
+        setUsers(response.users); // Ensure users are set correctly
+        console.log('Fetched Users:', response.users); // Log fetched users
+      } else {
+        console.error('Error: Invalid user response', response);
+      }
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  };
+
+   const fetchTransactions = async (page, limit) => {
+    try {
+      setIsLoading(true);
+      const response = await getAllTransactions(page, limit);
+      if (response) {
+        setTotalRows(response.totalTransactions);
+        setTransactions(response.transactions);
+      }
+    } catch (error) {
+      console.error('Error fetching transactions:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    fetchTransactions(page, rowsPerPage);
+  };
+
+  const handleChangeRowsPerPage = (rowsPerPage) => {
+    setRowsPerPage(rowsPerPage);
+    fetchTransactions(currentPage, rowsPerPage);
+  };
+
+  useEffect(() => {
+    fetchTransactions(currentPage, rowsPerPage);
+    fetchUsers(currentPage, rowsPerPage); // Fetch users when the component mounts
+  }, []);
   const columns = [
     {
       name: 'Trx Id',
       selector: (row) => row.trxId,
     },
-    {
+   {
       name: 'User',
       cell: (row) => {
-        const user = users?.find((user) => user._id.toString() === row?.userId);
-        console.log('still checking for user', user)
-        console.log('still checking for userss', users)
-        console.log('row ', row?.userId)
-        console.log('userid', user._id )
-        
+        const user = users.find((user) => user._id.toString() === row?.userId);
+        console.log('Row User ID:', row?.userId); // Log row userId
+        console.log('Found User:', user); // Log found user
         return (
           <div className="font-bold text-[13px]">
             {user?.fullname || user?.username || 'Unknown User'}
@@ -70,46 +110,20 @@ const Transactions = () => {
   };
 
   // Fetch transactions
-  const fetchTransactions = async (page, limit) => {
-    try {
-      setIsLoading(true);
-      const response = await getAllTransactions(page, limit);
-      if (response) {
-        setTotalRows(response.totalTransactions);
-        setTransactions(response.transactions);
-      }
-    } catch (error) {
-      console.error('Error fetching transactions:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+ 
 
   // Fetch users
-  const fetchUsers = async (page, limit) => {
-    try {
-      const response = await getAllUser(page, limit);
-      setUsers(response?.users || []);
-      console.log(response)
-    } catch (error) {
-      console.error('Error fetching users:', error);
-    }
-  };
+  // const fetchUsers = async (page, limit) => {
+  //   try {
+  //     const response = await getAllUser(page, limit);
+  //     setUsers(response?.users || []);
+  //     console.log(response)
+  //   } catch (error) {
+  //     console.error('Error fetching users:', error);
+  //   }
+  // };
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-    fetchTransactions(page, rowsPerPage);
-  };
 
-  const handleChangeRowsPerPage = (rowsPerPage) => {
-    setRowsPerPage(rowsPerPage);
-    fetchTransactions(currentPage, rowsPerPage);
-  };
-
-  useEffect(() => {
-    fetchTransactions(currentPage, rowsPerPage);
-    fetchUsers(currentPage, rowsPerPage); // Fetch users when the component mounts
-  }, []);
 
   return (
     <div className="w-full mx-auto mt-[2rem]">
