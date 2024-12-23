@@ -27,6 +27,7 @@ const Transactions = () => {
 			name: 'User',
 			cell: (row) => {
 				const user = users?.find((user) => user._id.toString() === row?.userId)
+				console.log('what is userr', user)
 				return (
 					<div className='font-bold text-[13px]'>
 						{user?.fullname ? user?.fullname : user?.username}
@@ -47,7 +48,8 @@ const Transactions = () => {
 		},
 		{
 			name: 'Date',
-			selector: (row) => row.date,
+			//selector: (row) => row.date,
+			selector: (row) => row.date ? new Date(parseInt(row.date)).toLocaleString() : 'N/A',
 		},
 		{
 			name: 'Status',
