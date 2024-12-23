@@ -67,7 +67,7 @@ const Transactions = () => {
    {
       name: 'User',
       cell: (row) => {
-        const user = users.find((user) => user._id.toString() === row?.userId);
+        const user = users.find((user) => user._id === row?.userId);
         console.log('Row User ID:', row?.userId); // Log row userId
         console.log('Found User:', user); // Log found user
         return (
