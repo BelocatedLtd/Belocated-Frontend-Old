@@ -90,6 +90,7 @@ const Transactions = () => {
     try {
       const response = await getAllUser(page, limit);
       setUsers(response?.users || []);
+      console.log(response)
     } catch (error) {
       console.error('Error fetching users:', error);
     }
