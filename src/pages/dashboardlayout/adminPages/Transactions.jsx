@@ -27,6 +27,9 @@ const Transactions = () => {
         const user = users?.find((user) => user._id.toString() === row?.userId);
         console.log('still checking for user', user)
         console.log('still checking for userss', users)
+        console.log('row ', row?.userId)
+        console.log('userid', user._id )
+        
         return (
           <div className="font-bold text-[13px]">
             {user?.fullname || user?.username || 'Unknown User'}
