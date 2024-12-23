@@ -28,6 +28,7 @@ const Transactions = () => {
 			cell: (row) => {
 				const user = users?.find((user) => user._id.toString() === row?.userId)
 				console.log('what is userr', user)
+				console.log('i want to know what users', users)
 				return (
 					<div className='font-bold text-[13px]'>
 						{user?.fullname ? user?.fullname : user?.username}
