@@ -73,7 +73,7 @@ const Transactions = () => {
       name: 'User',
       cell: (row) => {
         // Use the cache for lookups
-        return <div className="font-bold text-[13px]">{row.username: 'Unknown User'}</div>
+        return <div className="font-bold text-[13px]">{row.username}</div>
       },
     },
     {
