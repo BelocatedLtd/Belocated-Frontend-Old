@@ -59,28 +59,34 @@ const Transactions = () => {
     fetchTransactions(currentPage, rowsPerPage);
     fetchUsers(currentPage, rowsPerPage); // Fetch users when the component mounts
   }, []);
+  
+  useEffect(() => {
+  console.log('Users loaded:', users);
+}, [users]);
+
   const columns = [
     {
       name: 'Trx Id',
       selector: (row) => row.trxId,
     },
-   {
-      name: 'User',
-      cell: (row) => {
-      const user = users.find((user) => user._id.toString() === row?.userId.toString());
-        console.log('Row User ID:', row?.userId); // Log row userId
-        console.log('Found User:', user); // Log found user
-        console.log('Found Userss:', users); 
-        console.log('Type of row.userId:', typeof row?.userId);
-console.log('Type of user._id:', typeof user?._id);
+  
+    {
+  name: 'User',
+  cell: (row) => {
+    console.log('Row:', row);
+    const user = users.find((user) => {
+      console.log('Comparing:', user._id, row?.userId);
+      return user._id === row?.userId; // Exact match
+    });
+    console.log('Found User:', user);
+    return (
+      <div className="font-bold text-[13px]">
+        {user ? user.fullname || user.username : 'Unknown User'}
+      </div>
+    );
+  },
+},
 
-        return (
-          <div className="font-bold text-[13px]">
-            {user?.fullname || user?.username || 'Unknown User'}
-          </div>
-        );
-      },
-    },
     {
       name: 'Transaction Type',
       selector: (row) => row.trxType,
