@@ -41,6 +41,8 @@ const Transactions = () => {
       if (response) {
         setTotalRows(response.totalTransactions);
         setTransactions(response.transactions);
+        console.log(response.transactions)
+        console.log(response.totalTransactions)
       }
     } catch (error) {
       console.error('Error fetching transactions:', error);
