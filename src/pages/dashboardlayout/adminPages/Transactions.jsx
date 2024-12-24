@@ -27,10 +27,10 @@ const Transactions = () => {
         response.users.forEach((user) => userCache.set(user._id, user)); // Populate the cache
         setUsers(Array.from(userCache.values())); // Update state with cached users
       } else {
-        console.error('Error: Invalid user response', response);
+        console.log('Error: Invalid user response', response);
       }
     } catch (error) {
-      console.error('Error fetching users:', error);
+      console.log('Error fetching users:', error);
     }
   };
 
@@ -72,12 +72,8 @@ const Transactions = () => {
     {
       name: 'User',
       cell: (row) => {
-        const user = userCache.get(row.userId); // Use the cache for lookups
-        return (
-          <div className="font-bold text-[13px]">
-            {user ? user.fullname || user.username : 'Unknown User'}
-          </div>
-        );
+        // Use the cache for lookups
+        return <div className="font-bold text-[13px]">{row.username: 'Unknown User'}</div>
       },
     },
     {
