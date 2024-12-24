@@ -71,6 +71,9 @@ const Transactions = () => {
         console.log('Row User ID:', row?.userId); // Log row userId
         console.log('Found User:', user); // Log found user
         console.log('Found Userss:', users); 
+        console.log('Type of row.userId:', typeof row?.userId);
+console.log('Type of user._id:', typeof user?._id);
+
         return (
           <div className="font-bold text-[13px]">
             {user?.fullname || user?.username || 'Unknown User'}
