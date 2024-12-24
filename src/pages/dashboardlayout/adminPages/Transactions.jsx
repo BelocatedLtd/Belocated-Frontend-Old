@@ -16,13 +16,16 @@ const Transactions = () => {
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Cache to store users by their _id
+  const userCache = new Map();
 
-   const fetchUsers = async (page, limit) => {
+  // Fetch users and populate the cache
+  const fetchUsers = async (page, limit) => {
     try {
       const response = await getAllUser(page, limit);
       if (response && response.users) {
-        setUsers(response.users); // Ensure users are set correctly
-        console.log('Fetched Users:', response.users); // Log fetched users
+        response.users.forEach((user) => userCache.set(user._id, user)); // Populate the cache
+        setUsers(Array.from(userCache.values())); // Update state with cached users
       } else {
         console.error('Error: Invalid user response', response);
       }
@@ -31,7 +34,7 @@ const Transactions = () => {
     }
   };
 
-   const fetchTransactions = async (page, limit) => {
+  const fetchTransactions = async (page, limit) => {
     try {
       setIsLoading(true);
       const response = await getAllTransactions(page, limit);
@@ -45,6 +48,7 @@ const Transactions = () => {
       setIsLoading(false);
     }
   };
+
   const handlePageChange = (page) => {
     setCurrentPage(page);
     fetchTransactions(page, rowsPerPage);
@@ -59,34 +63,23 @@ const Transactions = () => {
     fetchTransactions(currentPage, rowsPerPage);
     fetchUsers(currentPage, rowsPerPage); // Fetch users when the component mounts
   }, []);
-  
-  useEffect(() => {
-  console.log('Users loaded:', users);
-}, [users]);
 
   const columns = [
     {
       name: 'Trx Id',
       selector: (row) => row.trxId,
     },
-  
     {
-  name: 'User',
-  cell: (row) => {
-    console.log('Row:', row);
-    const user = users.find((user) => {
-      console.log('Comparing:', user._id, row?.userId);
-      return user._id === row?.userId; // Exact match
-    });
-    console.log('Found User:', user);
-    return (
-      <div className="font-bold text-[13px]">
-        {user ? user.fullname || user.username : 'Unknown User'}
-      </div>
-    );
-  },
-},
-
+      name: 'User',
+      cell: (row) => {
+        const user = userCache.get(row.userId); // Use the cache for lookups
+        return (
+          <div className="font-bold text-[13px]">
+            {user ? user.fullname || user.username : 'Unknown User'}
+          </div>
+        );
+      },
+    },
     {
       name: 'Transaction Type',
       selector: (row) => row.trxType,
@@ -118,22 +111,6 @@ const Transactions = () => {
       },
     },
   };
-
-  // Fetch transactions
- 
-
-  // Fetch users
-  // const fetchUsers = async (page, limit) => {
-  //   try {
-  //     const response = await getAllUser(page, limit);
-  //     setUsers(response?.users || []);
-  //     console.log(response)
-  //   } catch (error) {
-  //     console.error('Error fetching users:', error);
-  //   }
-  // };
-
-
 
   return (
     <div className="w-full mx-auto mt-[2rem]">
