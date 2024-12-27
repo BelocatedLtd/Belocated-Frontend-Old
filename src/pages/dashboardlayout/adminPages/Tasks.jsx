@@ -226,7 +226,7 @@ const closeModal = () => {
 				className={`px-4 py-2 text-xs rounded ${
 				  task.status === 'Approved'
 					? 'bg-green-500'
-					: 'bg-yellow-500 hover:bg-green-500'
+					: 'bg-blue-500 hover:bg-green-500'
 				} text-white`}
 			  >
 				{task.status === 'Approved' ? 'Approved' : 'Approve'}
@@ -236,12 +236,14 @@ const closeModal = () => {
   
 		  <button
 					onClick={(e) => handleRejectClick(e,task)}
-					className={`px-4 py-2 rounded bg-red-500 text-white ${
-					  task.status === 'Rejected' ? 'opacity-50' : ''
-					}`}
+					className={`px-4 py-2 rounded text-white ${
+					  task.status === 'Rejected'
+						? 'bg-red-500'
+						: 'bg-gray-500 hover:bg-red-500'
+				} text-white`}
 					disabled={isRejecting}
 				  >
-					{task.status === 'Rejected' ? 'Rejecting...' : 'Reject'}
+					{task.status === 'Rejected' ? 'Rejected' : 'Reject'}
 				  </button>
   
 		  <button
