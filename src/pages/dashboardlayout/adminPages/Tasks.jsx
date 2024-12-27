@@ -81,10 +81,47 @@ const Tasks = () => {
 		}
 	  };
 	
-	  const handleRejectClick = (taskId) => {
-		const message = prompt('Please provide a reason for rejection:');
-		if (message) {
-		  rejectTask(taskId, message);
+	  const handleRejectClick = async (e,clickedTask) => {
+		e.preventDefault();
+		e.stopPropagation();
+
+		if (clickedTask.status === 'Rejected') {
+			toast.success('Task has already been Rejected');
+			return;
+		}
+		if (clickedTask.status === 'Approved') {
+			toast.success('Task has already been Rejected');
+			return;
+		}
+	
+		if (!clickedTask?._id) {
+			toast.error('Task information missing');
+			return;
+		}
+		setLoadingTaskId(clickedTask._id);
+		const updatedTask = { ...clickedTask, status: 'Rejected' };
+
+		// Optimistically update task in UI
+		setTasks((prevList) =>
+			prevList.map((task) => (task._id === clickedTask._id ? updatedTask : task))
+		);
+		try {
+			const message = prompt('Please provide a reason for rejection:');
+			if (message) {
+			  await rejectTask(clickedTask._id, message);
+			}
+			toast.success('Task Rejected');
+			// socket.emit('sendActivity', {
+			//     userId: clickedTask.taskPerformerId,
+			//     action: `@${clickedTask.taskPerformerId?.username} just earned ₦${clickedTask.toEarn} from a task completed`,
+			// });
+		} catch (error) {
+			toast.error('Error Rejecting Task');
+			setTasks((prevList) =>
+				prevList.map((task) =>
+					task._id === clickedTask._id ? { ...task, status: 'Pending' } : task
+				)
+			);
 		}
 	  };
 	
@@ -97,7 +134,10 @@ const handleTaskApproval = async (e, clickedTask) => {
         toast.success('Task has already been approved');
         return;
     }
-
+	if (clickedTask.status === 'Rejected') {
+		toast.success('Task has already been Rejected');
+		return;
+	}
     if (!clickedTask?._id) {
         toast.error('Task information missing');
         return;
@@ -195,13 +235,13 @@ const closeModal = () => {
 		  </div>
   
 		  <button
-					onClick={() => handleRejectClick(task._id)}
+					onClick={(e) => handleRejectClick(e,task)}
 					className={`px-4 py-2 rounded bg-red-500 text-white ${
-					  isRejecting ? 'opacity-50' : ''
+					  task.status === 'Rejected' ? 'opacity-50' : ''
 					}`}
 					disabled={isRejecting}
 				  >
-					{isRejecting ? 'Rejecting...' : 'Reject'}
+					{task.status === 'Rejected' ? 'Rejecting...' : 'Reject'}
 				  </button>
   
 		  <button
