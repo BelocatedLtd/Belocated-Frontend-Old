@@ -248,7 +248,7 @@ const closeModal = () => {
   
 		  <button
 			onClick={() => setDelBtn(true)}
-			className="py-2 px-5 bg-tertiary text-primary"
+			className="py-2 px-5 bg-purple-500 text-primary"
 		  >
 			Delete
 		  </button>
