@@ -123,7 +123,21 @@ const Tasks = () => {
 	const handleRejectClick = async (e, clickedTask) => {
 		e.preventDefault();
 		e.stopPropagation();
+
+			if (clickedTask.status === 'Rejected') {
+			toast.success('Task has already been Rejected');
+			return;
+		}
+		if (clickedTask.status === 'Approved') {
+			toast.success('Task has already been Rejected');
+			return;
+		}
 	
+		if (!clickedTask?._id) {
+			toast.error('Task information missing');
+			return;
+		}
+		
 		const message = prompt('Please provide a reason for rejection:');
 		if (message) {
 			await rejectTask(clickedTask._id, message); // Call rejectTask function
