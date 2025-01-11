@@ -15,17 +15,16 @@ const Transactions = () => {
   const [transactions, setTransactions] = useState([]);
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [timeFilter, setTimeFilter] = useState('all'); // Default filter is 'all'
 
-  // Cache to store users by their _id
   const userCache = new Map();
 
-  // Fetch users and populate the cache
   const fetchUsers = async (page, limit) => {
     try {
       const response = await getAllUser(page, limit);
       if (response && response.users) {
-        response.users.forEach((user) => userCache.set(user._id, user)); // Populate the cache
-        setUsers(Array.from(userCache.values())); // Update state with cached users
+        response.users.forEach((user) => userCache.set(user._id, user));
+        setUsers(Array.from(userCache.values()));
       } else {
         console.log('Error: Invalid user response', response);
       }
@@ -34,15 +33,13 @@ const Transactions = () => {
     }
   };
 
-  const fetchTransactions = async (page, limit) => {
+  const fetchTransactions = async (page, limit, filter = 'all') => {
     try {
       setIsLoading(true);
-      const response = await getAllTransactions(page, limit);
+      const response = await getAllTransactions(page, limit, filter);
       if (response) {
         setTotalRows(response.totalTransactions);
         setTransactions(response.transactions);
-        console.log(response.transactions)
-        console.log(response.totalTransactions)
       }
     } catch (error) {
       console.error('Error fetching transactions:', error);
@@ -53,17 +50,23 @@ const Transactions = () => {
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
-    fetchTransactions(page, rowsPerPage);
+    fetchTransactions(page, rowsPerPage, timeFilter);
   };
 
   const handleChangeRowsPerPage = (rowsPerPage) => {
     setRowsPerPage(rowsPerPage);
-    fetchTransactions(currentPage, rowsPerPage);
+    fetchTransactions(currentPage, rowsPerPage, timeFilter);
+  };
+
+  const handleFilterChange = (e) => {
+    const selectedFilter = e.target.value;
+    setTimeFilter(selectedFilter);
+    fetchTransactions(currentPage, rowsPerPage, selectedFilter);
   };
 
   useEffect(() => {
-    fetchTransactions(currentPage, rowsPerPage);
-    fetchUsers(currentPage, rowsPerPage); // Fetch users when the component mounts
+    fetchTransactions(currentPage, rowsPerPage, timeFilter);
+    fetchUsers(currentPage, rowsPerPage);
   }, []);
 
   const columns = [
@@ -73,10 +76,7 @@ const Transactions = () => {
     },
     {
       name: 'User',
-      cell: (row) => {
-        // Use the cache for lookups
-        return <div className="font-bold text-[13px]">{row.username}</div>
-      },
+      cell: (row) => <div className="font-bold text-[13px]">{row.username}</div>,
     },
     {
       name: 'Transaction Type',
@@ -84,9 +84,7 @@ const Transactions = () => {
     },
     {
       name: 'Amount',
-      cell: (row) => {
-        return <div className="font-bold text-[13px]">₦{row.chargedAmount}</div>;
-      },
+      cell: (row) => <div className="font-bold text-[13px]">₦{row.chargedAmount}</div>,
       sortable: true,
     },
     {
@@ -120,6 +118,19 @@ const Transactions = () => {
             className="mr-1"
           />
           <p className="font-semibold text-xl text-gray-700">Transactions</p>
+        </div>
+        <div>
+          <select
+            value={timeFilter}
+            onChange={handleFilterChange}
+            className="p-2 border rounded-md bg-white shadow-md"
+          >
+            <option value="all">All</option>
+            <option value="hour">Last Hour</option>
+            <option value="day">Today</option>
+            <option value="month">This Month</option>
+            <option value="year">This Year</option>
+          </select>
         </div>
       </div>
       <DataTable
