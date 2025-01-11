@@ -129,7 +129,7 @@ const Tasks = () => {
 			return;
 		}
 		if (clickedTask.status === 'Approved') {
-			toast.success('Task has already been Rejected');
+			toast.success('Task has already been Approved');
 			return;
 		}
 	
