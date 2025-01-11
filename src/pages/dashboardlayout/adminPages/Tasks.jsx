@@ -157,9 +157,7 @@ const closeModal = () => {
 		</div>
   
 		<div className="space-y-6">
-		{isLoading ? (
-			<p>Loading...</p>
-		  ) : tasks.length === 0 ? (
+		{tasks.length === 0 ? (
 			<p className="text-center text-gray-500">No Submitted tasks available</p>
 		  ) : (
 			tasks.map((task) => (
