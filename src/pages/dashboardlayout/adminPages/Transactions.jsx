@@ -36,7 +36,8 @@ const Transactions = () => {
   const fetchTransactions = async (page, limit, filter = 'all') => {
     try {
       setIsLoading(true);
-      const response = await getAllTransactions(page, limit, filter);
+      const dateFilter = getDateFilter(filter);
+      const response = await getAllTransactions(page, limit, dateFilter);
       if (response) {
         setTotalRows(response.totalTransactions);
         setTransactions(response.transactions);
@@ -46,6 +47,18 @@ const Transactions = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const getDateFilter = (filter) => {
+    const timeFilters = {
+      all: {}, 
+      hour: { createdAt: { $gte: new Date(Date.now() - 60 * 60 * 1000) } },
+      day: { createdAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) } },
+      month: { createdAt: { $gte: new Date(new Date().setDate(1)) } },
+      year: { createdAt: { $gte: new Date(new Date().getFullYear(), 0, 1) } },
+    };
+
+    return timeFilters[filter] || {};
   };
 
   const handlePageChange = (page) => {
