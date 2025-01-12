@@ -44,10 +44,10 @@ export const getUserTransactions = async (page, limit) => {
 }
 
 // Get Transactions List
-export const getAllTransactions = async (page, limit, filter) => {
+export const getAllTransactions = async (page, limit, filterType, filterValue) => {
 	const headers = getAuthHeaders()
 	const response = await axios.get(
-		`${BACKEND_URL}/api/transactions/all?page=${page}&limit=${limit}&filter=${filter}`,
+		`${BACKEND_URL}/api/transactions/all?page=${page}&limit=${limit}&filterType=${filterType}&filterValue=${filterValue}`,
 		headers,
 	)
 	return response.data
