@@ -186,6 +186,7 @@ const Transactions = () => {
       <div className="mt-8">
         <div className="flex flex-col sm:flex-row justify-between">
           <div className="w-full sm:w-1/2 mb-4 sm:mb-0">
+            Wallet Funding
             {!isLoading ? (
               <PieChart width={400} height={250}>
                 <Pie
@@ -221,6 +222,10 @@ const Transactions = () => {
                 </Pie>
                 <Tooltip />
               </PieChart>
+     <p> Successful: summary.successfulTransactionCount</p>
+     <p> Pending: summary.pendingTransactionCount</p>
+          <p> ₦${successfulTransactionAmount}</p>
+          <p> ₦${pendingTransactionAmount}</p>
             ) : (
               <div className="h-[200px] flex items-center justify-center">
                 <p>Loading...</p>
