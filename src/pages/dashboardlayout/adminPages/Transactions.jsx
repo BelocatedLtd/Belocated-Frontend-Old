@@ -6,8 +6,6 @@ import { getAllUser } from '../../../services/userServices';
 import { getAllTransactions } from '../../../services/transactionService';
 import { PieChart, Pie, Cell, Tooltip } from 'recharts'; // Import from Recharts
 
-ChartJS.register(ArcElement, Tooltip, Legend);
-
 const Transactions = () => {
   const navigate = useNavigate();
 
