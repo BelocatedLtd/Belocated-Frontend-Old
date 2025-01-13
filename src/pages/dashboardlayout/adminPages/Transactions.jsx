@@ -4,6 +4,10 @@ import { MdOutlineKeyboardArrowLeft } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import { getAllUser } from '../../../services/userServices';
 import { getAllTransactions } from '../../../services/transactionService';
+import { Pie } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const Transactions = () => {
   const navigate = useNavigate();
@@ -17,6 +21,13 @@ const Transactions = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [summary, setSummary] = useState({
+    successfulTransactionCount: 0,
+    successfulTransactionAmount: 0,
+    pendingTransactionCount: 0,
+    pendingTransactionAmount: 0,
+    totalUsers: 0,
+  });
 
   const userCache = new Map();
 
@@ -41,6 +52,13 @@ const Transactions = () => {
       if (response) {
         setTotalRows(response.totalTransactions);
         setTransactions(response.transactions);
+        setSummary({
+          successfulTransactionCount: response.successfulTransactionCount,
+          successfulTransactionAmount: response.successfulTransactionAmount,
+          pendingTransactionCount: response.pendingTransactionCount,
+          pendingTransactionAmount: response.pendingTransactionAmount,
+          totalUsers: response.totalUsers,
+        });
       }
     } catch (error) {
       console.error('Error fetching transactions:', error);
@@ -51,12 +69,14 @@ const Transactions = () => {
 
   const handleStartDateChange = (e) => {
     setStartDate(e.target.value);
-    fetchTransactions(currentPage, rowsPerPage, e.target.value, endDate);
   };
 
   const handleEndDateChange = (e) => {
     setEndDate(e.target.value);
-    fetchTransactions(currentPage, rowsPerPage, startDate, e.target.value);
+  };
+
+  const applyDateFilter = () => {
+    fetchTransactions(currentPage, rowsPerPage, startDate, endDate);
   };
 
   const handlePageChange = (page) => {
@@ -72,7 +92,7 @@ const Transactions = () => {
   useEffect(() => {
     fetchTransactions(currentPage, rowsPerPage, startDate, endDate);
     fetchUsers(currentPage, rowsPerPage);
-  }, [startDate, endDate]);
+  }, []);
 
   const columns = [
     {
@@ -113,10 +133,26 @@ const Transactions = () => {
     },
   };
 
+  const pieChartData = {
+    labels: ['Successful', 'Pending'],
+    datasets: [{
+      data: [summary.successfulTransactionCount, summary.pendingTransactionCount],
+      backgroundColor: [
+        'rgba(75, 192, 192, 0.6)', // Green for successful
+        'rgba(255, 206, 86, 0.6)'  // Yellow for pending
+      ],
+      borderColor: [
+        'rgba(75, 192, 192, 1)',
+        'rgba(255, 206, 86, 1)'
+      ],
+      borderWidth: 1,
+    }],
+  };
+
   return (
     <div className="w-full mx-auto mt-[2rem]">
-      <div className="flex items-center justify-between mb-[2rem]">
-        <div className="flex items-center">
+      <div className="flex items-center justify-between mb-[2rem] flex-wrap">
+        <div className="flex items-center mb-4 w-full sm:w-auto">
           <MdOutlineKeyboardArrowLeft
             size={30}
             onClick={() => navigate(-1)}
@@ -124,21 +160,28 @@ const Transactions = () => {
           />
           <p className="font-semibold text-xl text-gray-700">Transactions</p>
         </div>
-        <div className="flex space-x-4">
+        <div className="flex space-x-4 mb-4 w-full sm:w-auto">
           <input
             type="date"
             value={startDate}
             onChange={handleStartDateChange}
-            className="p-2 border rounded-md bg-white shadow-md"
+            className="p-2 border rounded-md bg-white shadow-md w-full sm:w-40"
           />
           <input
             type="date"
             value={endDate}
             onChange={handleEndDateChange}
-            className="p-2 border rounded-md bg-white shadow-md"
+            className="p-2 border rounded-md bg-white shadow-md w-full sm:w-40"
           />
+          <button
+            onClick={applyDateFilter}
+            className="p-2 border rounded-md bg-blue-500 text-white shadow-md hover:bg-blue-600 w-full sm:w-auto"
+          >
+            Apply
+          </button>
         </div>
       </div>
+
       <DataTable
         columns={columns}
         data={transactions}
@@ -152,8 +195,31 @@ const Transactions = () => {
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handleChangeRowsPerPage}
       />
-    </div>
-  );
+      <div className="mt-8">
+        <div className="flex flex-col sm:flex-row justify-between">
+          <div className="w-full sm:w-1/2 mb-4 sm:mb-0">
+            {!isLoading ? (
+              <Pie data={pieChartData} options={{ maintainAspectRatio: false }} height={200} />
+            ) : (
+              <div className="h-[200px] flex items-center justify-center">
+                <p>Loading...</p>
+              </div>
+            )}
+          </div>
+          <div className="w-full sm:w-1/2">
+            <div className="bg-white p-4 rounded-lg shadow-md">
+              <p className="text-lg font-bold mb-2">Summary</p>
+              <p>Successful Transactions: {summary.successfulTransactionCount}</p>
+              <p>Successful Amount: ₦{summary.successfulTransactionAmount}</p>
+              <p>Pending Transactions: {summary.pendingTransactionCount}</p>
+              <p>Pending Amount: ₦{summary.pendingTransactionAmount}</p>
+              <p>Total Users: {summary.totalUsers}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+      );
 };
 
 export default Transactions;
