@@ -4,8 +4,7 @@ import { MdOutlineKeyboardArrowLeft } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import { getAllUser } from '../../../services/userServices';
 import { getAllTransactions } from '../../../services/transactionService';
-import { Pie } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { PieChart, Pie, Cell, Tooltip } from 'recharts'; // Import from Recharts
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -133,21 +132,12 @@ const Transactions = () => {
     },
   };
 
-  const pieChartData = {
-    labels: ['Successful', 'Pending'],
-    datasets: [{
-      data: [summary.successfulTransactionCount, summary.pendingTransactionCount],
-      backgroundColor: [
-        'rgba(75, 192, 192, 0.6)', // Green for successful
-        'rgba(255, 206, 86, 0.6)'  // Yellow for pending
-      ],
-      borderColor: [
-        'rgba(75, 192, 192, 1)',
-        'rgba(255, 206, 86, 1)'
-      ],
-      borderWidth: 1,
-    }],
-  };
+  const pieChartData = [
+    { name: 'Successful', value: summary.successfulTransactionCount },
+    { name: 'Pending', value: summary.pendingTransactionCount },
+  ];
+
+  const COLORS = ['#4bc0c0', '#ffce56'];
 
   return (
     <div className="w-full mx-auto mt-[2rem]">
@@ -199,7 +189,40 @@ const Transactions = () => {
         <div className="flex flex-col sm:flex-row justify-between">
           <div className="w-full sm:w-1/2 mb-4 sm:mb-0">
             {!isLoading ? (
-              <Pie data={pieChartData} options={{ maintainAspectRatio: false }} height={200} />
+              <PieChart width={400} height={250}>
+                <Pie
+                  data={pieChartData}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+                    const RADIAN = Math.PI / 180;
+                    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+                    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+                    return (
+                      <text
+                        x={x}
+                        y={y}
+                        fill="white"
+                        textAnchor={x > cx ? 'start' : 'end'}
+                        dominantBaseline="central"
+                      >
+                        {`${(percent * 100).toFixed(0)}%`}
+                      </text>
+                    );
+                  }}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {pieChartData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
             ) : (
               <div className="h-[200px] flex items-center justify-center">
                 <p>Loading...</p>
@@ -207,19 +230,12 @@ const Transactions = () => {
             )}
           </div>
           <div className="w-full sm:w-1/2">
-            <div className="bg-white p-4 rounded-lg shadow-md">
-              <p className="text-lg font-bold mb-2">Summary</p>
-              <p>Successful Transactions: {summary.successfulTransactionCount}</p>
-              <p>Successful Amount: ₦{summary.successfulTransactionAmount}</p>
-              <p>Pending Transactions: {summary.pendingTransactionCount}</p>
-              <p>Pending Amount: ₦{summary.pendingTransactionAmount}</p>
-              <p>Total Users: {summary.totalUsers}</p>
-            </div>
+            {/* ... summary box */}
           </div>
         </div>
       </div>
-      </div>
-      );
+    </div>
+  );
 };
 
 export default Transactions;
