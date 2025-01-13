@@ -15,7 +15,8 @@ const Transactions = () => {
   const [transactions, setTransactions] = useState([]);
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [dayCount, setDayCount] = useState(30); // Number of days for filtering
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   const userCache = new Map();
 
@@ -33,10 +34,10 @@ const Transactions = () => {
     }
   };
 
-  const fetchTransactions = async (page, limit, dayCount) => {
+  const fetchTransactions = async (page, limit, startDate, endDate) => {
     try {
       setIsLoading(true);
-      const response = await getAllTransactions(page, limit, 'day', dayCount);
+      const response = await getAllTransactions(page, limit, startDate, endDate);
       if (response) {
         setTotalRows(response.totalTransactions);
         setTransactions(response.transactions);
@@ -48,26 +49,30 @@ const Transactions = () => {
     }
   };
 
-  const handleDayCountChange = (e) => {
-    setDayCount(e.target.value);
-    fetchTransactions(currentPage, rowsPerPage, e.target.value);
+  const handleStartDateChange = (e) => {
+    setStartDate(e.target.value);
+    fetchTransactions(currentPage, rowsPerPage, e.target.value, endDate);
+  };
+
+  const handleEndDateChange = (e) => {
+    setEndDate(e.target.value);
+    fetchTransactions(currentPage, rowsPerPage, startDate, e.target.value);
   };
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
-    fetchTransactions(page, rowsPerPage, dayCount);
+    fetchTransactions(page, rowsPerPage, startDate, endDate);
   };
 
   const handleChangeRowsPerPage = (rowsPerPage) => {
     setRowsPerPage(rowsPerPage);
-    fetchTransactions(currentPage, rowsPerPage, dayCount);
+    fetchTransactions(currentPage, rowsPerPage, startDate, endDate);
+  };
 
-
-  }
   useEffect(() => {
-    fetchTransactions(currentPage, rowsPerPage, dayCount);
+    fetchTransactions(currentPage, rowsPerPage, startDate, endDate);
     fetchUsers(currentPage, rowsPerPage);
-  }, []);
+  }, [startDate, endDate]);
 
   const columns = [
     {
@@ -119,12 +124,17 @@ const Transactions = () => {
           />
           <p className="font-semibold text-xl text-gray-700">Transactions</p>
         </div>
-        <div>
+        <div className="flex space-x-4">
           <input
-            type="number"
-            value={dayCount}
-            onChange={handleDayCountChange}
-            min="1"
+            type="date"
+            value={startDate}
+            onChange={handleStartDateChange}
+            className="p-2 border rounded-md bg-white shadow-md"
+          />
+          <input
+            type="date"
+            value={endDate}
+            onChange={handleEndDateChange}
             className="p-2 border rounded-md bg-white shadow-md"
           />
         </div>
