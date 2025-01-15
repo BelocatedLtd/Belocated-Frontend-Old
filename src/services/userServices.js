@@ -19,12 +19,9 @@ export const getAllUser = async (page, limit, search) => {
 	const headers = getAuthHeaders()
 	try {
 		const response = await axios.get(
-			`${BACKEND_URL}/api/user/all?page=${page}&limit=${limit}&search=${
-				search || ''
-			}`,
-			headers,
-		)
-		console.log('getAllUser Response:', response.data);
+			`${BACKEND_URL}/api/user/all?page=${page}&limit=${limit}&search=${search || ''}&startDate=${startDate || ''}&endDate=${endDate || ''}`,
+			{ headers }
+		  );
 		return response.data
 	} catch (error) {
 		const message =
