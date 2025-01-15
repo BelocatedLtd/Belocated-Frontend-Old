@@ -15,6 +15,7 @@ import { selectTasks } from '../../../redux/slices/taskSlice'
 import { selectIsLoading } from '../../../redux/slices/userSlice'
 import { trashAllUserActivities } from '../../../services/feedService'
 import { getAllUser } from '../../../services/userServices'
+import { PieChart, Pie, Cell, Tooltip } from 'recharts';
 
 const Users = () => {
   const navigate = useNavigate();
