@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { BACKEND_URL } from '../../utils/globalConfig'
 import { getToken } from '../../utils/tokenHandler'
+import toast from 'react-hot-toast';
 
 const getAuthHeaders = () => {
 	const token = getToken()
