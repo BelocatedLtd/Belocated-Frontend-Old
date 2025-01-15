@@ -18,6 +18,12 @@ const Users = () => {
     totalUsers: 0,
     totalTasksCompleted: 0,
     totalReferrals: 0,
+	usersWithCompletedTasks: 0,
+	usersWithOngoingTasks:0,
+	totalTasksOngoing:0,
+	referralStats:0,
+
+	
   });
 
   const COLORS = ['#4bc0c0', '#ffce56', '#36a2eb'];
@@ -48,7 +54,7 @@ const Users = () => {
 
   const handleStartDateChange = (e) => setStartDate(e.target.value);
   const handleEndDateChange = (e) => setEndDate(e.target.value);
-  const applyDateFilter = () => fetchTransactions(currentPage, rowsPerPage, startDate, endDate);
+  const applyDateFilter = () => fetchUsers(currentPage, rowsPerPage, startDate, endDate);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
