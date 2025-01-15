@@ -15,7 +15,7 @@ const getAuthHeaders = () => {
 }
 
 //Get User
-export const getAllUser = async (page, limit, search) => {
+export const getAllUser = async (page, limit, search, startDate,endDate) => {
 	const headers = getAuthHeaders()
 	try {
 		const response = await axios.get(
