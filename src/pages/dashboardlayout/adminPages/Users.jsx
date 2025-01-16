@@ -183,9 +183,38 @@ const Users = () => {
         </div>
       </div>
       {/* Summary */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-        {/* ... (Summary elements) */}
-      </div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+				{/* ... (Summary elements) */} <div className="p-4 bg-white shadow rounded">
+					<h3 className="text-sm text-gray-500">Total Users</h3>
+					<p className="text-xl font-semibold">{summary.totalUsers}</p>
+				</div>
+
+				<div className="p-4 bg-white shadow rounded">
+					<h3 className="text-sm text-gray-500">Total Tasks Completed</h3>
+					<p className="text-xl font-semibold">{summary.totalTasksCompleted}</p>
+				</div>
+				<div className="p-4 bg-white shadow rounded">
+					<h3 className="text-sm text-gray-500">Users With Completed Tasks</h3>
+					<p className="text-xl font-semibold">{summary.usersWithCompletedTasks}</p>
+				</div>
+				<div className="p-4 bg-white shadow rounded">
+					<h3 className="text-sm text-gray-500">Total Tasks Ongoing</h3>
+					<p className="text-xl font-semibold">{summary.totalTasksOngoing}</p>
+				</div>
+				<div className="p-4 bg-white shadow rounded">
+					<h3 className="text-sm text-gray-500">Users With Ongoing Tasks</h3>
+					<p className="text-xl font-semibold">{summary.usersWithOngoingTasks}</p>
+				</div>
+				<div className="p-4 bg-white shadow rounded">
+					<h3 className="text-sm text-gray-500">Referral Stats</h3>
+					<p className="text-xl font-semibold">{summary.referralStats}</p>
+				</div>
+				<div className="p-4 bg-white shadow rounded">
+					<h3 className="text-sm text-gray-500">Total Referrals</h3>
+					<p className="text-xl font-semibold">{summary.totalReferrals}</p>
+				</div>
+			</div>
+
 
       {/* Filters and Pie Chart */}
       <div className="flex flex-wrap gap-4 mb-6">
