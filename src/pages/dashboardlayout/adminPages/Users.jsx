@@ -184,11 +184,11 @@ const Users = () => {
 			</div>
 
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-	 {/*  <div className="p-4 bg-white shadow rounded">
+	  <div className="p-4 bg-white shadow rounded">
     <h3 className="text-sm text-gray-500">Total Users</h3>
     <p className="text-xl font-semibold">{summary?.totalUsers ?? "N/A"}</p>
-  </div> */}
-  <div className="p-4 bg-white shadow rounded">
+  </div> 
+	 {/* <div className="p-4 bg-white shadow rounded">
     <h3 className="text-sm text-gray-500">Total Tasks Completed</h3>
     <p className="text-xl font-semibold">{summary?.totalTasksCompleted ?? "N/A"}</p>
     <p className="text-green-500 font-bold">{summary?.usersWithCompletedTasks ?? 0} Users</p>
@@ -202,7 +202,7 @@ const Users = () => {
     <h3 className="text-sm text-gray-500">Referral Stats</h3>
     <p className="text-xl font-semibold">{summary?.totalReferrals ?? "N/A"}</p>
     <p className="text-yellow-500 font-bold">{summary?.referralStats ?? 0} Users</p>
-  </div>
+  </div> */}
 </div> 
  
 
