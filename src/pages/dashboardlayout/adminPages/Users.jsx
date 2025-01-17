@@ -188,12 +188,12 @@ const Users = () => {
     <h3 className="text-sm text-gray-500">Total Users</h3>
     <p className="text-xl font-semibold">{summary?.totalUsers ?? "N/A"}</p>
   </div> 
-	 {/* <div className="p-4 bg-white shadow rounded">
+	  <div className="p-4 bg-white shadow rounded">
     <h3 className="text-sm text-gray-500">Total Tasks Completed</h3>
     <p className="text-xl font-semibold">{summary?.totalTasksCompleted ?? "N/A"}</p>
     <p className="text-green-500 font-bold">{summary?.usersWithCompletedTasks ?? 0} Users</p>
   </div>
-  <div className="p-4 bg-white shadow rounded">
+	 {/*  <div className="p-4 bg-white shadow rounded">
     <h3 className="text-sm text-gray-500">Total Tasks Ongoing</h3>
     <p className="text-xl font-semibold">{summary?.totalTasksOngoing ?? "N/A"}</p>
     <p className="text-yellow-500 font-bold">{summary?.usersWithOngoingTasks ?? 0} Users</p>
