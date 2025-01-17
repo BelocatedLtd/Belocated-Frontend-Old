@@ -118,12 +118,14 @@ const Transactions = () => {
             type="date"
             value={startDate}
             onChange={handleStartDateChange}
+            placeholder="Start Date"
             className="p-2 border rounded bg-white shadow"
           />
           <input
             type="date"
             value={endDate}
             onChange={handleEndDateChange}
+            placeholder="End Date"
             className="p-2 border rounded bg-white shadow"
           />
           <button
