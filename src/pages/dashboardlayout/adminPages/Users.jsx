@@ -136,10 +136,10 @@ const Users = () => {
 				setSummary({
 					totalUsers: response.totalUsers,
 					totalTasksCompleted: response.totalTasksCompleted,
-					totalReferrals: response.totalReferralsByAllUsers,
+					totalReferrals: response.totalReferrals,
 					usersWithCompletedTasks: response.usersWithCompletedTasks,
-					referralStats: response.referralStats,
-					usersWithOngoingTasks: response.usersWithOngoingTasks,
+					referralStats: response.totalUsersWithReferrals,
+			        	usersWithOngoingTasks: response.usersWithOngoingTasks,
 					totalTasksOngoing: response.totalTasksOngoing
 				});
 			}
@@ -201,7 +201,7 @@ const Users = () => {
 	 <div className="p-4 bg-white shadow rounded">
     <h3 className="text-sm text-gray-500">Referral Stats</h3>
 		  <p className="text-xl font-semibold">{summary?.totalReferrals ?? "N/A"}</p>
-		 {/*  <p className="text-yellow-500 font-bold">{summary?.referralStats ?? 0} Users</p> */}
+		 <p className="text-yellow-500 font-bold">{summary?.referralStats ?? 0} Users</p>
   </div> 
 </div> 
  
@@ -210,6 +210,8 @@ const Users = () => {
 			
 			<div className="flex flex-wrap gap-4 mb-6">
 				<div className="flex flex-col sm:flex-row gap-4 items-center">
+					<label className="text-gray-500">
+  Start Date
 					<input
 						type="date"
 						value={startDate}
@@ -217,6 +219,9 @@ const Users = () => {
 						placeholder='Start Date'
 						className="p-2 border rounded bg-white shadow"
 					/>
+					</label>
+					<label className="text-gray-500">
+  End Date
 					<input
 						type="date"
 						value={endDate}
@@ -224,6 +229,7 @@ const Users = () => {
 						placeholder="End Date"
 						className="p-2 border rounded bg-white shadow"
 					/>
+						</label>
 					<button
 						onClick={applyDateFilter}
 						className="p-2 bg-blue-500 text-white rounded shadow hover:bg-blue-600"
