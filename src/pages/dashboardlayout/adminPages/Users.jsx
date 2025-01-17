@@ -200,8 +200,8 @@ const Users = () => {
   </div>
 	 <div className="p-4 bg-white shadow rounded">
     <h3 className="text-sm text-gray-500">Referral Stats</h3>
-		 {/*    <p className="text-xl font-semibold">{summary?.totalReferrals ?? "N/A"}</p>*/}
-    <p className="text-yellow-500 font-bold">{summary?.referralStats ?? 0} Users</p>
+		  <p className="text-xl font-semibold">{summary?.totalReferrals ?? "N/A"}</p>
+		 {/*  <p className="text-yellow-500 font-bold">{summary?.referralStats ?? 0} Users</p> */}
   </div> 
 </div> 
  
