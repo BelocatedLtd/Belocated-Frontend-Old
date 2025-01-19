@@ -35,14 +35,13 @@ const WithdrawalRequests = () => {
     {
       name: 'User',
       cell: (row) => {
-        const user = users?.find(user => user._id === row?.userId)
-        setWdUser(user)
-              return (
-                
-                  <div className='font-bold text-[13px]'>{user?.fullname ? user?.fullname : user?.username}</div>
-                
-              )
-        }
+        const user = row.userId; // Complete user object
+        return (
+          <div className='font-bold text-[13px]'>
+            {user?.fullname ? user?.fullname : user?.username}
+          </div>
+        );
+      }
     },
     {
       name: 'Withdrawal Method',
@@ -67,7 +66,7 @@ const WithdrawalRequests = () => {
         button: true,
         cell: (row) => {
             const userWithdrawalRequest = withdrawalList?.find(wdrequest => wdrequest?._id === row?._id) || {}
-            setWdData(userWithdrawalRequest)
+           
             return (
                 <button className='bg-[#18141E] text-gray-100 px-6 py-2 rounded-2xl hover:bg-btn hover:bg-secondary' onClick={(e) => handleButtonClick(e, row?._id)}>Pay</button>
             )
