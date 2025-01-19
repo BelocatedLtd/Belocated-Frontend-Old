@@ -35,7 +35,7 @@ const WithdrawalRequests = () => {
     {
       name: 'User',
       cell: (row) => {
-        const user = row.userId; // Complete user object
+        const user = row.user; // Complete user object
         return (
           <div className='font-bold text-[13px]'>
             {user?.fullname ? user?.fullname : user?.username}
