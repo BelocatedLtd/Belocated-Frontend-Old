@@ -15,7 +15,7 @@ const WithdrawalModal = () => {
     const { withdrawalRequestId } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const users = useSelector(selectUsers)
+ 
     const isLoading = useSelector(selectIsLoading)
     const isSuccess = useSelector(selectIsSuccess)
     const isError = useSelector(selectIsError)
