@@ -93,17 +93,19 @@ export const handleGetUserWithdrawals = createAsyncThunk(
 
      // Confirm Withdraw User Wallet
 export const handleConfirmUserWithdrawal = createAsyncThunk(
-  "wallet/handleConfirmUserWithdrawal",
-  async(withdrawalRequestId, thunkAPI) => {
-      try {
-        return await confirmWithdrawal(withdrawalRequestId) 
-      } catch(error) {
-          const message = 
-      (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-          return thunkAPI.rejectWithValue(message)
+      "wallet/handleConfirmUserWithdrawal",
+      async ({ withdrawalRequestId, formData }, thunkAPI) => {
+          try {
+              return await confirmWithdrawal(withdrawalRequestId, formData);
+          } catch (error) {
+              const message = 
+                  (error.response && error.response.data && error.response.data.message) || 
+                  error.message || 
+                  error.toString();
+              return thunkAPI.rejectWithValue(message);
+          }
       }
-      } 
-  )
+  );
 
      // Confirm Withdraw User Wallet
 export const handleDeleteWithdrawal = createAsyncThunk(
