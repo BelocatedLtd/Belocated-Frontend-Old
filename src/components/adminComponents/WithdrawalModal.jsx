@@ -78,9 +78,8 @@ const WithdrawalModal = () => {
     const formData = new FormData();
     imageArray.forEach(file => formData.append('images', file));
     formData.append('taskId', _id);
-    formData.append('userSocialName', userSocialName);
-
-    await dispatch(handleConfirmUserWithdrawal(_id));
+   
+await dispatch(handleConfirmUserWithdrawal({ withdrawalRequestId: _id, formData }));
 
     if (isError) {
       toast.error("Error confirming withdrawal request");
