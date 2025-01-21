@@ -5,17 +5,12 @@ import { getToken } from '../../utils/tokenHandler'
 
 
 const getAuthHeaders = () => {
-    const token = getToken()
+    const token = getToken();
 
-    if (token) {
-        return {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }
-    }
-}
-
+    return token
+        ? { Authorization: `Bearer ${token}` }
+        : {}; // Return an empty object if no token
+};
 
 
 // Get User Wallet Details
