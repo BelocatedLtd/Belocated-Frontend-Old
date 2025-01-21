@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { 
@@ -14,7 +14,6 @@ import { BACKEND_URL } from '../../../utils/globalConfig';
 import Loader from '../loader/Loader';
 import { MdOutlineKeyboardArrowLeft } from 'react-icons/md';
 import { BiArrowBack } from 'react-icons/bi';
-import { useDropzone } from 'react-dropzone';
 import { GiCancel } from 'react-icons/gi';
 import { IoClose, IoTimeOutline } from 'react-icons/io5';
 
@@ -36,6 +35,7 @@ const WithdrawalModal = () => {
   const [selectedImages, setSelectedImages] = useState([]);
   const [userSocialName, setUserSocialName] = useState("");
   const [taskSubmitted, setTaskSubmitted] = useState(false);
+  const inputFileRef = useRef(null);
 
   useEffect(() => {
     const wd = withdrawalList?.find(wd => wd?._id === withdrawalRequestId) || {};
@@ -49,14 +49,16 @@ const WithdrawalModal = () => {
     setUserSocialName(e.target.value);
   };
 
-  const handleImageChange = (files) => {
+  const handleFileSelect = (event) => {
+    const files = Array.from(event.target.files);
     setImageArray(files);
+
     const filePreviews = files.map(file => URL.createObjectURL(file));
-    setSelectedImages(filePreviews);
+    setSelectedImages(prevImages => [...prevImages, ...filePreviews]);
   };
 
   const handleImageRemove = (imagePreview) => {
-    const updatedImages = selectedImages.filter(preview => preview !== imagePreview);
+    const updatedImages = selectedImages.filter(img => img !== imagePreview);
     const updatedFiles = imageArray.filter(file => URL.createObjectURL(file) !== imagePreview);
     
     setSelectedImages(updatedImages);
@@ -108,11 +110,6 @@ const WithdrawalModal = () => {
       navigate(-1);
     }
   };
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop: handleImageChange,
-    multiple: true,
-  });
 
   return (
     <div className='w-full h-fit'>
@@ -185,14 +182,21 @@ const WithdrawalModal = () => {
             ))}
           </div>
 
-          <div {...getRootProps()} className={`w-full p-6 border-2 cursor-pointer border-dashed rounded-2xl h-22 ${isDragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-gray-50'}`}>
-            <input {...getInputProps()} />
-            {isDragActive ? (
-              <p className='text-center text-blue-500'>Drop the files here...</p>
-            ) : (
-              <p className='text-center text-gray-500'>Drag & drop some files here, or click to select files</p>
-            )}
-          </div>
+          <input 
+            ref={inputFileRef}
+            type="file" 
+            accept="image/*" 
+            onChange={handleFileSelect} 
+            multiple 
+            className='w-full p-3 shadow-inner rounded-2xl bg-gray-50 md:w-[300px]'
+            style={{ display: 'none' }}
+          />
+          <button 
+            type="button"
+            onClick={() => inputFileRef.current.click()}
+            className='w-full p-6 border-2 cursor-pointer border-dashed rounded-2xl h-22 border-gray-300 bg-gray-50'>
+            <p className='text-center text-gray-500'>Click to select files</p>
+          </button>
         </div>
 
         <div className='flex flex-col md:flex-row items-center'>
