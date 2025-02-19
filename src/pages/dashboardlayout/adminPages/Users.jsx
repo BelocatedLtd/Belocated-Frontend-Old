@@ -66,7 +66,7 @@ const Users = () => {
 
 	const handleFilter = (search) => {
 		setSearchTerm(search);
-		fetchUsers(currentPage, rowsPerPage, search, startDate, endDate);
+		fetchUsers(currentPage, rowsPerPage, searchTerm, startDate, endDate);
 	};
 
 	const columns = [
