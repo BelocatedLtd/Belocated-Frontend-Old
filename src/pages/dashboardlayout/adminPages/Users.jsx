@@ -64,8 +64,9 @@ const Users = () => {
 		}
 	};
 
-	const handleFilter = (search) => {
-		setSearchTerm(search);
+	const handleFilter = (e) => {
+		e.preventDefault()
+		setSearchTerm(e?.target?.value);
 		fetchUsers(currentPage, rowsPerPage, searchTerm, startDate, endDate);
 	};
 
