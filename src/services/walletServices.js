@@ -108,7 +108,7 @@ export const confirmWithdrawal = async (withdrawalRequestId, formData) => {
         const response = await axios.patch(
             `${BACKEND_URL}/api/transactions/withdrawals/confirm/${withdrawalRequestId}`,
             formData,
-            { headers: { ...getAuthHeaders(), "Content-Type": "multipart/form-data" } } // Merged headers correctly
+            { headers: getAuthHeaders() } // Merged headers correctly
         );
         return response.data;
     } catch (error) {
