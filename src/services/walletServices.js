@@ -1,138 +1,132 @@
-import { toast } from 'react-hot-toast'
-import { BACKEND_URL } from '../../utils/globalConfig'
-import axios from "axios"
-import { getToken } from '../../utils/tokenHandler'
+import { toast } from 'react-hot-toast';
+import { BACKEND_URL } from '../../utils/globalConfig';
+import axios from "axios";
+import { getToken } from '../../utils/tokenHandler';
 
-
+// Function to Get Authorization Headers
 const getAuthHeaders = () => {
-    const token = getToken()
-
-    if (token) {
-        return {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }
-    }
-}
-
-
+    const token = getToken();
+    return token ? { Authorization: `Bearer ${token}` } : {};
+};
 
 // Get User Wallet Details
-export const getWallet = async() => {
-    const headers = getAuthHeaders();
+export const getWallet = async () => {
     try {
-         const response = await axios.get(`${BACKEND_URL}/api/transactions/wallet/user`,  headers)
-        return response.data
-     } catch (error) {
-         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-         toast.error(`${message}, Error retrieving user wallet, please Logout`)
-     }         
-}
+        const response = await axios.get(
+            `${BACKEND_URL}/api/transactions/wallet/user`,
+            { headers: getAuthHeaders() } // Correct header format
+        );
+        return response.data;
+    } catch (error) {
+        toast.error(`${error.response?.data?.message || error.message}, Error retrieving user wallet, please Logout`);
+    }
+};
 
-// Get Wallet Details
-export const getUserWallet = async() => {
-    const headers = getAuthHeaders();
+// Get User Wallet Details (Duplicate Function, Kept for Clarity)
+export const getUserWallet = async () => {
     try {
-         const response = await axios.get(`${BACKEND_URL}/api/transactions/wallet/user`,  headers)
-        return response.data
-     } catch (error) {
-         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-         toast.error(message)
-     }         
-}
+        const response = await axios.get(
+            `${BACKEND_URL}/api/transactions/wallet/user`,
+            { headers: getAuthHeaders() }
+        );
+        return response.data;
+    } catch (error) {
+        toast.error(error.response?.data?.message || error.message);
+    }
+};
 
-// Get Wallet Details
-export const getSingleUserDetails = async(id) => {
-    const headers = getAuthHeaders();
+// Get Single User Details
+export const getSingleUserDetails = async (id) => {
     try {
-         const response = await axios.get(`${BACKEND_URL}/api/admin/user/${id}`, headers)
-        return response.data
-     } catch (error) {
-         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-         toast.error(message)
-     }         
-}
-
+        const response = await axios.get(
+            `${BACKEND_URL}/api/admin/user/${id}`,
+            { headers: getAuthHeaders() }
+        );
+        return response.data;
+    } catch (error) {
+        toast.error(error.response?.data?.message || error.message);
+    }
+};
 
 // Fund User Wallet
-export const fundWallet = async(trxData) => { 
-    const headers = getAuthHeaders();
+export const fundWallet = async (trxData) => {
     try {
-        const response = await axios.patch(`${BACKEND_URL}/api/transactions/fund`, trxData, headers)
-        return response.data
-     } catch (error) {
-         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-         toast.error(message)
-     }
-            
-}
+        const response = await axios.patch(
+            `${BACKEND_URL}/api/transactions/fund`,
+            trxData,
+            { headers: getAuthHeaders() }
+        );
+        return response.data;
+    } catch (error) {
+        toast.error(error.response?.data?.message || error.message);
+    }
+};
 
-// Withdraw User Wallet 
-export const withdrawWallet = async(trxData) => { 
-    const headers = getAuthHeaders();
+// Withdraw from Wallet
+export const withdrawWallet = async (trxData) => {
     try {
-        const response = await axios.post(`${BACKEND_URL}/api/transactions/withdraw`, trxData, headers)
-        return response.data
-     } catch (error) {
-         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-         toast.error(message)
-     }        
-}
+        const response = await axios.post(
+            `${BACKEND_URL}/api/transactions/withdraw`,
+            trxData,
+            { headers: getAuthHeaders() }
+        );
+        return response.data;
+    } catch (error) {
+        toast.error(error.response?.data?.message || error.message);
+    }
+};
 
 // Get All Withdrawals
-export const getWithdrawals = async() => {
-    const headers = getAuthHeaders();
+export const getWithdrawals = async () => {
     try {
-         const response = await axios.get(`${BACKEND_URL}/api/transactions/withdrawals`, headers)
-        return response.data
-     } catch (error) {
-         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-         toast.error(message)
-     }         
-}
-
-
+        const response = await axios.get(
+            `${BACKEND_URL}/api/transactions/withdrawals`,
+            { headers: getAuthHeaders() }
+        );
+        return response.data;
+    } catch (error) {
+        toast.error(error.response?.data?.message || error.message);
+    }
+};
 
 // Get User Withdrawals
-export const getUserWithdrawals = async(userId) => {
-    const headers = getAuthHeaders();
+export const getUserWithdrawals = async (userId) => {
     try {
-         const response = await axios.get(`${BACKEND_URL}/api/transactions/withdrawals/${userId}`, headers)
-        return response.data
-     } catch (error) {
-         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-         toast.error(message)
-     }         
-}
+        const response = await axios.get(
+            `${BACKEND_URL}/api/transactions/withdrawals/${userId}`,
+            { headers: getAuthHeaders() }
+        );
+        return response.data;
+    } catch (error) {
+        toast.error(error.response?.data?.message || error.message);
+    }
+};
 
-// Confirm User Withdrawal Request
+// Confirm Withdrawal Request
 export const confirmWithdrawal = async (withdrawalRequestId, formData) => {
-    const headers = getAuthHeaders(); 
-    console.log("Auth Headers:", headers); // Debugging output
-
     try {
         const response = await axios.patch(
             `${BACKEND_URL}/api/transactions/withdrawals/confirm/${withdrawalRequestId}`,
             formData,
-            { headers: { ...headers, "Content-Type": "multipart/form-data" } }
+            { headers: { ...getAuthHeaders(), "Content-Type": "multipart/form-data" } } // Merged headers correctly
         );
         return response.data;
     } catch (error) {
-        console.error("Request Error:", error.response?.data || error.message); // Debugging output
+        console.error("Request Error:", error.response?.data || error.message);
         toast.error(error.response?.data?.message || error.message);
         throw error;
     }
 };
 
-// Get User Withdrawals
-export const deleteWithdrawal = async(withdrawalRequestId) => {
-    const headers = getAuthHeaders();
+// Delete Withdrawal Request
+export const deleteWithdrawal = async (withdrawalRequestId) => {
     try {
-         const response = await axios.delete(`${BACKEND_URL}/api/transactions/withdrawals/delete/${withdrawalRequestId}`, headers)
-        return response.data
-     } catch (error) {
-         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-         toast.error(message)
-     }         
-}
+        const response = await axios.delete(
+            `${BACKEND_URL}/api/transactions/withdrawals/delete/${withdrawalRequestId}`,
+            { headers: getAuthHeaders() }
+        );
+        return response.data;
+    } catch (error) {
+        toast.error(error.response?.data?.message || error.message);
+    }
+};
