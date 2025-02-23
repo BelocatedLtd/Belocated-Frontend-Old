@@ -108,18 +108,17 @@ export const getUserWithdrawals = async(userId) => {
 
 // Confirm User Withdrawal Request
 export const confirmWithdrawal = async (withdrawalRequestId, formData) => {
-    const headers = { ...getAuthHeaders(), 'Content-Type': 'multipart/form-data' };
     try {
         const response = await axios.patch(
-            `${BACKEND_URL}/api/transactions/withdrawals/confirm/${withdrawalRequestId}`, 
-            formData,
-            { headers }
+            `${BACKEND_URL}/api/transactions/withdrawals/confirm/${withdrawalRequestId}`,
+            formData, 
+            { headers: { ...getAuthHeaders(), "Content-Type": "multipart/form-data" } } // Fix headers
         );
         return response.data;
     } catch (error) {
-        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+        const message = error.response?.data?.message || error.message || error.toString();
         toast.error(message);
-        throw error; // Re-throw the error for the caller to handle
+        throw error;
     }
 };
 
