@@ -8,6 +8,7 @@ import {
 	MdOutlineKeyboardDoubleArrowRight,
 } from 'react-icons/md'
 import { useNavigate, useParams,useLocation } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import { toIntlCurrency } from '../../../../utils/currency'
 import ManageUserModal from '../../../components/adminComponents/ManageUserModal'
 import Loader from '../../../components/loader/Loader'
