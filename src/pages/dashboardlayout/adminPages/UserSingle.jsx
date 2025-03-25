@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+
 import { CheckmarkIcon } from 'react-hot-toast'
 import { FaUser } from 'react-icons/fa'
 import {
@@ -6,7 +7,7 @@ import {
 	MdOutlineKeyboardArrowLeft,
 	MdOutlineKeyboardDoubleArrowRight,
 } from 'react-icons/md'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams,useLocation } from 'react-router-dom'
 import { toIntlCurrency } from '../../../../utils/currency'
 import ManageUserModal from '../../../components/adminComponents/ManageUserModal'
 import Loader from '../../../components/loader/Loader'
@@ -14,7 +15,8 @@ import { getSingleUserDetails } from '../../../services/walletServices'
 
 const UserSingle = () => {
 	const { id } = useParams()
-	const navigate = useNavigate()
+	const navigate = useNavigate();
+	const location = useLocation();
 	const [isLoading, setIsLoading] = useState(false)
 	const [manageUserBtn, setManageUserBtn] = useState(false)
 
@@ -24,6 +26,8 @@ const UserSingle = () => {
 	const [userAds, setUserAds] = useState()
 	const [tasks, setTasks] = useState()
 	const [trxs, setTrxs] = useState()
+	const page = location.state?.page || 1;   // Default to page 1 if no state found
+const limit = location.state?.limit || 10;
 
 	const getUserDetails = async () => {
 		const details = await getSingleUserDetails(id)
@@ -50,7 +54,7 @@ const UserSingle = () => {
 			)}
 			{isLoading && <Loader />}
 			<div className='flex items-center gap-3 border-b border-gray-200 pb-6'>
-				<MdOutlineKeyboardArrowLeft size={30} onClick={() => navigate(-1)} />
+				<MdOutlineKeyboardArrowLeft size={30} onClick={() => navigate(`/admin/dashboard/users`, { state: { page, limit } })} />
 				<div className='flex flex-col'>
 					<p className='font-semibold text-xl text-gray-700'>
 						Go back to Users
