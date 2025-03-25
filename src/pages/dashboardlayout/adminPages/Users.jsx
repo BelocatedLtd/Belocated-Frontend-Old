@@ -26,7 +26,7 @@ const Users = () => {
 	const sortIcon = <MdArrowDownward />;
 	const [activityIsLoading, setactivityIsLoading] = useState(false);
 	const [currentPage, setCurrentPage] = useState(location.state?.page || 1);
-const [rowsPerPage, setRowsPerPage] = useState(location.state?.limit || 10);
+	const [rowsPerPage, setRowsPerPage] = useState(location.state?.limit || 10);
 	const [totalRows, setTotalRows] = useState(0);
 	const [users, setUsers] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
@@ -111,9 +111,9 @@ const [rowsPerPage, setRowsPerPage] = useState(location.state?.limit || 10);
 
 	const handleButtonClick = (e, userId) => {
 		e.preventDefault();
-		navigate(`/admin/dashboard/user/${userId}`,{
-		state: { page: currentPage, limit: rowsPerPage }
-	});
+		navigate(`/admin/dashboard/user/${userId}`, {
+			state: { page: currentPage, limit: rowsPerPage }
+		});
 	}
 
 	const handleStartDateChange = (e) => setStartDate(e.target.value);
@@ -122,13 +122,19 @@ const [rowsPerPage, setRowsPerPage] = useState(location.state?.limit || 10);
 
 	const handlePageChange = (page) => {
 		setCurrentPage(page);
-		fetchUsers(page, rowsPerPage, searchTerm, startDate, endDate);
+		setTimeout(() => {  // Ensure state updates before fetching
+			fetchUsers(page, rowsPerPage, searchTerm, startDate, endDate);
+		}, 0);
 	};
+
 
 	const handleChangeRowsPerPage = (rowsPerPage) => {
 		setRowsPerPage(rowsPerPage);
-		fetchUsers(currentPage, rowsPerPage, searchTerm, startDate, endDate);
+		setTimeout(() => {
+			fetchUsers(currentPage, rowsPerPage, searchTerm, startDate, endDate);
+		}, 0);
 	};
+
 
 	const fetchUsers = async (page, limit, search = '', startDate = '', endDate = '') => {
 		try {
@@ -143,7 +149,7 @@ const [rowsPerPage, setRowsPerPage] = useState(location.state?.limit || 10);
 					totalReferrals: response.totalReferrals,
 					usersWithCompletedTasks: response.usersWithCompletedTasks,
 					referralStats: response.totalUsersWithReferrals,
-			        	usersWithOngoingTasks: response.usersWithOngoingTasks,
+					usersWithOngoingTasks: response.usersWithOngoingTasks,
 					totalTasksOngoing: response.totalTasksOngoing
 				});
 			}
@@ -187,53 +193,49 @@ const [rowsPerPage, setRowsPerPage] = useState(location.state?.limit || 10);
 				</div>
 			</div>
 
- <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-	  <div className="p-4 bg-white shadow rounded">
-    <h3 className="text-sm text-gray-500">Total Users</h3>
-    <p className="text-xl font-semibold">{summary?.totalUsers ?? "N/A"}</p>
-  </div> 
-	  <div className="p-4 bg-white shadow rounded">
-    <h3 className="text-sm text-gray-500">Total Tasks Completed</h3>
-    <p className="text-xl font-semibold">{summary?.totalTasksCompleted ?? "N/A"}</p>
-    <p className="text-green-500 font-bold">{summary?.usersWithCompletedTasks ?? 0} Users</p>
-  </div>
-	  <div className="p-4 bg-white shadow rounded">
-    <h3 className="text-sm text-gray-500">Total Tasks Ongoing</h3>
-    <p className="text-xl font-semibold">{summary?.totalTasksOngoing ?? "N/A"}</p>
-    <p className="text-yellow-500 font-bold">{summary?.usersWithOngoingTasks ?? 0} Users</p>
-  </div>
-	 <div className="p-4 bg-white shadow rounded">
-    <h3 className="text-sm text-gray-500">Referral Stats</h3>
-		  <p className="text-xl font-semibold">{summary?.totalReferrals ?? "N/A"}</p>
-		 <p className="text-blue-500 font-bold">{summary?.referralStats ?? 0} Users</p>
-  </div> 
-</div> 
- 
-
-			
-			
+			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+				<div className="p-4 bg-white shadow rounded">
+					<h3 className="text-sm text-gray-500">Total Users</h3>
+					<p className="text-xl font-semibold">{summary?.totalUsers ?? "N/A"}</p>
+				</div>
+				<div className="p-4 bg-white shadow rounded">
+					<h3 className="text-sm text-gray-500">Total Tasks Completed</h3>
+					<p className="text-xl font-semibold">{summary?.totalTasksCompleted ?? "N/A"}</p>
+					<p className="text-green-500 font-bold">{summary?.usersWithCompletedTasks ?? 0} Users</p>
+				</div>
+				<div className="p-4 bg-white shadow rounded">
+					<h3 className="text-sm text-gray-500">Total Tasks Ongoing</h3>
+					<p className="text-xl font-semibold">{summary?.totalTasksOngoing ?? "N/A"}</p>
+					<p className="text-yellow-500 font-bold">{summary?.usersWithOngoingTasks ?? 0} Users</p>
+				</div>
+				<div className="p-4 bg-white shadow rounded">
+					<h3 className="text-sm text-gray-500">Referral Stats</h3>
+					<p className="text-xl font-semibold">{summary?.totalReferrals ?? "N/A"}</p>
+					<p className="text-blue-500 font-bold">{summary?.referralStats ?? 0} Users</p>
+				</div>
+			</div>
 			<div className="flex flex-wrap gap-4 mb-6">
 				<div className="flex flex-col sm:flex-row gap-4 items-center">
 					<label className="text-gray-500">
-  Start Date
-					<input
-						type="date"
-						value={startDate}
-						onChange={handleStartDateChange}
-						placeholder='Start Date'
-						className="p-2 border rounded bg-white shadow"
-					/>
+						Start Date
+						<input
+							type="date"
+							value={startDate}
+							onChange={handleStartDateChange}
+							placeholder='Start Date'
+							className="p-2 border rounded bg-white shadow"
+						/>
 					</label>
 					<label className="text-gray-500">
-  End Date
-					<input
-						type="date"
-						value={endDate}
-						onChange={handleEndDateChange}
-						placeholder="End Date"
-						className="p-2 border rounded bg-white shadow"
-					/>
-						</label>
+						End Date
+						<input
+							type="date"
+							value={endDate}
+							onChange={handleEndDateChange}
+							placeholder="End Date"
+							className="p-2 border rounded bg-white shadow"
+						/>
+					</label>
 					<button
 						onClick={applyDateFilter}
 						className="p-2 bg-blue-500 text-white rounded shadow hover:bg-blue-600"
@@ -269,14 +271,17 @@ const [rowsPerPage, setRowsPerPage] = useState(location.state?.limit || 10);
 					data={users}
 					progressPending={isLoading}
 					pagination
+					paginationTotalRows={totalRows}
+					paginationPerPage={rowsPerPage}
+					paginationDefaultPage={currentPage} // Keeps pagination on the correct page
+					onChangePage={handlePageChange}
+					onChangeRowsPerPage={handleChangeRowsPerPage}
 					selectableRows
 					paginationServer
 					fixedHeader
 					customStyles={customStyles}
 					sortIcon={sortIcon}
-					paginationTotalRows={totalRows}
-					onChangePage={handlePageChange}
-					onChangeRowsPerPage={handleChangeRowsPerPage}
+
 				/>
 			) : (
 				<p>No users found.</p>
