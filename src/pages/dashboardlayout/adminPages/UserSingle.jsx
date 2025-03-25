@@ -12,6 +12,7 @@ import { toIntlCurrency } from '../../../../utils/currency'
 import ManageUserModal from '../../../components/adminComponents/ManageUserModal'
 import Loader from '../../../components/loader/Loader'
 import { getSingleUserDetails } from '../../../services/walletServices'
+import { selectUser } from '../../../redux/slices/authSlice'
 
 const UserSingle = () => {
 	const { id } = useParams()
@@ -19,6 +20,8 @@ const UserSingle = () => {
 	const location = useLocation();
 	const [isLoading, setIsLoading] = useState(false)
 	const [manageUserBtn, setManageUserBtn] = useState(false)
+	const adminUser = useSelector(selectUser)
+	
 
 	const [wallet, setWallet] = useState()
 
@@ -54,7 +57,7 @@ const limit = location.state?.limit || 10;
 			)}
 			{isLoading && <Loader />}
 			<div className='flex items-center gap-3 border-b border-gray-200 pb-6'>
-				<MdOutlineKeyboardArrowLeft size={30} onClick={() => navigate(`/admin/dashboard/users`, { state: { page, limit } })} />
+				<MdOutlineKeyboardArrowLeft size={30} onClick={() => navigate(`/admin/dashboard/users/${adminUser.username}`, { state: { page, limit } })} />
 				<div className='flex flex-col'>
 					<p className='font-semibold text-xl text-gray-700'>
 						Go back to Users
