@@ -58,7 +58,9 @@ const ManageUserModal = ({manageUser, user}) => {
 
         if (response) {
             toast.success("User Account Status Changed")
-            navigate(`/admin/dashboard/users/${adminUser.username}`)
+           // navigate(`/admin/dashboard/users/${adminUser.username}`)
+           manageUser();
+           
         }
     }
 
