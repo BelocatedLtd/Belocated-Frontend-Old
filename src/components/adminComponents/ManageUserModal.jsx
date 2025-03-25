@@ -3,8 +3,9 @@ import close from '../../assets/close.svg'
 import  ReactDOM  from 'react-dom'
 import { MdCancel } from 'react-icons/md'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+
 import { CheckmarkIcon, toast } from 'react-hot-toast'
 import Loader from '../loader/Loader'
 import { selectUser } from '../../redux/slices/authSlice'
@@ -15,6 +16,7 @@ const ManageUserModal = ({manageUser, user}) => {
     const [isLoading, setIsLoading] = useState(false)
     const navigate = useNavigate()
     const adminUser = useSelector(selectUser)
+     const location = useLocation();
 
     const initialState = {
       userId: '',
@@ -57,11 +59,16 @@ const ManageUserModal = ({manageUser, user}) => {
         }
 
         if (response) {
-            toast.success("User Account Status Changed")
-           // navigate(`/admin/dashboard/users/${adminUser.username}`)
-           manageUser();
-           
-        }
+          toast.success("User Account Status Changed");
+      
+          // Get the current page and limit from location state
+          const page = location.state?.page || 1;
+          const limit = location.state?.limit || 10;
+      
+          // Navigate back with the same pagination state
+          navigate(`/admin/dashboard/users/${adminUser.username}`, {
+              state: { page, limit }
+          });
     }
 
 
