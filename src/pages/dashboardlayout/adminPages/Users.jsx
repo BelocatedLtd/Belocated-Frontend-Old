@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import { AiFillDelete } from 'react-icons/ai';
 import { MdArrowDownward, MdOutlineKeyboardArrowLeft } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import DataSearch from '../../../components/adminComponents/DataSearch';
 import Loader from '../../../components/loader/Loader';
 import {
@@ -19,14 +19,15 @@ import { PieChart, Pie, Cell, Tooltip } from 'recharts';
 
 const Users = () => {
 	const navigate = useNavigate();
+	const location = useLocation();
 	const dispatch = useDispatch();
 	const tasks = useSelector(selectTasks);
 	const activities = useSelector(selectActivities);
 	const sortIcon = <MdArrowDownward />;
 	const [activityIsLoading, setactivityIsLoading] = useState(false);
-	const [currentPage, setCurrentPage] = useState(1);
+	const [currentPage, setCurrentPage] = useState(location.state?.page || 1);
+const [rowsPerPage, setRowsPerPage] = useState(location.state?.limit || 10);
 	const [totalRows, setTotalRows] = useState(0);
-	const [rowsPerPage, setRowsPerPage] = useState(10);
 	const [users, setUsers] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const [startDate, setStartDate] = useState('');
@@ -110,8 +111,10 @@ const Users = () => {
 
 	const handleButtonClick = (e, userId) => {
 		e.preventDefault();
-		navigate(`/admin/dashboard/user/${userId}`);
-	};
+		navigate(`/admin/dashboard/user/${userId}`,{
+		state: { page: currentPage, limit: rowsPerPage }
+	});
+	}
 
 	const handleStartDateChange = (e) => setStartDate(e.target.value);
 	const handleEndDateChange = (e) => setEndDate(e.target.value);
