@@ -70,6 +70,7 @@ const ManageUserModal = ({manageUser, user}) => {
               state: { page, limit }
           });
     }
+              }
 
 
     return ReactDOM.createPortal(
