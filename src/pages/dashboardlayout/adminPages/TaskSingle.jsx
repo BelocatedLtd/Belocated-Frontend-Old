@@ -129,7 +129,7 @@ const isError = useSelector(selectIsError);
       toast.success('Task Approved');
       socket.emit('sendActivity', {
         userId: clickedTask.taskPerformerId,
-        action: `@${clickedTask.taskPerformerId?.username} just earned ₦${clickedTask.toEarn} from a task completed`,
+        action: `@${clickedTask.taskPerformerId?.username} just earned from a task completed`,
       });
     }
   };
