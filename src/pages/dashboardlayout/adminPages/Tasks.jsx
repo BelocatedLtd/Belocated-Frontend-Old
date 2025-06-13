@@ -117,9 +117,15 @@ const Tasks = () => {
 			return;
 		}
 	
-		await approveTask(clickedTask._id); // Call approveTask function
-	};
-	
+		await approveTask(clickedTask._id);
+		// Call approveTask function
+
+		
+	socket.emit('sendActivity', {
+        userId: clickedTask.taskPerformerId,
+        action: `@${clickedTask.taskPerformerId?.username} just earned from a task completed`,
+      });
+	}
 	const handleRejectClick = async (e, clickedTask) => {
 		e.preventDefault();
 		e.stopPropagation();
