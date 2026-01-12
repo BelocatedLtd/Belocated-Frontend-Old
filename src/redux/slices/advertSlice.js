@@ -54,6 +54,23 @@ export const handleToggleFreeAdvert = createAsyncThunk(
 		}
 	},
 )
+// Update Advert
+export const handleUpdateAdvert = createAsyncThunk(
+  'advert/update',
+  async ({ advertId, adFormData },thunkAPI) => {
+    try {
+      return await updateAdvert(advertId, adFormData);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  },
+);
 
 // Get User Adverts
 export const handleGetUserAdverts = createAsyncThunk(
