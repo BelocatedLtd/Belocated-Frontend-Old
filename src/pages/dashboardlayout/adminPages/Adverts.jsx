@@ -204,6 +204,9 @@ const Adverts = () => {
           {adverts.map((advert) => (
             <div key={advert._id} className="bg-white p-4 rounded-lg shadow-md mb-4">
               <div className="flex items-center gap-4">
+                <div style={{ float: 'right' }}>
+                  <MdModeEdit size={20} onClick={(e) => handleEditClick(e, advert)} />
+                </div>
                 <img
                   src={icons?.find((icon) => icon.platform === advert.platform)?.icon}
                   alt={advert.platform}
