@@ -29,15 +29,15 @@ const AllTasksList = () => {
 
   const fetchTasks = async () => {
     try {
-        const resp = await getTasks({
-            page: currentPage,
-            limit: rowsPerPage,
-            status:selectedStatus,
-          });
-          setTasks(resp.tasks);
-          setTaskPerformers(resp.taskPerformer);
-          setTotalRows(resp.totalTasks);
-      
+      const resp = await getTasks({
+        page: currentPage,
+        limit: rowsPerPage,
+        status: selectedStatus,
+      });
+      setTasks(resp.tasks);
+      setTaskPerformers(resp.taskPerformer);
+      setTotalRows(resp.totalTasks);
+
     } catch (error) {
       console.error('Error fetching tasks:', error);
     }
@@ -162,6 +162,8 @@ const AllTasksList = () => {
                   >
                     View Proof
                   </span>
+                ) : task.nameOnSocialPlatform ? (
+                  <span className="text-gray-700">Username: {task.nameOnSocialPlatform}</span>
                 ) : (
                   'N/A'
                 )}
@@ -185,49 +187,49 @@ const AllTasksList = () => {
           'N/A'
         )}
 
-        {/* Modal */}
-        {isModalOpen && (
+      {/* Modal */}
+      {isModalOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+          onClick={closeModal} // Close modal when clicking outside the content
+        >
           <div
-            className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
-            onClick={closeModal} // Close modal when clicking outside the content
+            className="bg-white p-5 rounded-md shadow-lg max-w-lg w-full relative"
+            onClick={(e) => e.stopPropagation()} // Prevent click from closing modal
           >
-            <div
-              className="bg-white p-5 rounded-md shadow-lg max-w-lg w-full relative"
-              onClick={(e) => e.stopPropagation()} // Prevent click from closing modal
+            <button
+              className="absolute top-2 right-2 text-gray-500 hover:text-red-500"
+              onClick={closeModal}
             >
-              <button
-                className="absolute top-2 right-2 text-gray-500 hover:text-red-500"
-                onClick={closeModal}
-              >
-                ✕
-              </button>
-              <h2 className="text-lg font-semibold mb-4">Proof of Work</h2>
-              <iframe
-                src={modalContent}
-                className="w-full h-64 rounded-md"
-                title="Proof of Work"
-                frameBorder="0"
-              />
-            </div>
+              ✕
+            </button>
+            <h2 className="text-lg font-semibold mb-4">Proof of Work</h2>
+            <iframe
+              src={modalContent}
+              className="w-full h-64 rounded-md"
+              title="Proof of Work"
+              frameBorder="0"
+            />
           </div>
-        )}
-      </div>
-      {/* Pagination */}
-      <div className="flex justify-center mt-6">
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentPage(index + 1)}
-            className={`mx-1 px-3 py-1 border ${currentPage === index + 1
-                ? 'bg-secondary text-white'
-                : 'bg-white text-gray-700'
-              }`}
-          >
-            {index + 1}
-          </button>
-        ))}
-      </div>
+        </div>
+      )}
     </div>
+      {/* Pagination */ }
+  <div className="flex justify-center mt-6">
+    {Array.from({ length: totalPages }, (_, index) => (
+      <button
+        key={index}
+        onClick={() => setCurrentPage(index + 1)}
+        className={`mx-1 px-3 py-1 border ${currentPage === index + 1
+          ? 'bg-secondary text-white'
+          : 'bg-white text-gray-700'
+          }`}
+      >
+        {index + 1}
+      </button>
+    ))}
+  </div>
+    </div >
   );
 };
 
