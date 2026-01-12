@@ -4,6 +4,7 @@ import {
 	getAllUserAdverts,
 	getUserAdverts,
 	setAdvertFree,
+	updateAdvert,
 } from '../../services/advertService'
 
 import { toast } from 'react-hot-toast'
@@ -175,10 +176,36 @@ const advertSlice = createSlice({
 				state.message = action.payload
 				toast.error(state.message)
 			})
+
+			// Update Advert
+			.addCase(handleUpdateAdvert.pending, (state) => {
+				state.isLoading = true
+			})
+			.addCase(handleUpdateAdvert.fulfilled, (state, action) => {
+				state.isLoading = false
+				state.isSuccess = true
+				state.isError = false
+				state.advert = action.payload
+				// Update the advert in allAdverts array
+				state.allAdverts = {
+					...state.allAdverts,
+					adverts: state.allAdverts.adverts?.map((advert) =>
+						advert._id === action.payload._id ? action.payload : advert
+					)
+				}
+				toast.success('Advert Updated Successfully')
+			})
+			.addCase(handleUpdateAdvert.rejected, (state, action) => {
+				state.isLoading = false
+				state.isSuccess = false
+				state.isError = true
+				state.message = action.payload
+				toast.error(action.payload)
+			})
 	},
 })
 
-export const {} = advertSlice.actions
+export const { } = advertSlice.actions
 export const selectAdvert = (state) => state.advert.advert
 export const selectAdverts = (state) => state.advert.adverts
 export const selectAllAdverts = (state) => state.advert.allAdverts
