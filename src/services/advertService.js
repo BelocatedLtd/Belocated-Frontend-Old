@@ -85,7 +85,7 @@ export const deleteAdvert = async (advertId) => {
 export const updateAdvert = async (advertId, adFormData) => {
 	const headers = getAuthHeaders()
 	try {
-		const response = await axios.put(
+		const response = await axios.patch(
 			`${BACKEND_URL}/api/adverts/update/${advertId}`,
 			adFormData,
 			headers,
