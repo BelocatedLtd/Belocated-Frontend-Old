@@ -40,7 +40,7 @@ const Tasks = () => {
 
 	const fetchTasks = async () => {
 		const response = await getTasks()
-		if (!response || response.tasks.length === 0) {
+		if (!response || response?.tasks?.length === 0) {
 			toast.info('No submitted tasks available');
 			return;
 		}
