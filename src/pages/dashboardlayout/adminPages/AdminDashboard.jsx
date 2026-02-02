@@ -22,7 +22,7 @@ const AdminDashboard = () => {
 		async function getUserData() {
 			const data = await getAdminDashboardData()
 			setDashboardData(data)
-			console.log('🚀 ~ getUserData ~ data:', data)
+			//console.log('🚀 ~ getUserData ~ data:', data)
 			if (!user) {
 				const data = await getUser()
 

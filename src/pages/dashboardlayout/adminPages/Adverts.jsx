@@ -69,7 +69,7 @@ const Adverts = () => {
       caption: formData.caption.split(',').map((c) => c.trim()),
     };
 
-    console.log('updated data',updatedData);
+    //console.log('updated data',updatedData);
 
     await dispatch(handleUpdateAdvert({ advertId: currentAdvert._id, adFormData: updatedData }));
     setIsEditModalOpen(false);

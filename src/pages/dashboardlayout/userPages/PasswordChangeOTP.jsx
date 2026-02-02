@@ -81,7 +81,7 @@ const PasswordChangeOTP = () => {
 
     const resendOTP = async () => {
      //e.preventDefault()
-     console.log(accountDetailsData)
+     //console.log(accountDetailsData)
     // try {
     //     setIsLoading(true)
     //  const response = await handlesendingPhoneOTP(accountDetailsData)

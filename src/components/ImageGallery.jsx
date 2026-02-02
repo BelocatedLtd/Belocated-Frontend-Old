@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 const ImageGallery = ({images}) => {
 
     useEffect(() => {
-      console.log(images)
+      //console.log(images)
     }, [])
     
   return (

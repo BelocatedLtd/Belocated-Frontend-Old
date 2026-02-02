@@ -38,6 +38,6 @@ export const getAllChallenges = async() => {
 export const handleRefPtsConv = async(userId) => {
     const headers = getAuthHeaders();
     const response = await axios.post(`${BACKEND_URL}/api/ref/bonus/convert`, userId, headers)
-    console.log(response)
+    //console.log(response)
     return response.data       
 }

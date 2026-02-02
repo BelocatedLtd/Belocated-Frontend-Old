@@ -104,7 +104,7 @@ const PaymentMethod = ({ togglePaymentSelect, formData, captionArray }) => {
 
       setIsLoading(true);
       const response = await createAdvert(paymentFormData);
-      console.log(response);
+      //console.log(response);
       setIsLoading(false);
 
       if (response) {

@@ -36,7 +36,7 @@ const AdvertSingle = () => {
       setAd(resp)
       setSlides(resp?.mediaURL)
       setAdverter(resp.userId)
-      console.log(ad)
+      //console.log(ad)
     }
     getData()
   }, [id])

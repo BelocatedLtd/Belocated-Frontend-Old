@@ -300,7 +300,7 @@ export const confirmOTP = async(OTPData) => {
 //Delete User
 export const handleManageUser = async(formData) => {
     const headers = getAuthHeaders();
-    console.log(formData)
+    //console.log(formData)
     if (formData.status == "") {
         toast.error("Please select an option")
         return

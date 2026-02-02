@@ -22,7 +22,7 @@ const makePayment = (amount, email, phone, fullname, title, desc) => {
         ...config,
         text: 'Fund wallet',
         callback: (response) => {
-           console.log(response);
+           //console.log(response);
           closePaymentModal() // this will close the modal programmatically
         },
         onClose: () => {},

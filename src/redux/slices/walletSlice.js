@@ -141,7 +141,7 @@ const walletSlice = createSlice({
           .addCase(getUserWallet.rejected, (state, action) => {
             state.isLoading = false;
             state.isError = true;
-            console.log(action.payload)
+            //console.log(action.payload)
             state.message = action.payload;
             toast.error(action.payload) 
           })
@@ -154,7 +154,7 @@ const walletSlice = createSlice({
             state.isLoading = false;
             state.isSuccess = true;
             state.isError = false;
-            console.log(action.payload)
+            //console.log(action.payload)
             state.walletValue = action.payload
           })
           .addCase(fundUserWallet.rejected, (state, action) => {

@@ -14,7 +14,7 @@ const initialState = {
 export const handleGetAllUser = createAsyncThunk(
 	'get/handleGetAllUser',
 	async ({ page, limit }, thunkAPI) => {
-		console.log('🚀 ~ page, limit:', page, limit)
+		//console.log('🚀 ~ page, limit:', page, limit)
 		try {
 			return await getAllUser(page, limit)
 		} catch (error) {
