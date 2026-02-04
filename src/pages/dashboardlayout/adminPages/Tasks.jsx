@@ -64,12 +64,8 @@ const Tasks = () => {
 			setLoadingTaskId(taskId); // Show loading spinner
 			await dispatch(handleApproveTask({ taskId, status: 'Approved', message: 'The advertiser approved this task' }));
 
-			// Optimistic update for UI
-			setTasks((prevTasks) =>
-				prevTasks.map((task) =>
-					task._id === taskId ? { ...task, status: 'Approved' } : task
-				)
-			);
+			// Optimistic update for UI - Remove from list
+			setTasks((prevTasks) => prevTasks.filter((task) => task._id !== taskId));
 			toast.success('Task Approved');
 		} catch (error) {
 			toast.error('Error Approving Task');
@@ -150,9 +146,16 @@ const Tasks = () => {
 		}
 	};
 
+	const handleTaskDeleted = (taskId) => {
+		setTasks((prevTasks) => prevTasks.filter((task) => task._id !== taskId));
+	};
+
 	const handleModal = () => setModalBtn(!modalBtn);
 	const handleDelete = (e) => {
-		e.preventDefault();
+		if (e) {
+			e.preventDefault();
+			e.stopPropagation();
+		}
 		setDelBtn(!delBtn);
 	};
 
@@ -195,7 +198,7 @@ const Tasks = () => {
 										{new Date(task.createdAt).toLocaleDateString()}
 									</p>
 								</div>
-								{delBtn && <DeleteTaskModal handleDelete={handleDelete} task={task} />}
+								{delBtn && <DeleteTaskModal handleDelete={handleDelete} task={task} onSuccess={handleTaskDeleted} />}
 
 								<div className="flex flex-col md:flex-row gap-2">
 									<div className="flex gap-2">
@@ -204,8 +207,8 @@ const Tasks = () => {
 										<button
 											onClick={(e) => handleTaskApproval(e, task)}
 											className={`px-4 py-2 text-xs rounded ${task.status === 'Approved'
-													? 'bg-green-500'
-													: 'bg-blue-500 hover:bg-green-500'
+												? 'bg-green-500'
+												: 'bg-blue-500 hover:bg-green-500'
 												} text-white flex items-center`}
 											disabled={loadingTaskId === task._id}
 										>
@@ -220,8 +223,8 @@ const Tasks = () => {
 									<button
 										onClick={(e) => handleRejectClick(e, task)}
 										className={`px-4 py-2 rounded text-white ${task.status === 'Rejected'
-												? 'bg-red-500'
-												: 'bg-gray-500 hover:bg-red-500'
+											? 'bg-red-500'
+											: 'bg-gray-500 hover:bg-red-500'
 											} flex items-center`}
 										disabled={loadingTaskId === task._id}
 									>
