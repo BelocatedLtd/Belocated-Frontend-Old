@@ -45,7 +45,7 @@ const AdsTasksList = () => {
         return;
       }
       setTaskAdList(resp.tasks);
-      setTaskPerformer(resp.taskPerformer);
+      setTaskPerformer(resp.tasks.taskPerformerId);
       setTotalRows(resp.totalTasks);
     } catch (error) {
       console.error('Failed to fetch tasks:', error);
@@ -172,10 +172,10 @@ const AdsTasksList = () => {
               <div className="flex justify-between items-center mt-4">
                 <div>
                   <p className="text-sm">
-                    <strong>Performer:</strong> {task.taskPerformerId?.fullname}
+                    <strong>Performer:</strong> {task.taskPerformerId?.username}
                   </p>
                   <p className="text-sm">
-                    <strong>Advertiser:</strong> {task.advertiserId?.fullname}
+                    <strong>Advertiser:</strong> {task.advertiserId?.username}
                   </p>
                   <p className="text-xs text-gray-500">
                     {new Date(task.createdAt).toLocaleDateString()}
