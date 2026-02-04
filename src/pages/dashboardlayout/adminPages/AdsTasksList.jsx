@@ -20,11 +20,8 @@ const AdsTasksList = () => {
   const isError = useSelector(selectIsError);
   const isSuccess = useSelector(selectIsSuccess);
   const [taskAdList, setTaskAdList] = useState([]);
+  const [selectedTask, setSelectedTask] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState('All');
-  const [modalBtn, setModalBtn] = useState(false);
-  const [delBtn, setDelBtn] = useState(false);
-  const [taskPerformer, setTaskPerformer] = useState(null);
-  const [taskPerformers, setTaskPerformers] = useState(taskAdList || [])
 
   const [totalRows, setTotalRows] = useState(0); // Total tasks available
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -129,6 +126,7 @@ const AdsTasksList = () => {
 
   const handleTaskDeleted = (taskId) => {
     setTaskAdList((prevList) => prevList.filter((task) => task._id !== taskId));
+    setSelectedTask(null);
   };
 
   const handleModal = () => setModalBtn(!modalBtn);
@@ -137,7 +135,7 @@ const AdsTasksList = () => {
       e.preventDefault();
       e.stopPropagation();
     }
-    setDelBtn(!delBtn);
+    setSelectedTask(null);
   };
 
   const closeModal = () => {
@@ -181,7 +179,6 @@ const AdsTasksList = () => {
                     {new Date(task.createdAt).toLocaleDateString()}
                   </p>
                 </div>
-                {delBtn && <DeleteTaskModal handleDelete={handleDelete} task={task} onSuccess={handleTaskDeleted} />}
 
                 <div className="flex flex-col md:flex-row gap-2">
                   <div className="flex gap-2">
@@ -189,8 +186,8 @@ const AdsTasksList = () => {
 
                     <button onClick={(e) => handleTaskApproval(e, task)}
                       className={`px-4 py-2 text-xs rounded ${task.status === 'Approved'
-                          ? 'bg-green-500'
-                          : 'bg-blue-500 hover:bg-green-500'
+                        ? 'bg-green-500'
+                        : 'bg-blue-500 hover:bg-green-500'
                         } text-white flex items-center`}
                       disabled={loadingTaskId === task._id}
                     >
@@ -204,8 +201,8 @@ const AdsTasksList = () => {
                   <button
                     onClick={() => handleRejectClick(task._id)}
                     className={`px-4 py-2 rounded text-white ${task.status === 'Rejected'
-                        ? 'bg-red-500'
-                        : 'bg-gray-500 hover:bg-red-500'
+                      ? 'bg-red-500'
+                      : 'bg-gray-500 hover:bg-red-500'
                       } flex items-center`}
                     disabled={loadingTaskId === task._id}
                   >
@@ -213,7 +210,7 @@ const AdsTasksList = () => {
                   </button>
 
                   <button
-                    onClick={() => setDelBtn(true)}
+                    onClick={() => setSelectedTask(task)}
                     className="py-2 px-5 bg-tertiary text-primary"
                   >
                     Delete
@@ -240,24 +237,32 @@ const AdsTasksList = () => {
               </div>
 
               <div className="mt-2">
-								<label>Proof:</label>{' '}
-								{task.proofOfWorkMediaURL?.[0]?.secure_url ? (
-									<span
-										onClick={() => handleProofClick(task.proofOfWorkMediaURL[0].secure_url)}
-										className="text-blue-500 hover:text-red-500 cursor-pointer"
-									>
-										View Proof
-									</span>
-								) : task.nameOnSocialPlatform ? (
-									<span className="text-gray-700">Username: {task.nameOnSocialPlatform}</span>
-								) : (
-									'N/A'
-								)}
-							</div>
+                <label>Proof:</label>{' '}
+                {task.proofOfWorkMediaURL?.[0]?.secure_url ? (
+                  <span
+                    onClick={() => handleProofClick(task.proofOfWorkMediaURL[0].secure_url)}
+                    className="text-blue-500 hover:text-red-500 cursor-pointer"
+                  >
+                    View Proof
+                  </span>
+                ) : task.nameOnSocialPlatform ? (
+                  <span className="text-gray-700">Username: {task.nameOnSocialPlatform}</span>
+                ) : (
+                  'N/A'
+                )}
+              </div>
             </div>
           ))
         )}
       </div>
+
+      {selectedTask && (
+        <DeleteTaskModal
+          handleDelete={handleDelete}
+          task={selectedTask}
+          onSuccess={handleTaskDeleted}
+        />
+      )}
 
       {isModalOpen && (
         <div

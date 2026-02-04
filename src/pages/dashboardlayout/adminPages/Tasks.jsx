@@ -30,6 +30,7 @@ const Tasks = () => {
 	const [totalRows, setTotalRows] = useState(0)
 	const [rowsPerPage, setRowsPerPage] = useState(10)
 	const [tasks, setTasks] = useState([])
+	const [selectedTask, setSelectedTask] = useState(null)
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [modalContent, setModalContent] = useState('');
 	const [loadingTaskId, setLoadingTaskId] = useState(null);
@@ -148,6 +149,7 @@ const Tasks = () => {
 
 	const handleTaskDeleted = (taskId) => {
 		setTasks((prevTasks) => prevTasks.filter((task) => task._id !== taskId));
+		setSelectedTask(null);
 	};
 
 	const handleModal = () => setModalBtn(!modalBtn);
@@ -156,7 +158,7 @@ const Tasks = () => {
 			e.preventDefault();
 			e.stopPropagation();
 		}
-		setDelBtn(!delBtn);
+		setSelectedTask(null);
 	};
 
 	const closeModal = () => {
@@ -198,7 +200,6 @@ const Tasks = () => {
 										{new Date(task.createdAt).toLocaleDateString()}
 									</p>
 								</div>
-								{delBtn && <DeleteTaskModal handleDelete={handleDelete} task={task} onSuccess={handleTaskDeleted} />}
 
 								<div className="flex flex-col md:flex-row gap-2">
 									<div className="flex gap-2">
@@ -234,7 +235,7 @@ const Tasks = () => {
 									</button>
 
 									<button
-										onClick={() => setDelBtn(true)}
+										onClick={() => setSelectedTask(task)}
 										className="py-2 px-5 bg-purple-500 text-primary"
 									>
 										Delete
@@ -279,6 +280,14 @@ const Tasks = () => {
 					))
 				)}
 			</div>
+
+			{selectedTask && (
+				<DeleteTaskModal
+					handleDelete={handleDelete}
+					task={selectedTask}
+					onSuccess={handleTaskDeleted}
+				/>
+			)}
 
 			{isModalOpen && (
 				<div

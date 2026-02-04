@@ -100,6 +100,10 @@ const Adverts = () => {
     navigate(`/admin/dashboard/advert/${advertId}`);
   };
 
+  const handleAdvertDeleted = (advertId) => {
+    setAdverts((prevAdverts) => prevAdverts.filter((ad) => ad._id !== advertId));
+  };
+
   useEffect(() => {
     fetchAdverts(currentPage, rowsPerPage);
   }, [currentPage, rowsPerPage]);
@@ -272,7 +276,7 @@ const Adverts = () => {
                   {renderStatusBadge(advert.status)}
                 </div>
                 <div>
-                  <DeleteAdvertButton advertId={advert._id} />
+                  <DeleteAdvertButton advertId={advert._id} onSuccess={handleAdvertDeleted} />
                 </div>
               </div>
               <div className="mt-4 flex justify-end">
