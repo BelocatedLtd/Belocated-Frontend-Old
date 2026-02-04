@@ -116,7 +116,7 @@ const AdsTasksList = () => {
 
       toast.success('Task Approved');
       socket.emit('sendActivity', {
-        userId: clickedTask.taskPerformerId,
+        userId: clickedTask.taskPerformerId._id,
         action: `@${clickedTask.taskPerformerId?.username} just earned ₦${clickedTask.toEarn} from a task completed`,
       });
     } catch (error) {
