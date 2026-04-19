@@ -70,7 +70,7 @@ const Transactions = () => {
     { name: 'User', selector: (row) => row.username },
     { name: 'Transaction Type', selector: (row) => row.trxType },
     { name: 'Amount', selector: (row) => `₦${row.chargedAmount}` },
-    { name: 'Date', selector: (row) => new Date(parseInt(row.date)).toLocaleString() },
+    { name: 'Date', selector: (row) => new Date(row.createdAt || row.date).toLocaleString() },
     { name: 'Status', selector: (row) => row.status },
   ];
 
@@ -114,26 +114,26 @@ const Transactions = () => {
       {/* Filters and Pie Chart */}
       <div className="flex flex-wrap gap-4 mb-6">
         <div className="flex flex-col sm:flex-row gap-4 items-center">
-       <label className="text-gray-500">
-  Start Date   <input
-            type="date"
-            value={startDate}
-            onChange={handleStartDateChange}
-            placeholder="Start Date"
-            className="p-2 border rounded bg-white shadow"
-          />
-         </label>
           <label className="text-gray-500">
-  End Date
-          
-          <input
-            type="date"
-            value={endDate}
-            onChange={handleEndDateChange}
-            placeholder="End Date"
-            className="p-2 border rounded bg-white shadow"
-          />
-            </label>
+            Start Date   <input
+              type="date"
+              value={startDate}
+              onChange={handleStartDateChange}
+              placeholder="Start Date"
+              className="p-2 border rounded bg-white shadow"
+            />
+          </label>
+          <label className="text-gray-500">
+            End Date
+
+            <input
+              type="date"
+              value={endDate}
+              onChange={handleEndDateChange}
+              placeholder="End Date"
+              className="p-2 border rounded bg-white shadow"
+            />
+          </label>
           <button
             onClick={applyDateFilter}
             className="p-2 bg-blue-500 text-white rounded shadow hover:bg-blue-600"
@@ -141,7 +141,7 @@ const Transactions = () => {
             Apply
           </button>
         </div>
-      <br/>       <div className="w-full sm:w-auto mx-auto">
+        <br />       <div className="w-full sm:w-auto mx-auto">
           <PieChart width={300} height={200}>
             <Pie
               data={pieChartData}
