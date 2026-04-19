@@ -91,7 +91,7 @@ const limit = location.state?.limit || 10;
 
 						<div
 							onClick={() =>
-								navigate(`/admin/dashboard/adverts/user/${userData._id}`)
+								userData?._id && navigate(`/admin/dashboard/adverts/user/${userData._id}`)
 							}
 							className='flex items-center justify-center gap-2 cursor-pointer hover:text-secondary md:justify-start'>
 							<label htmlFor=''>Ads Created:</label>
@@ -104,7 +104,7 @@ const limit = location.state?.limit || 10;
 
 						<div
 							onClick={() =>
-								navigate(`/admin/dashboard/tasks/user/${userData._id}`)
+								userData?._id && navigate(`/admin/dashboard/tasks/user/${userData._id}`)
 							}
 							className='flex items-center justify-center gap-2 cursor-pointer hover:text-secondary md:justify-start'>
 							<label htmlFor=''>Tasks:</label>
@@ -117,7 +117,7 @@ const limit = location.state?.limit || 10;
 
 						<div
 							onClick={() =>
-								navigate(`/admin/dashboard/transactions/user/${userData._id}`)
+								userData?._id && navigate(`/admin/dashboard/transactions/user/${userData._id}`)
 							}
 							className='flex items-center justify-center gap-2 cursor-pointer hover:text-secondary md:justify-start'>
 							<label htmlFor=''>Transactions:</label>
@@ -130,16 +130,9 @@ const limit = location.state?.limit || 10;
 
 						{/* No. of users referred */}
 						<div
-							onClick={() =>
-								navigate(`/admin/dashboard/transactions/user/${userData._id}`)
-							}
-							className='flex items-center justify-center gap-2 cursor-pointer hover:text-secondary md:justify-start'>
+							className='flex items-center justify-center gap-2 md:justify-start'>
 							<label htmlFor=''>Referred:</label>
 							<p>{userData?.referrals?.length}</p>
-							<MdOutlineKeyboardDoubleArrowRight
-								size={12}
-								className='text-secondary'
-							/>
 						</div>
 
 						{/* User Account Status */}

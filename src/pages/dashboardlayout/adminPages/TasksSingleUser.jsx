@@ -22,12 +22,18 @@ const TasksSingleUser = () => {
   const [userTasks, setUserTasks] = useState()
 
   useEffect(() => {
+    if (users && users.length === 0) {
+      dispatch(handleGetAllUser({ page: 1, limit: 1000 }))
+    }
+  }, [dispatch, users?.length])
+
+  useEffect(() => {
     dispatch(handleGetTasks())
-  
+
     if (isError) {
       toast.error("failed to fetch tasks")
     }
-  
+
   }, [isError, dispatch])
 
   useEffect(() => {

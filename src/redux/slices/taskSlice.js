@@ -178,7 +178,7 @@ const taskSlice = createSlice({
 				state.isLoading = false
 				state.isSuccess = true
 				state.isError = false
-				state.tasks = action.payload
+				state.tasks = action.payload.tasks || action.payload
 			})
 			.addCase(handleGetUserTasks.rejected, (state, action) => {
 				state.isLoading = false
@@ -195,7 +195,7 @@ const taskSlice = createSlice({
 				state.isLoading = false
 				state.isSuccess = true
 				state.isError = false
-				state.tasks = action.payload
+				state.tasks = action.payload.tasks || action.payload
 			})
 			.addCase(handleGetTasks.rejected, (state, action) => {
 				state.isLoading = false

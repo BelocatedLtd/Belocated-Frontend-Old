@@ -54,7 +54,7 @@ const transactionSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.transactions = action.payload
+        state.transactions = action.payload.transactions || action.payload
       })
       .addCase(handleGetUserTransactions.rejected, (state, action) => {
         state.isLoading = false;
@@ -71,7 +71,7 @@ const transactionSlice = createSlice({
       state.isLoading = false;
       state.isSuccess = true;
       state.isError = false;
-      state.transactions = action.payload
+      state.transactions = action.payload.transactions || action.payload
     })
     .addCase(handleGetTransactions.rejected, (state, action) => {
       state.isLoading = false;

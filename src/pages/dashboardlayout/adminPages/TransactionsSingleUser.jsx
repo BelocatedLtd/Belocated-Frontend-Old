@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { selectTransactions, selectIsError, selectIsLoading, handleGetTransactions } from '../../../redux/slices/transactionSlice';
-import { selectUsers } from '../../../redux/slices/userSlice';
+import { selectUsers, handleGetAllUser } from '../../../redux/slices/userSlice';
 import { toast } from 'react-hot-toast';
 import { useState } from 'react';
 
@@ -79,14 +79,20 @@ const TransactionsSingleUser = () => {
    // navigate(`/admin/dashboard/user/${userId}`)
   }
 
-   useEffect(() => {
+  useEffect(() => {
+    if (users && users.length === 0) {
+      dispatch(handleGetAllUser({ page: 1, limit: 1000 }))
+    }
+  }, [dispatch, users?.length])
+
+  useEffect(() => {
     dispatch(handleGetTransactions())
 
     if (isError) {
-      toast.error("failed to fetch users")
+      toast.error("failed to fetch transactions")
     }
 
-}, [isError, dispatch])
+  }, [isError, dispatch])
 
 
   return (

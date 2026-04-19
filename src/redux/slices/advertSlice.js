@@ -184,7 +184,7 @@ const advertSlice = createSlice({
 				state.isLoading = false
 				state.isSuccess = true
 				state.isError = false
-				state.allAdverts = action.payload
+				state.allAdverts = action.payload.adverts || action.payload
 			})
 			.addCase(handleGetALLUserAdverts.rejected, (state, action) => {
 				state.isLoading = false

@@ -104,14 +104,20 @@ const handleButtonClick = (e, advertId) => {
   navigate(`/admin/dashboard/advert/${advertId}`)
 }
 
- useEffect(() => {
-  dispatch(handleGetALLUserAdverts())
+  useEffect(() => {
+    if (users && users.length === 0) {
+      dispatch(handleGetAllUser({ page: 1, limit: 1000 }))
+    }
+  }, [dispatch, users?.length])
 
-  if (isError) {
-    toast.error("failed to fetch adverts")
-  }
+  useEffect(() => {
+    dispatch(handleGetALLUserAdverts())
 
-}, [isError, dispatch])
+    if (isError) {
+      toast.error("failed to fetch adverts")
+    }
+
+  }, [isError, dispatch])
 
 
   return (
