@@ -284,7 +284,7 @@ const taskSlice = createSlice({
 
 export const {} = taskSlice.actions
 export const selectTask = (state) => state.task.task
-export const selectTasks = (state) => state.task.tasks
+export const selectTasks = (state) => state.task.tasks?.tasks || state.task.tasks || []
 export const selectIsLoading = (state) => state.task.isLoading
 export const selectIsSuccess = (state) => state.task.isSuccess
 export const selectIsError = (state) => state.task.isError

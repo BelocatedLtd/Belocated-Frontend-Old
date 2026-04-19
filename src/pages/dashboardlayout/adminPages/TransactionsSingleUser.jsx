@@ -19,9 +19,9 @@ const TransactionsSingleUser = () => {
   const [userTransactions, setUserTransactions] = useState()
 
   useEffect(() => {
-    const userTransactionsList = transactions?.filter(trx => trx.userId === userId)
+    const userTransactionsList = transactions?.filter(trx => (trx.userId?._id || trx.userId) === userId)
     setUserTransactions(userTransactionsList) 
-  }, [transactions])
+  }, [transactions, userId])
 
   const columns = [
     {
@@ -31,10 +31,11 @@ const TransactionsSingleUser = () => {
     {
       name: 'User',
       cell: (row) => {
-        const user = users?.find(user => user._id === row?.userId)
+        const tUserId = row.userId?._id || row.userId
+        const user = users?.find(user => user._id === tUserId)
               return (
                 
-                  <div className='font-bold text-[13px]'>{user?.fullname ? user?.fullname : user?.username}</div>
+                  <div className='font-bold text-[13px]'>{user?.fullname || user?.username || row.userId?.fullname}</div>
                 
               )
         }

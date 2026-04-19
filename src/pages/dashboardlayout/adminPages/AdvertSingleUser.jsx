@@ -19,18 +19,19 @@ const AdvertSingleUser = () => {
   const [userAds,  setUserAds] = useState()
 
   useEffect(() => {
-    const userAdsList = adverts?.filter(ad => ad.userId === userId)
+    const userAdsList = adverts?.filter(ad => (ad.userId?._id || ad.userId) === userId)
     setUserAds(userAdsList ) 
-  }, [adverts])
+  }, [adverts, userId])
   
 const columns = [
   {
     name: 'Advertiser',
     selector: (row) => {
-    const advertiser = users.find(user => user._id === row.userId)
+    const advertiserId = row.userId?._id || row.userId
+    const advertiser = users?.find(user => user._id === advertiserId)
           return (
             
-              <div className='font-bold text-[13px]'>{advertiser?.fullname}</div>
+              <div className='font-bold text-[13px]'>{advertiser?.fullname || advertiser?.username || row.userId?.fullname}</div>
             
           )
     }

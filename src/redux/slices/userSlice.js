@@ -56,7 +56,7 @@ const userSlice = createSlice({
 	},
 })
 
-export const selectUsers = (state) => state.user.users
+export const selectUsers = (state) => state.user.users?.users || state.user.users || []
 export const selectIsLoading = (state) => state.user.isLoading
 export const selectIsError = (state) => state.user.isError
 

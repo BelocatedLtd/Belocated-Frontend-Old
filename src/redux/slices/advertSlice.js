@@ -225,7 +225,7 @@ const advertSlice = createSlice({
 export const { } = advertSlice.actions
 export const selectAdvert = (state) => state.advert.advert
 export const selectAdverts = (state) => state.advert.adverts
-export const selectAllAdverts = (state) => state.advert.allAdverts
+export const selectAllAdverts = (state) => state.advert.allAdverts?.adverts || state.advert.allAdverts || []
 export const selectIsLoading = (state) => state.advert.isLoading
 export const selectIsSuccess = (state) => state.advert.isSuccess
 export const selectIsError = (state) => state.advert.isError

@@ -84,7 +84,7 @@ const transactionSlice = createSlice({
 });
 
 export const {} = transactionSlice.actions
-export const selectTransactions = (state) => state.transaction.transactions
+export const selectTransactions = (state) => state.transaction.transactions?.transactions || state.transaction.transactions || []
 export const selectIsLoading = (state) => state.transaction.isLoading;
 export const selectIsError = (state) => state.transaction.isError;
 

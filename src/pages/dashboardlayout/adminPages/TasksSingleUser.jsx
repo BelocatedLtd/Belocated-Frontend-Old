@@ -37,9 +37,9 @@ const TasksSingleUser = () => {
   }, [isError, dispatch])
 
   useEffect(() => {
-    const userTasksList = tasks?.filter(task => task.taskPerformerId === userId)
+    const userTasksList = tasks?.filter(task => (task.taskPerformerId?._id || task.taskPerformerId) === userId)
     setUserTasks(userTasksList) 
-  }, [tasks])
+  }, [tasks, userId])
 
   const columns = [
     {
@@ -50,9 +50,10 @@ const TasksSingleUser = () => {
     {
       name: 'Task Performer',
       selector: (row) => {
-      const taskPerformer = users?.find(user => user._id === row.taskPerformerId)
+      const performerId = row.taskPerformerId?._id || row.taskPerformerId
+      const taskPerformer = users?.find(user => user._id === performerId)
             return (
-                <div className='font-bold text-[13px]'>{taskPerformer?.fullname}</div>
+                <div className='font-bold text-[13px]'>{taskPerformer?.fullname || taskPerformer?.username || row.taskPerformerId?.fullname}</div>
               
             )
       }
@@ -60,9 +61,10 @@ const TasksSingleUser = () => {
     {
       name: 'Advertiser',
       selector: (row) => {
-      const advertiser = users?.find(user => user._id === row.advertiserId)
+      const advertiserId = row.advertiserId?._id || row.advertiserId
+      const advertiser = users?.find(user => user._id === advertiserId)
             return (
-                <div className='font-bold text-[13px]'>{advertiser?.fullname}</div>
+                <div className='font-bold text-[13px]'>{advertiser?.fullname || advertiser?.username || row.advertiserId?.fullname}</div>
               
             )
       }
