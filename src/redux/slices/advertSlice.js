@@ -93,9 +93,10 @@ export const handleGetUserAdverts = createAsyncThunk(
 // Get User Adverts
 export const handleGetALLUserAdverts = createAsyncThunk(
 	'get/handleGetAllUserAdverts',
-	async ({ page = 1, limit = 10 }, thunkAPI) => {
+	async (params = {}, thunkAPI) => {
+		const { page = 1, limit = 10, status } = params;
 		try {
-			return await getAllUserAdverts(page, limit)
+			return await getAllUserAdverts(page, limit, status)
 		} catch (error) {
 			const message =
 				(error.response &&

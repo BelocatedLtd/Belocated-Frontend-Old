@@ -28,7 +28,7 @@ const TasksSingleUser = () => {
   }, [dispatch, users?.length])
 
   useEffect(() => {
-    dispatch(handleGetTasks())
+    dispatch(handleGetTasks({ status: 'All' }))
 
     if (isError) {
       toast.error("failed to fetch tasks")

@@ -57,9 +57,10 @@ export const handleGetUserTasks = createAsyncThunk(
 // Get Tasks  Get all tasks from db
 export const handleGetTasks = createAsyncThunk(
 	'get/handleGetTasks',
-	async ({ page, limit }, thunkAPI) => {
+	async (params = {}, thunkAPI) => {
+		const { page, limit, status } = params;
 		try {
-			return await getTasks(page,limit)
+			return await getTasks(page, limit, status)
 		} catch (error) {
 			const message =
 				(error.response &&
