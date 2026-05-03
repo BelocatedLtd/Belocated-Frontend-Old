@@ -46,9 +46,9 @@ export const getUserTransactions = async (page, limit) => {
 // Get Transactions List
 export const getAllTransactions = async (page, limit, startDate, endDate) => {
 	const headers = getAuthHeaders()
-	const response = await axios.get(
-		`${BACKEND_URL}/api/transactions/all?page=${page}&limit=${limit}&startDate=${startDate}&endDate=${endDate}`,
-		headers,
-	)
+	let url = `${BACKEND_URL}/api/transactions/all?page=${page || 1}&limit=${limit || 10}`;
+	if (startDate) url += `&startDate=${startDate}`;
+	if (endDate) url += `&endDate=${endDate}`;
+	const response = await axios.get(url, headers)
 	return response.data
 }

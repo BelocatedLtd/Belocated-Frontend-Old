@@ -87,7 +87,7 @@ const TransactionsSingleUser = () => {
   }, [dispatch, users?.length])
 
   useEffect(() => {
-    dispatch(handleGetTransactions())
+    dispatch(handleGetTransactions({ page: 1, limit: 10000 }))
 
     if (isError) {
       toast.error("failed to fetch transactions")

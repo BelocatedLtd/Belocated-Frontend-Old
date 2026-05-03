@@ -28,9 +28,10 @@ export const handleGetUserTransactions = createAsyncThunk(
   // Get All Transactions
 export const handleGetTransactions = createAsyncThunk(
   "get/handleGetTransactions",
-  async(token, thunkAPI) => {
+  async(params = {}, thunkAPI) => {
+      const { page, limit, startDate, endDate } = params;
       try {
-        return await getAllTransactions(token)
+        return await getAllTransactions(page, limit, startDate, endDate)
       } catch(error) {
           const message = 
       (error.response && error.response.data && error.response.data.message) || error.message || error.toString();

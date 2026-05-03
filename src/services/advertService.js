@@ -38,9 +38,9 @@ export const getUserAdverts = async () => {
 
 // Get All User Adverts
 export const getAllUserAdverts = async (page, limit, status) => {
-	const response = await axios.get(
-		`${BACKEND_URL}/api/adverts/all?page=${page}&limit=${limit}&status=${status}`,
-	)
+	let url = `${BACKEND_URL}/api/adverts/all?page=${page || 1}&limit=${limit || 10}`;
+	if (status) url += `&status=${status}`;
+	const response = await axios.get(url)
 	return response.data
 }
 

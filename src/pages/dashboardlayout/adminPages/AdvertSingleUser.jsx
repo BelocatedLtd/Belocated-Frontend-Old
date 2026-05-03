@@ -112,7 +112,7 @@ const handleButtonClick = (e, advertId) => {
   }, [dispatch, users?.length])
 
   useEffect(() => {
-    dispatch(handleGetALLUserAdverts({ status: 'All' }))
+    dispatch(handleGetALLUserAdverts({ status: 'All', page: 1, limit: 10000 }))
 
     if (isError) {
       toast.error("failed to fetch adverts")
